@@ -403,7 +403,19 @@ namespace SpawnDev.SpawnJS
                     }
                     break;
                 case ReturnType.SpawnJSObjectReferenceNonNullable:
+                    {
+                        var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId);
+                        var spawnJSObjectReference = SpawnJSObjectReference.FromID(fromJS, true);
+                        ret = inMarshaller!.JSToNet(returnType!, spawnJSObjectReference!);
+                    }
+                    break;
                 case ReturnType.SpawnJSObjectReference:
+                    {
+                        var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId);
+                        var spawnJSObjectReference = SpawnJSObjectReference.FromID(fromJS, false);
+                        ret = inMarshaller!.JSToNet(returnType!, spawnJSObjectReference!);
+                    }
+                    break;
                 case ReturnType.Double:
                     {
                         var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId);
@@ -573,12 +585,13 @@ namespace SpawnDev.SpawnJS
                     break;
                 case ReturnType.SpawnJSObjectReference:
                     {
-                        _doubleNullableCallbacks.TryAdd(asyncCallbackId, (value, error) =>
+                        _doubleCallbacks.TryAdd(asyncCallbackId, (value, error) =>
                         {
                             if (error != null) tcs.TrySetException(new Exception(error));
                             else
                             {
-                                ret = returnMarshaller.JSToNet(typeOfT, value!);
+                                var spawnJSObjectReference = SpawnJSObjectReference.FromID(value, false);
+                                ret = returnMarshaller.JSToNet(typeOfT, spawnJSObjectReference!);
                                 tcs.TrySetResult();
                             }
                         });
@@ -586,12 +599,13 @@ namespace SpawnDev.SpawnJS
                     break;
                 case ReturnType.SpawnJSObjectReferenceNonNullable:
                     {
-                        _doubleNullableCallbacks.TryAdd(asyncCallbackId, (value, error) =>
+                        _doubleCallbacks.TryAdd(asyncCallbackId, (value, error) =>
                         {
                             if (error != null) tcs.TrySetException(new Exception(error));
                             else
                             {
-                                ret = returnMarshaller.JSToNet(typeOfT, value!);
+                                var spawnJSObjectReference = SpawnJSObjectReference.FromID(value, true);
+                                ret = returnMarshaller.JSToNet(typeOfT, spawnJSObjectReference!);
                                 tcs.TrySetResult();
                             }
                         });

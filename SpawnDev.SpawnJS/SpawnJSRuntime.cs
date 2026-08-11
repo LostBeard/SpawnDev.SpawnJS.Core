@@ -71,6 +71,7 @@ namespace SpawnDev.SpawnJS
             Marshallers.Add(new BooleanNullableMarshaller());
             Marshallers.Add(new SpawnJSObjectReferenceMarshaller());
             Marshallers.Add(new ArrayMarshaller<object>());
+            Marshallers.Add(new ListMarshaller<object>());
         }
     }
 }

@@ -302,10 +302,10 @@
                     dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedString(asyncCallId, ret, error);
                     break;
                 case 6: // SpawnJSObject
-                    dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedDoubleNullable(asyncCallId, ret, error);
+                    dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedDouble(asyncCallId, ret, error);
                     break;
                 case 7: // SpawnJSObjectNonNullable
-                    dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedDoubleNullable(asyncCallId, ret, error);
+                    dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedDouble(asyncCallId, ret, error);
                     break;
                 case 8: // Json
                     dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedString(asyncCallId, ret, error);
@@ -350,9 +350,8 @@
                 case 4: // BooleanNullable
                 case 5: // String
                     return ret;
-                case 6: // SpawnJSObject
-                    return ret === null || ret === undefined ? null : SpawnJSInterop.spawnJSObjectHold(ret);
-                case 7: // SpawnJSObjectNonNullable
+                case 6: // SpawnJSObject - Number
+                case 7: // SpawnJSObjectNonNullable - Number
                     return SpawnJSInterop.spawnJSObjectHold(ret);
                 case 8: // Json
                     return JSON.stringify(ret);

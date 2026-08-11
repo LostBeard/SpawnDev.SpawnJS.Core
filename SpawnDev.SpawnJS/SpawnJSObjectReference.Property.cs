@@ -12,6 +12,10 @@ namespace SpawnDev.SpawnJS
     //    paths cleanly separated is what makes this base flexible and reliable.
     public partial class SpawnJSObjectReference
     {
+        internal static SpawnJSObjectReference? FromID(double fromJS, bool nonNullable = false)
+        {
+            return !nonNullable && (fromJS == SpawnJSObjectReference.Null || fromJS == SpawnJSObjectReference.UndefinedId) ? null : new SpawnJSObjectReference((long)fromJS);
+        }
 
         /// <summary>Returns "&lt;typeof&gt; &lt;toStringTag&gt;" for the property, or null if it is absent.</summary>
         public string PropertyTypeInfo(string key) => SpawnJSRuntime._propertyTypeInfo(Id, key);
