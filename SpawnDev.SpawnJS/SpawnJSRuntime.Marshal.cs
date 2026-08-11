@@ -383,10 +383,22 @@ namespace SpawnDev.SpawnJS
                         _spawnJSInteropCallVoid((double)returnTypeIndex, methodName, argsId);
                     }
                     break;
+                case ReturnType.Double:
+                    {
+                        var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId);
+                        ret = inMarshaller!.JSToNet(returnType!, fromJS);
+                    }
+                    break;
                 case ReturnType.Boolean:
                     {
                         var fromJS = _spawnJSInteropCallBoolean((double)returnTypeIndex, methodName, argsId);
                         ret = inMarshaller!.JSToNet(returnType, fromJS);
+                    }
+                    break;
+                case ReturnType.DoubleNullable:
+                    {
+                        var fromJS = _spawnJSInteropCallDoubleNullable((double)returnTypeIndex, methodName, argsId);
+                        ret = inMarshaller!.JSToNet(returnType!, fromJS);
                     }
                     break;
                 case ReturnType.BooleanNullable:
@@ -395,18 +407,10 @@ namespace SpawnDev.SpawnJS
                         ret = inMarshaller!.JSToNet(returnType!, fromJS);
                     }
                     break;
-                case ReturnType.Json:
                 case ReturnType.String:
                     {
                         var fromJS = _spawnJSInteropCallString((double)returnTypeIndex, methodName, argsId);
                         ret = inMarshaller!.JSToNet(returnType!, fromJS);
-                    }
-                    break;
-                case ReturnType.SpawnJSObjectReferenceNonNullable:
-                    {
-                        var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId);
-                        var spawnJSObjectReference = SpawnJSObjectReference.FromID(fromJS, true);
-                        ret = inMarshaller!.JSToNet(returnType!, spawnJSObjectReference!);
                     }
                     break;
                 case ReturnType.SpawnJSObjectReference:
@@ -416,15 +420,16 @@ namespace SpawnDev.SpawnJS
                         ret = inMarshaller!.JSToNet(returnType!, spawnJSObjectReference!);
                     }
                     break;
-                case ReturnType.Double:
+                case ReturnType.SpawnJSObjectReferenceNonNullable:
                     {
                         var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId);
-                        ret = inMarshaller!.JSToNet(returnType!, fromJS);
+                        var spawnJSObjectReference = SpawnJSObjectReference.FromID(fromJS, true);
+                        ret = inMarshaller!.JSToNet(returnType!, spawnJSObjectReference!);
                     }
                     break;
-                case ReturnType.DoubleNullable:
+                case ReturnType.Json:
                     {
-                        var fromJS = _spawnJSInteropCallDoubleNullable((double)returnTypeIndex, methodName, argsId);
+                        var fromJS = _spawnJSInteropCallString((double)returnTypeIndex, methodName, argsId);
                         ret = inMarshaller!.JSToNet(returnType!, fromJS);
                     }
                     break;
@@ -520,17 +525,6 @@ namespace SpawnDev.SpawnJS
                         }
                     });
                     break;
-                case ReturnType.DoubleNullable:
-                    _doubleNullableCallbacks.TryAdd(asyncCallbackId, (value, error) =>
-                    {
-                        if (error != null) tcs.TrySetException(new Exception(error));
-                        else
-                        {
-                            ret = returnMarshaller.JSToNet(typeOfT, value!);
-                            tcs.TrySetResult();
-                        }
-                    });
-                    break;
                 case ReturnType.Boolean:
                     {
                         _booleanCallbacks.TryAdd(asyncCallbackId, (value, error) =>
@@ -544,6 +538,17 @@ namespace SpawnDev.SpawnJS
                         });
                     }
                     break;
+                case ReturnType.DoubleNullable:
+                    _doubleNullableCallbacks.TryAdd(asyncCallbackId, (value, error) =>
+                    {
+                        if (error != null) tcs.TrySetException(new Exception(error));
+                        else
+                        {
+                            ret = returnMarshaller.JSToNet(typeOfT, value!);
+                            tcs.TrySetResult();
+                        }
+                    });
+                    break;
                 case ReturnType.BooleanNullable:
                     {
                         _booleanNullableCallbacks.TryAdd(asyncCallbackId, (value, error) =>
@@ -552,19 +557,6 @@ namespace SpawnDev.SpawnJS
                             else
                             {
                                 ret = returnMarshaller.JSToNet(typeOfT, value);
-                                tcs.TrySetResult();
-                            }
-                        });
-                    }
-                    break;
-                case ReturnType.Json:
-                    {
-                        _stringCallbacks.TryAdd(asyncCallbackId, (value, error) =>
-                        {
-                            if (error != null) tcs.TrySetException(new Exception(error));
-                            else
-                            {
-                                ret = returnMarshaller.JSToNet(typeOfT, value!);
                                 tcs.TrySetResult();
                             }
                         });
@@ -606,6 +598,19 @@ namespace SpawnDev.SpawnJS
                             {
                                 var spawnJSObjectReference = SpawnJSObjectReference.FromID(value, true);
                                 ret = returnMarshaller.JSToNet(typeOfT, spawnJSObjectReference!);
+                                tcs.TrySetResult();
+                            }
+                        });
+                    }
+                    break;
+                case ReturnType.Json:
+                    {
+                        _stringCallbacks.TryAdd(asyncCallbackId, (value, error) =>
+                        {
+                            if (error != null) tcs.TrySetException(new Exception(error));
+                            else
+                            {
+                                ret = returnMarshaller.JSToNet(typeOfT, value!);
                                 tcs.TrySetResult();
                             }
                         });
