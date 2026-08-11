@@ -1,0 +1,18 @@
+﻿using SpawnDev.SpawnJS.Marshal;
+
+namespace SpawnDev.SpawnJS.Marshallers
+{
+    /// <summary>
+    /// Marshals a <see cref="SpawnJSObjectReference"/> itself: a JS value held on the JS side and carried
+    /// across the boundary as its numeric object-table id. A non-positive id (0, or the null/undefined
+    /// sentinels) is treated as no reference and returns null.
+    /// </summary>
+    public class SpawnJSObjectReferenceMarshaller : JSMarshallerFromSpawnJSObjectReference<SpawnJSObjectReference>
+    {
+        public override SpawnJSObjectReference JSToNet(Type typeToConvert, double? value) => value == null ? null! : new SpawnJSObjectReference((long)value);
+        public override SpawnJSObjectReference JSToNet(Type typeToConvert, double value) => value == 0 ? null! : new SpawnJSObjectReference((long)value);
+        public override SpawnJSObjectReference JSToNet(Type typeToConvert, SpawnJSObjectReference value) => value;
+        public override void NetToJS(Type? typeToConvert, SpawnJSObjectReference jsParent, double jsKey, SpawnJSObjectReference value) => jsParent.PropertySet(jsKey, value);
+        public override void NetToJS(Type? typeToConvert, SpawnJSObjectReference jsParent, string jsKey, SpawnJSObjectReference value) => jsParent.PropertySet(jsKey, value);
+    }
+}
