@@ -335,6 +335,115 @@ namespace SpawnDev.SpawnJS
         /// </summary>
         Queue<SpawnJSObjectReference> _callArrays = new Queue<SpawnJSObjectReference>();
 
+        internal T InteropCall<T1, T>(string methodName)
+        {
+            return _InteropCallApply<T>(methodName);
+        }
+        internal T InteropCall<T1, T>(string methodName, T1 arg1)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            return _InteropCallApply<T>(methodName, jsArgs);
+        }
+        internal T InteropCall<T1, T2, T>(string methodName, T1 arg1, T2 arg2)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            return _InteropCallApply<T>(methodName, jsArgs);
+        }
+        internal T InteropCall<T1, T2, T3, T>(string methodName, T1 arg1, T2 arg2, T3 arg3)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            return _InteropCallApply<T>(methodName, jsArgs);
+        }
+        internal T InteropCall<T1, T2, T3, T4, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            return _InteropCallApply<T>(methodName, jsArgs);
+        }
+        internal T InteropCall<T1, T2, T3, T4, T5, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
+            return _InteropCallApply<T>(methodName, jsArgs);
+        }
+        internal T InteropCall<T1, T2, T3, T4, T5, T6, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
+            return _InteropCallApply<T>(methodName, jsArgs);
+        }
+        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
+            GetMarshaller<T7>().NetToJS(typeof(T7), jsArgs!, 6, arg7!);
+            return _InteropCallApply<T>(methodName, jsArgs);
+        }
+        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
+            GetMarshaller<T7>().NetToJS(typeof(T7), jsArgs!, 6, arg7!);
+            GetMarshaller<T8>().NetToJS(typeof(T8), jsArgs!, 7, arg8!);
+            return _InteropCallApply<T>(methodName, jsArgs);
+        }
+        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
+            GetMarshaller<T7>().NetToJS(typeof(T7), jsArgs!, 6, arg7!);
+            GetMarshaller<T8>().NetToJS(typeof(T8), jsArgs!, 7, arg8!);
+            GetMarshaller<T9>().NetToJS(typeof(T9), jsArgs!, 8, arg9!);
+            return _InteropCallApply<T>(methodName, jsArgs);
+        }
+        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
+            GetMarshaller<T7>().NetToJS(typeof(T7), jsArgs!, 6, arg7!);
+            GetMarshaller<T8>().NetToJS(typeof(T8), jsArgs!, 7, arg8!);
+            GetMarshaller<T9>().NetToJS(typeof(T9), jsArgs!, 8, arg9!);
+            GetMarshaller<T10>().NetToJS(typeof(T10), jsArgs!, 9, arg10!);
+            return _InteropCallApply<T>(methodName, jsArgs);
+        }
         /// <summary>
         /// Calls a SpawnJSInterop static method synchronously, marshalling <paramref name="args"/> into a JS
         /// array and reading the result back as <typeparamref name="T"/>.
@@ -373,73 +482,85 @@ namespace SpawnDev.SpawnJS
                     }
                 }
             }
+            return _InteropCallApply<T>(methodName, jsArgs);
+        }
+        internal T _InteropCallApply<T>(string methodName, SpawnJSObjectReference? jsArgs = null)
+        {
+            var returnType = typeof(T);
+            var inMarshaller = GetMarshaller<T>();
             var returnTypeIndex = inMarshaller?.ReturnType ?? ReturnType.Void;
             T ret = default!;
             var argsId = jsArgs?.Id ?? UndefinedId;
-            switch (returnTypeIndex)
+            try
             {
-                case ReturnType.Void:
-                    {
-                        _spawnJSInteropCallVoid((double)returnTypeIndex, methodName, argsId);
-                    }
-                    break;
-                case ReturnType.Double:
-                    {
-                        var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId);
-                        ret = inMarshaller!.JSToNet(returnType!, fromJS);
-                    }
-                    break;
-                case ReturnType.Boolean:
-                    {
-                        var fromJS = _spawnJSInteropCallBoolean((double)returnTypeIndex, methodName, argsId);
-                        ret = inMarshaller!.JSToNet(returnType, fromJS);
-                    }
-                    break;
-                case ReturnType.DoubleNullable:
-                    {
-                        var fromJS = _spawnJSInteropCallDoubleNullable((double)returnTypeIndex, methodName, argsId);
-                        ret = inMarshaller!.JSToNet(returnType!, fromJS);
-                    }
-                    break;
-                case ReturnType.BooleanNullable:
-                    {
-                        var fromJS = _spawnJSInteropCallBooleanNullable((double)returnTypeIndex, methodName, argsId);
-                        ret = inMarshaller!.JSToNet(returnType!, fromJS);
-                    }
-                    break;
-                case ReturnType.String:
-                    {
-                        var fromJS = _spawnJSInteropCallString((double)returnTypeIndex, methodName, argsId);
-                        ret = inMarshaller!.JSToNet(returnType!, fromJS);
-                    }
-                    break;
-                case ReturnType.SpawnJSObjectReference:
-                    {
-                        var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId);
-                        var spawnJSObjectReference = SpawnJSObjectReference.FromID(fromJS, false);
-                        ret = inMarshaller!.JSToNet(returnType!, spawnJSObjectReference!);
-                    }
-                    break;
-                case ReturnType.SpawnJSObjectReferenceNonNullable:
-                    {
-                        var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId);
-                        var spawnJSObjectReference = SpawnJSObjectReference.FromID(fromJS, true);
-                        ret = inMarshaller!.JSToNet(returnType!, spawnJSObjectReference!);
-                    }
-                    break;
-                case ReturnType.Json:
-                    {
-                        var fromJS = _spawnJSInteropCallString((double)returnTypeIndex, methodName, argsId);
-                        ret = inMarshaller!.JSToNet(returnType!, fromJS);
-                    }
-                    break;
-                default:
-                    throw new Exception($"Invalid ReturnType for marshaller: {inMarshaller?.GetType().Name} {returnTypeIndex}");
+                switch (returnTypeIndex)
+                {
+                    case ReturnType.Void:
+                        {
+                            _spawnJSInteropCallVoid((double)returnTypeIndex, methodName, argsId);
+                        }
+                        break;
+                    case ReturnType.Double:
+                        {
+                            var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId);
+                            ret = inMarshaller!.JSToNet(returnType!, fromJS);
+                        }
+                        break;
+                    case ReturnType.Boolean:
+                        {
+                            var fromJS = _spawnJSInteropCallBoolean((double)returnTypeIndex, methodName, argsId);
+                            ret = inMarshaller!.JSToNet(returnType, fromJS);
+                        }
+                        break;
+                    case ReturnType.DoubleNullable:
+                        {
+                            var fromJS = _spawnJSInteropCallDoubleNullable((double)returnTypeIndex, methodName, argsId);
+                            ret = inMarshaller!.JSToNet(returnType!, fromJS);
+                        }
+                        break;
+                    case ReturnType.BooleanNullable:
+                        {
+                            var fromJS = _spawnJSInteropCallBooleanNullable((double)returnTypeIndex, methodName, argsId);
+                            ret = inMarshaller!.JSToNet(returnType!, fromJS);
+                        }
+                        break;
+                    case ReturnType.String:
+                        {
+                            var fromJS = _spawnJSInteropCallString((double)returnTypeIndex, methodName, argsId);
+                            ret = inMarshaller!.JSToNet(returnType!, fromJS);
+                        }
+                        break;
+                    case ReturnType.SpawnJSObjectReference:
+                        {
+                            var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId);
+                            var spawnJSObjectReference = SpawnJSObjectReference.FromID(fromJS, false);
+                            ret = inMarshaller!.JSToNet(returnType!, spawnJSObjectReference!);
+                        }
+                        break;
+                    case ReturnType.SpawnJSObjectReferenceNonNullable:
+                        {
+                            var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId);
+                            var spawnJSObjectReference = SpawnJSObjectReference.FromID(fromJS, true);
+                            ret = inMarshaller!.JSToNet(returnType!, spawnJSObjectReference!);
+                        }
+                        break;
+                    case ReturnType.Json:
+                        {
+                            var fromJS = _spawnJSInteropCallString((double)returnTypeIndex, methodName, argsId);
+                            ret = inMarshaller!.JSToNet(returnType!, fromJS);
+                        }
+                        break;
+                    default:
+                        throw new Exception($"Invalid ReturnType for marshaller: {inMarshaller?.GetType().Name} {returnTypeIndex}");
+                }
             }
-            if (jsArgs != null)
+            finally
             {
-                // returen the array to the usable call queue. it has already been reset by js
-                _callArrays.Enqueue(jsArgs);
+                if (jsArgs != null)
+                {
+                    // returen the array to the usable call queue. it has already been reset by js
+                    _callArrays.Enqueue(jsArgs);
+                }
             }
             return ret;
         }
@@ -465,11 +586,265 @@ namespace SpawnDev.SpawnJS
         /// [JSExport] with that id, which completes the task. The assembly export table is loaded once on
         /// the first async call.
         /// </summary>
-        internal async Task<T> InteropCallApplyAsync<T>(string methodName, object?[]? args = null)
+        internal Task<T> InteropCallAsync<T1, T>(string methodName)
         {
-            var returnType = typeof(T);
+            return _InteropCallApplyAsync<T>(methodName);
+        }
+        internal Task<T> InteropCallAsync<T1, T>(string methodName, T1 arg1)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            return _InteropCallApplyAsync<T>(methodName, jsArgs);
+        }
+        internal Task<T> InteropCallAsync<T1, T2, T>(string methodName, T1 arg1, T2 arg2)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            return _InteropCallApplyAsync<T>(methodName, jsArgs);
+        }
+        internal Task<T> InteropCallAsync<T1, T2, T3, T>(string methodName, T1 arg1, T2 arg2, T3 arg3)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            return _InteropCallApplyAsync<T>(methodName, jsArgs);
+        }
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            return _InteropCallApplyAsync<T>(methodName, jsArgs);
+        }
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
+            return _InteropCallApplyAsync<T>(methodName, jsArgs);
+        }
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
+            return _InteropCallApplyAsync<T>(methodName, jsArgs);
+        }
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
+            GetMarshaller<T7>().NetToJS(typeof(T7), jsArgs!, 6, arg7!);
+            return _InteropCallApplyAsync<T>(methodName, jsArgs);
+        }
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
+            GetMarshaller<T7>().NetToJS(typeof(T7), jsArgs!, 6, arg7!);
+            GetMarshaller<T8>().NetToJS(typeof(T8), jsArgs!, 7, arg8!);
+            return _InteropCallApplyAsync<T>(methodName, jsArgs);
+        }
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
+            GetMarshaller<T7>().NetToJS(typeof(T7), jsArgs!, 6, arg7!);
+            GetMarshaller<T8>().NetToJS(typeof(T8), jsArgs!, 7, arg8!);
+            GetMarshaller<T9>().NetToJS(typeof(T9), jsArgs!, 8, arg9!);
+            return _InteropCallApplyAsync<T>(methodName, jsArgs);
+        }
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
+            GetMarshaller<T7>().NetToJS(typeof(T7), jsArgs!, 6, arg7!);
+            GetMarshaller<T8>().NetToJS(typeof(T8), jsArgs!, 7, arg8!);
+            GetMarshaller<T9>().NetToJS(typeof(T9), jsArgs!, 8, arg9!);
+            GetMarshaller<T10>().NetToJS(typeof(T10), jsArgs!, 9, arg10!);
+            return _InteropCallApplyAsync<T>(methodName, jsArgs);
+        }
+        async Task<T> _InteropCallApplyAsync<T>(string methodName, SpawnJSObjectReference? jsArgs = null)
+        {
             _loadAssemblyExportsTask ??= _spawnJSInteropLoadExportsAsync(DotnetInstance.Id, Assembly.GetExecutingAssembly().GetName().Name!);
             if (!_loadAssemblyExportsTask.IsCompleted) await _loadAssemblyExportsTask;
+            var typeOfT = typeof(T);
+            var returnMarshaller = GetMarshaller<T>();
+            var returnTypeIndex = returnMarshaller.ReturnType;
+            var tcs = new TaskCompletionSource<T>();
+            var asyncCallbackId = ++_asyncCallbackId;
+            switch (returnTypeIndex)
+            {
+                case ReturnType.Void:
+                    {
+                        _voidCallbacks.TryAdd(asyncCallbackId, (error) =>
+                        {
+                            if (error == null) tcs.TrySetResult(default!);
+                            else tcs.TrySetException(new Exception(error));
+                        });
+                    }
+                    break;
+                case ReturnType.Double:
+                    _doubleCallbacks.TryAdd(asyncCallbackId, (value, error) =>
+                    {
+                        if (error != null) tcs.TrySetException(new Exception(error));
+                        else
+                        {
+                            var ret = returnMarshaller.JSToNet(typeOfT, value!);
+                            tcs.TrySetResult(ret);
+                        }
+                    });
+                    break;
+                case ReturnType.Boolean:
+                    {
+                        _booleanCallbacks.TryAdd(asyncCallbackId, (value, error) =>
+                        {
+                            if (error != null) tcs.TrySetException(new Exception(error));
+                            else
+                            {
+                                var ret = returnMarshaller.JSToNet(typeOfT, value);
+                                tcs.TrySetResult(ret);
+                            }
+                        });
+                    }
+                    break;
+                case ReturnType.DoubleNullable:
+                    _doubleNullableCallbacks.TryAdd(asyncCallbackId, (value, error) =>
+                    {
+                        if (error != null) tcs.TrySetException(new Exception(error));
+                        else
+                        {
+                            var ret = returnMarshaller.JSToNet(typeOfT, value!);
+                            tcs.TrySetResult(ret);
+                        }
+                    });
+                    break;
+                case ReturnType.BooleanNullable:
+                    {
+                        _booleanNullableCallbacks.TryAdd(asyncCallbackId, (value, error) =>
+                        {
+                            if (error != null) tcs.TrySetException(new Exception(error));
+                            else
+                            {
+                                var ret = returnMarshaller.JSToNet(typeOfT, value);
+                                tcs.TrySetResult(ret);
+                            }
+                        });
+                    }
+                    break;
+                case ReturnType.String:
+                    {
+                        _stringCallbacks.TryAdd(asyncCallbackId, (value, error) =>
+                        {
+                            if (error != null) tcs.TrySetException(new Exception(error));
+                            else
+                            {
+                                var ret = returnMarshaller.JSToNet(typeOfT, value!);
+                                tcs.TrySetResult(ret);
+                            }
+                        });
+                    }
+                    break;
+                case ReturnType.SpawnJSObjectReference:
+                    {
+                        _doubleCallbacks.TryAdd(asyncCallbackId, (value, error) =>
+                        {
+                            if (error != null) tcs.TrySetException(new Exception(error));
+                            else
+                            {
+                                var spawnJSObjectReference = SpawnJSObjectReference.FromID(value, false);
+                                var ret = returnMarshaller.JSToNet(typeOfT, spawnJSObjectReference!);
+                                tcs.TrySetResult(ret);
+                            }
+                        });
+                    }
+                    break;
+                case ReturnType.SpawnJSObjectReferenceNonNullable:
+                    {
+                        _doubleCallbacks.TryAdd(asyncCallbackId, (value, error) =>
+                        {
+                            if (error != null) tcs.TrySetException(new Exception(error));
+                            else
+                            {
+                                var spawnJSObjectReference = SpawnJSObjectReference.FromID(value, true);
+                                var ret = returnMarshaller.JSToNet(typeOfT, spawnJSObjectReference!);
+                                tcs.TrySetResult(ret);
+                            }
+                        });
+                    }
+                    break;
+                case ReturnType.Json:
+                    {
+                        _stringCallbacks.TryAdd(asyncCallbackId, (value, error) =>
+                        {
+                            if (error != null) tcs.TrySetException(new Exception(error));
+                            else
+                            {
+                                var ret = returnMarshaller.JSToNet(typeOfT, value!);
+                                tcs.TrySetResult(ret);
+                            }
+                        });
+                    }
+                    break;
+                default:
+                    return default!;
+            }
+            try
+            {
+                var argsId = jsArgs?.Id ?? UndefinedId;
+                // make the js call
+                _spawnJSInteropCallAsync((double)returnMarshaller.ReturnType, DotnetInstance.Id, asyncCallbackId, methodName, argsId);
+                // wait for the tcs to complete or throw
+                return await tcs.Task.ConfigureAwait(false);
+            }
+            finally
+            {
+                if (jsArgs != null)
+                {
+                    // returen the array to the usable call queue. it has already been reset by js
+                    _callArrays.Enqueue(jsArgs);
+                }
+            }
+        }
+        /// <summary>
+        /// Calls a SpawnJSInterop static method asynchronously. A per-call id is registered against a
+        /// TaskCompletionSource; the JS side runs the underlying promise then invokes an AsyncCallResolved*
+        /// [JSExport] with that id, which completes the task. The assembly export table is loaded once on
+        /// the first async call.
+        /// </summary>
+        internal async Task<T> InteropCallApplyAsync<T>(string methodName, object?[]? args = null)
+        {
             // The JS side empties this array's slot after the call, so it can be returned to the pool.
             SpawnJSObjectReference? jsArgs = null;
             if (args != null && args.Length > 0)
@@ -497,145 +872,7 @@ namespace SpawnDev.SpawnJS
                     }
                 }
             }
-            T ret = default!;
-            var typeOfT = typeof(T);
-            var returnMarshaller = GetMarshaller<T>();
-            var returnTypeIndex = returnMarshaller.ReturnType;
-            var tcs = new TaskCompletionSource();
-            var asyncCallbackId = ++_asyncCallbackId;
-            switch (returnTypeIndex)
-            {
-                case ReturnType.Void:
-                    {
-                        _voidCallbacks.TryAdd(asyncCallbackId, (error) =>
-                        {
-                            if (error == null) tcs.TrySetResult();
-                            else tcs.TrySetException(new Exception(error));
-                        });
-                    }
-                    break;
-                case ReturnType.Double:
-                    _doubleCallbacks.TryAdd(asyncCallbackId, (value, error) =>
-                    {
-                        if (error != null) tcs.TrySetException(new Exception(error));
-                        else
-                        {
-                            ret = returnMarshaller.JSToNet(typeOfT, value!);
-                            tcs.TrySetResult();
-                        }
-                    });
-                    break;
-                case ReturnType.Boolean:
-                    {
-                        _booleanCallbacks.TryAdd(asyncCallbackId, (value, error) =>
-                        {
-                            if (error != null) tcs.TrySetException(new Exception(error));
-                            else
-                            {
-                                ret = returnMarshaller.JSToNet(typeOfT, value);
-                                tcs.TrySetResult();
-                            }
-                        });
-                    }
-                    break;
-                case ReturnType.DoubleNullable:
-                    _doubleNullableCallbacks.TryAdd(asyncCallbackId, (value, error) =>
-                    {
-                        if (error != null) tcs.TrySetException(new Exception(error));
-                        else
-                        {
-                            ret = returnMarshaller.JSToNet(typeOfT, value!);
-                            tcs.TrySetResult();
-                        }
-                    });
-                    break;
-                case ReturnType.BooleanNullable:
-                    {
-                        _booleanNullableCallbacks.TryAdd(asyncCallbackId, (value, error) =>
-                        {
-                            if (error != null) tcs.TrySetException(new Exception(error));
-                            else
-                            {
-                                ret = returnMarshaller.JSToNet(typeOfT, value);
-                                tcs.TrySetResult();
-                            }
-                        });
-                    }
-                    break;
-                case ReturnType.String:
-                    {
-                        _stringCallbacks.TryAdd(asyncCallbackId, (value, error) =>
-                        {
-                            if (error != null) tcs.TrySetException(new Exception(error));
-                            else
-                            {
-                                ret = returnMarshaller.JSToNet(typeOfT, value!);
-                                tcs.TrySetResult();
-                            }
-                        });
-                    }
-                    break;
-                case ReturnType.SpawnJSObjectReference:
-                    {
-                        _doubleCallbacks.TryAdd(asyncCallbackId, (value, error) =>
-                        {
-                            if (error != null) tcs.TrySetException(new Exception(error));
-                            else
-                            {
-                                var spawnJSObjectReference = SpawnJSObjectReference.FromID(value, false);
-                                ret = returnMarshaller.JSToNet(typeOfT, spawnJSObjectReference!);
-                                tcs.TrySetResult();
-                            }
-                        });
-                    }
-                    break;
-                case ReturnType.SpawnJSObjectReferenceNonNullable:
-                    {
-                        _doubleCallbacks.TryAdd(asyncCallbackId, (value, error) =>
-                        {
-                            if (error != null) tcs.TrySetException(new Exception(error));
-                            else
-                            {
-                                var spawnJSObjectReference = SpawnJSObjectReference.FromID(value, true);
-                                ret = returnMarshaller.JSToNet(typeOfT, spawnJSObjectReference!);
-                                tcs.TrySetResult();
-                            }
-                        });
-                    }
-                    break;
-                case ReturnType.Json:
-                    {
-                        _stringCallbacks.TryAdd(asyncCallbackId, (value, error) =>
-                        {
-                            if (error != null) tcs.TrySetException(new Exception(error));
-                            else
-                            {
-                                ret = returnMarshaller.JSToNet(typeOfT, value!);
-                                tcs.TrySetResult();
-                            }
-                        });
-                    }
-                    break;
-                default:
-                    throw new Exception($"Invalid ReturnType");
-            }
-            try
-            {
-                var argsId = jsArgs?.Id ?? UndefinedId;
-                // make the js call
-                _spawnJSInteropCallAsync((double)returnMarshaller.ReturnType, DotnetInstance.Id, asyncCallbackId, methodName, argsId);
-                // wait for the tcs to complete or throw
-                await tcs.Task.ConfigureAwait(false);
-            }
-            finally
-            {
-                if (jsArgs != null)
-                {
-                    // returen the array to the usable call queue. it has already been reset by js
-                    _callArrays.Enqueue(jsArgs);
-                }
-            }
-            return ret;
+            return await _InteropCallApplyAsync<T>(methodName, jsArgs);
         }
         // NOTE: Callback (.Net method passed to JS and invoked directly) is not wired up yet. These two
         // exports are placeholders for that path and currently only log.

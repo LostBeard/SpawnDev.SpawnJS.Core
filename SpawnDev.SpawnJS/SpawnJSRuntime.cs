@@ -63,7 +63,7 @@ namespace SpawnDev.SpawnJS
             // later takes precedence when more than one reports it can marshal a type. The more specific /
             // higher-priority handlers (arrays, object references) are therefore added last.
             Marshallers.Add(new VoidMarshaller());
-            Marshallers.Add(new NullMarshaller());
+            Marshallers.Add(new ObjectMarshaller());
             Marshallers.Add(new StringMarshaller());
             Marshallers.Add(new DoubleMarshaller());
             Marshallers.Add(new DoubleNullableMarshaller());
