@@ -1,5 +1,4 @@
 ﻿using SpawnDev.SpawnJS.Marshal;
-using System.Reflection;
 
 namespace SpawnDev.SpawnJS.Marshallers
 {
@@ -29,6 +28,27 @@ namespace SpawnDev.SpawnJS.Marshallers
                 }
             }
         }
-        public override void NetToJS(Type? typeToConvert, SpawnJSObjectReference jsParent, string jsKey, object value) => jsParent.PropertySetNull(jsKey);
+        public override void NetToJS(Type? typeToConvert, SpawnJSObjectReference jsParent, string jsKey, object value)
+        {
+            if (value == null)
+            {
+                jsParent.PropertySetNull(jsKey);
+                return;
+            }
+            var type = value.GetType();
+            if (type == typeof(object))
+            {
+                throw new NotImplementedException("TODO");
+            }
+            else
+            {
+                ((Delegate)writeTyped<object>).InvokeGeneric(type, value);
+                void writeTyped<T>(T value)
+                {
+                    var marshaller = JS.GetMarshaller<T>();
+                    marshaller.NetToJS(type, jsParent, jsKey, value);
+                }
+            }
+        }
     }
 }

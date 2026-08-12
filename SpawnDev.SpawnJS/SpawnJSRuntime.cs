@@ -48,7 +48,7 @@ namespace SpawnDev.SpawnJS
         /// When true, marshaller selection is logged to the console. Off by default so libraries stay quiet.
         /// </summary>
         public bool Verbose;
-
+        internal string[] InteropMethods;
         /// <summary>
         /// Creates the runtime. The base id is <see cref="GlobalThis"/> so the instance addresses JS
         /// <c>globalThis</c> directly. Registers the built-in marshallers in priority order (last wins).
@@ -72,6 +72,7 @@ namespace SpawnDev.SpawnJS
             Marshallers.Add(new SpawnJSObjectReferenceMarshaller());
             Marshallers.Add(new ArrayMarshaller<object>());
             Marshallers.Add(new ListMarshaller<object>());
+            InteropMethods = Get<string[]>("SpawnJSInterop._methodMapNames");
         }
     }
 }

@@ -17,14 +17,25 @@
     if (globalThis.SpawnJSInterop) return;
 
     class SpawnJSInterop {
-        static _methodMapNames = null;
+        static _methodMapNames = [];
         static _methodMap = [];
         static verbose = false;
         // The id -> JS value table. Holds every value .Net currently references.
         static spawnJSObjects = {};
         // Monotonic id source; never reused, so a stale .Net id can never collide with a live value.
         static _sjsObjectIdNext = 0;
-
+        static {
+            SpawnJSInterop._methodMap = [];
+            SpawnJSInterop._methodMapNames = [];
+            var keys = Reflect.ownKeys(SpawnJSInterop);
+            for (const pName of keys) {
+                var propVal = SpawnJSInterop[pName];
+                if (typeof propVal === 'function') {
+                    SpawnJSInterop._methodMap.push(propVal.bind(SpawnJSInterop))
+                    SpawnJSInterop._methodMapNames.push(pName);
+                }
+            }
+        }
         static spawnJSObjectNewObject() {
             return SpawnJSInterop.spawnJSObjectHold({});
         }
@@ -261,20 +272,22 @@
         // The args array is fetched AND replaced with a fresh empty [] in the same slot, so the .Net side's
         // pooled argument-array reference (same id) comes back emptied and ready to reuse on the next call.
         static _spawnJSInteropCall(returnType, methodName, argsId) {
+            var target = typeof methodName === 'string' ? SpawnJSInterop[methodName] : SpawnJSInterop._methodMap[methodName];
             var args = argsId === null || argsId === undefined ? null : SpawnJSInterop.spawnJSObjectGetAndReplace(argsId, []);
-            var ret = !args ? SpawnJSInterop[methodName]() : SpawnJSInterop[methodName](...args);
+            var ret = !args ? target() : target(...args);
             // shape the result to match the .Net side's expected returnType
             ret = SpawnJSInterop._serializeToNet(returnType, ret);
             return ret;
         }
         // Main .Net to JS entrypoint
         static async _spawnJSInteropCallAsync(returnType, dotnetId, asyncCallId, methodName, argsId) {
+            var target = typeof methodName === 'string' ? SpawnJSInterop[methodName] : SpawnJSInterop._methodMap[methodName];
             var dotnet = SpawnJSInterop.spawnJSObjectGet(dotnetId);
             var args = argsId === null || argsId === undefined ? null : SpawnJSInterop.spawnJSObjectGetAndReplace(argsId, []);
             var error = null;
             var ret = null;
             try {
-                ret = !args ? SpawnJSInterop[methodName]() : SpawnJSInterop[methodName](...args);
+                ret = !args ? target() : target(...args);
                 ret = await ret;
                 // prepare using returnType
                 ret = SpawnJSInterop._serializeToNet(returnType, ret);
@@ -415,4 +428,5 @@
 
     }
     globalThis.SpawnJSInterop = SpawnJSInterop;
+    SpawnJSInterop.init();
 })();
