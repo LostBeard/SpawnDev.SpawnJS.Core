@@ -22,6 +22,8 @@ namespace SpawnDev.SpawnJS
         public const long Null = -3;
         /// <summary>Sentinel id for the JS object table itself.</summary>
         public const long SpawnJSObjects = -4;
+        /// <summary>Sentinel id for SpawnJSInterop.</summary>
+        public const long SpawnJSInterop = -5;
         /// <summary>True once this handle has been disposed (its JS table entry released).</summary>
         public bool IsDisposed { get; private set; }
         /// <summary>Shortcut to the runtime singleton.</summary>
@@ -40,6 +42,14 @@ namespace SpawnDev.SpawnJS
             Id = sjsId;
         }
 
+        /// <summary>
+        /// Returns the referenced Javascript value as type T
+        /// </summary>
+        /// <typeparam name="T">The type to return the referenced Javascript value as</typeparam>
+        /// <returns>The referenced Javascript value as type T</returns>
+        public T As<T>() => JS.As<T>(this);
+
+        #region ReleaseAs
         /// <summary>
         /// releases the SpawnJSObject reference and returns underlying value
         /// </summary>
@@ -107,6 +117,7 @@ namespace SpawnDev.SpawnJS
             return ret!;
         }
 
+        #endregion
         // Get/Set/CallApply are the marshalled convenience surface: they accept arbitrary .Net values and
         // route through the runtime's marshaller pipeline (InteropCallApply). For primitive keys/values the
         // typed, no-marshalling fast path in SpawnJSObjectReference.Property.cs (PropertyGet*/PropertySet)
@@ -119,21 +130,79 @@ namespace SpawnDev.SpawnJS
         public T Get<T>(double key) => JS.InteropCall<double, double, T>("propertyGet", Id, key);
         public T Get<T>(string key) => JS.InteropCall<double, string, T>("propertyGet", Id, key);
 
-        //public object? Get(Type type, object key) => JS.InteropCallApply(type, "propertyGet", new object?[] { Id, key });
-        //public object? Get(Type type, double key) => JS.InteropCallApply(type, "propertyGet", new object?[] { Id, key });
-        //public object? Get(Type type, string key) => JS.InteropCallApply(type, "propertyGet", new object?[] { Id, key });
+        public SpawnJSObjectReference? Get(object key) => JS.InteropCall<double, object, SpawnJSObjectReference>("propertyGet", Id, key);
+        public SpawnJSObjectReference? Get(double key) => JS.InteropCall<double, double, SpawnJSObjectReference>("propertyGet", Id, key);
+        public SpawnJSObjectReference? Get(string key) => JS.InteropCall<double, string, SpawnJSObjectReference>("propertyGet", Id, key);
 
         public Task<T> GetAsync<T>(object key) => JS.InteropCallAsync<double, object, T>("propertyGet", Id, key);
         public Task<T> GetAsync<T>(double key) => JS.InteropCallAsync<double, double, T>("propertyGet", Id, key);
         public Task<T> GetAsync<T>(string key) => JS.InteropCallAsync<double, string, T>("propertyGet", Id, key);
 
-        //public Task<object?> GetAsync(Type type, object key) => JS.InteropCallApplyAsync(type, "propertyGet", new object?[] { Id, key });
-        //public Task<object?> GetAsync(Type type, double key) => JS.InteropCallApplyAsync(type, "propertyGet", new object?[] { Id, key });
-        //public Task<object?> GetAsync(Type type, string key) => JS.InteropCallApplyAsync(type, "propertyGet", new object?[] { Id, key });
+        public Task<SpawnJSObjectReference> GetAsync(object key) => JS.InteropCallAsync<double, object, SpawnJSObjectReference>("propertyGet", Id, key);
+        public Task<SpawnJSObjectReference> GetAsync(double key) => JS.InteropCallAsync<double, double, SpawnJSObjectReference>("propertyGet", Id, key);
+        public Task<SpawnJSObjectReference> GetAsync(string key) => JS.InteropCallAsync<double, string, SpawnJSObjectReference>("propertyGet", Id, key);
 
         public T CallApply<T>(object key, object?[]? args = null) => JS.InteropCall<double, object, object?[]?, T>("propertyCallApply", Id, key, args);
         public T CallApply<T>(double key, object?[]? args = null) => JS.InteropCall<double, double, object?[]?, T>("propertyCallApply", Id, key, args);
         public T CallApply<T>(string key, object?[]? args = null) => JS.InteropCall<double, string, object?[]?, T>("propertyCallApply", Id, key, args);
+
+
+        public T Call<T>(object key) 
+            => JS.InteropCall<double, object, T>("propertyCall", Id, key);
+        public T Call<T1, T>(object key, T1 arg1) 
+            => JS.InteropCall<double, object, T1, T>("propertyCall", Id, key, arg1);
+        public T Call<T1, T2, T>(object key, T1 arg1, T2 arg2)
+            => JS.InteropCall<double, object, T1, T2, T>("propertyCall", Id, key, arg1, arg2);
+        public T Call<T1, T2, T3, T>(object key, T1 arg1, T2 arg2, T3 arg3)
+            => JS.InteropCall<double, object, T1, T2, T3, T>("propertyCall", Id, key, arg1, arg2, arg3);
+        public T Call<T1, T2, T3, T4, T>(object key, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4);
+        public T Call<T1, T2, T3, T4, T5, T>(object key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T5, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5);
+        public T Call<T1, T2, T3, T4, T5, T6, T>(object key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T5, T6, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6);
+        public T Call<T1, T2, T3, T4, T5, T6, T7, T>(object key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T5, T6, T7, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+        public T Call<T1, T2, T3, T4, T5, T6, T7, T8, T>(object key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8) 
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T5, T6, T7, T8, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+
+        public T Call<T>(double key) 
+            => JS.InteropCall<double, object, T>("propertyCall", Id, key);
+        public T Call<T1, T>(double key, T1 arg1)
+            => JS.InteropCall<double, object, T1, T>("propertyCall", Id, key, arg1);
+        public T Call<T1, T2, T>(double key, T1 arg1, T2 arg2)
+            => JS.InteropCall<double, object, T1, T2, T>("propertyCall", Id, key, arg1, arg2);
+        public T Call<T1, T2, T3, T>(double key, T1 arg1, T2 arg2, T3 arg3)
+            => JS.InteropCall<double, object, T1, T2, T3, T>("propertyCall", Id, key, arg1, arg2, arg3);
+        public T Call<T1, T2, T3, T4, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4);
+        public T Call<T1, T2, T3, T4, T5, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T5, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5);
+        public T Call<T1, T2, T3, T4, T5, T6, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T5, T6, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6);
+        public T Call<T1, T2, T3, T4, T5, T6, T7, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T5, T6, T7, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+        public T Call<T1, T2, T3, T4, T5, T6, T7, T8, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T5, T6, T7, T8, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+
+        public T Call<T>(string key) 
+            => JS.InteropCall<double, object, T>("propertyCall", Id, key);
+        public T Call<T1, T>(string key, T1 arg1)
+            => JS.InteropCall<double, object, T1, T>("propertyCall", Id, key, arg1);
+        public T Call<T1, T2, T>(string key, T1 arg1, T2 arg2)
+            => JS.InteropCall<double, object, T1, T2, T>("propertyCall", Id, key, arg1, arg2);
+        public T Call<T1, T2, T3, T>(string key, T1 arg1, T2 arg2, T3 arg3)
+            => JS.InteropCall<double, object, T1, T2, T3, T>("propertyCall", Id, key, arg1, arg2, arg3);
+        public T Call<T1, T2, T3, T4, T>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4);
+        public T Call<T1, T2, T3, T4, T5, T>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T5, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5);
+        public T Call<T1, T2, T3, T4, T5, T6, T>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T5, T6, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6);
+        public T Call<T1, T2, T3, T4, T5, T6, T7, T>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T5, T6, T7, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+        public T Call<T1, T2, T3, T4, T5, T6, T7, T8, T>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+            => JS.InteropCall<double, object, T1, T2, T3, T4, T5, T6, T7, T8, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
 
         public Task<T> CallApplyAsync<T>(object key, object?[]? args = null) => JS.InteropCallAsync<double, object, object?[]?, T>("propertyCallApply", Id, key, args);
         public Task<T> CallApplyAsync<T>(double key, object?[]? args = null) => JS.InteropCallAsync<double, double, object?[]?, T>("propertyCallApply", Id, key, args);
@@ -142,6 +211,7 @@ namespace SpawnDev.SpawnJS
         public void CallApplyVoid(object key, object?[]? args = null) => JS.InteropCall<double, object, object?[]?, VoidType>("propertyCallApply", Id, key, args);
         public void CallApplyVoid(double key, object?[]? args = null) => JS.InteropCall<double, double, object?[]?, VoidType>("propertyCallApply", Id, key, args);
         public void CallApplyVoid(string key, object?[]? args = null) => JS.InteropCall<double, string, object?[]?, VoidType>("propertyCallApply", Id, key, args);
+
         public Task CallApplyVoidAsync(object key, object?[]? args = null) => JS.InteropCallAsync<double, object, object?[]?, VoidType>("propertyCallApply", Id, key, args);
         public Task CallApplyVoidAsync(double key, object?[]? args = null) => JS.InteropCallAsync<double, double, object?[]?, VoidType>("propertyCallApply", Id, key, args);
         public Task CallApplyVoidAsync(string key, object?[]? args = null) => JS.InteropCallAsync<double, string, object?[]?, VoidType>("propertyCallApply", Id, key, args);

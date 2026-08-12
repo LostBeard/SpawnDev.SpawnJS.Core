@@ -3,50 +3,127 @@
 // readback, an async readback, and an async DOM method call (document.write). The `var nmt = true;` /
 // `var nmt1 = true;` lines are intentional debugger breakpoint anchors - leave them in place.
 using SpawnDev.SpawnJS;
-using SpawnDev.SpawnJS.Marshal;
+using SpawnDev.SpawnJS.Marshallers;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Threading.Tasks;
 
 try
 {
     var JS = SpawnJSRuntime.Instance;
     JS.Verbose = true;
 
+    using var document = JS.PropertyGetSpawnJSObjectReference("document");
+    document.CallApplyVoid("write", new object?[] { $@"Starting...<br/>" });
+    await Task.Delay(1);
 
-    //{
 
-    //    var gg2 = new List<string> { "Hello", "world!" };
-    //    JS.Set("_test", gg2);
-    //    var rbI = JS.Get<List<string>>("_test");
-    //    var nmt = true;
-    //}
-    //{
-    //    var gg2 = new string[] { "Hello", "world!" };
-    //    JS.Set("_test", gg2);
-    //    var rbI = JS.Get<string[]>("_test");
-    //    var nmt = true;
-    //}
+    byte[] data = new byte[] { 10, 20, 30, 40 };
+    unsafe
+    {
+        fixed (byte* ptr = data)
+        {
+            // Convert the raw pointer to a standardized IntPtr or nuint if needed
+            IntPtr address = (IntPtr)ptr;
+            var heapView = new HeapViewDescriptor(address.ToInt64(), data.Length);
+            JS.Set("_myHeapView1", heapView);
+            var uint8Array1 = JS.As<SpawnJSObjectReference>(new HeapViewDescriptor(address.ToInt64(), data.Length));
+            var length = uint8Array1.Get<double>("length");
+            var growth = JS.GrowHeap();
+            Console.WriteLine("growth", growth);
+            JS.Set("_myHeapView2", heapView);
+            var uint8Array2 = JS.As<SpawnJSObjectReference>(new HeapViewDescriptor(address.ToInt64(), data.Length));
+            JS.Set("_myHeapView3", uint8Array2);
+            JS.Set("_myHeapView4", uint8Array1);
+        }
+        
+
+    }
 
     {
-        var sw = Stopwatch.StartNew();
-        var array = JS.NewApply("Array");
-        JS.Set("_marray", array);
-        var cnt = 10000;
-        var callsPerIteration = 2;
-        for (var i = 0; i < cnt; i++)
-        {
-            using var window2 = JS.PropertyGetSpawnJSObjectReference("window");
-            array.PropertySet(i, window2);
-        }
-        var callCountTotal = callsPerIteration * cnt;
-        var costPerCall = sw.Elapsed.TotalMicroseconds / (cnt * callsPerIteration); // 2 calls per iteration, teh window get and the array index set
-        var elapsed = sw.Elapsed.TotalMicroseconds;
-        Console.WriteLine($"SpawnJS Total .Net to JS calls: {callCountTotal} Cost per call: {costPerCall} microseconds - Total elapsed: {elapsed} microseconds");
-        // 2026-08-11 SpawnJS.Core  Total .Net to JS calls: 20000 Cost per call:  1.515 microseconds - Total elapsed:   30400 microseconds
-        // 2026-08-11 SpawnJS (old) Total .Net to JS calls: 20000 Cost per call: 16.519 microseconds - Total elapsed:  330600 microseconds
-        // 2026-08-11 BlazorJS      Total .Net to JS calls: 20000 Cost per call: 91.285 microseconds - Total elapsed: 1825700 microseconds
+
+        var gg2 = new List<string> { "Hello", "world!42" };
+        JS.Set("_test", gg2);
+        var rbI = JS.Get<List<string>>("_test");
+        var nmt = true;
     }
+    {
+        var gg2 = new string[] { "Hello", "world!42" };
+        JS.Set("_test", gg2);
+        var rbI = JS.Get<string[]>("_test");
+        var nmt = true;
+    }
+
+    //{
+    //    var sw = Stopwatch.StartNew();
+    //    var array = JS.NewApply("Array");
+    //    JS.Set("_marray", array);
+    //    var cnt = 20000;
+    //    var callsPerIteration = 1;
+    //    using var window2 = JS.Get("window");
+    //    for (var i = 0; i < cnt; i++)
+    //    {
+    //        array.Set(i, window2);
+    //    }
+    //    var callCountTotal = callsPerIteration * cnt;
+    //    var costPerCall = sw.Elapsed.TotalMicroseconds / (cnt * callsPerIteration); // 2 calls per iteration, teh window get and the array index set
+    //    var elapsed = sw.Elapsed.TotalMicroseconds;
+    //    document.CallApplyVoid("write", [$"SpawnJS Total .Net to JS.Set calls: {callCountTotal} Cost per call: {costPerCall} microseconds - Total elapsed: {elapsed} microseconds<br/>"]);
+    //    // 2026-08-12 SpawnJS.Core  Total .Net to JS calls: 20000 Cost per call:  0.984 microseconds - Total elapsed:   19799 microseconds
+    //    // 2026-08-11 SpawnJS.Core  Total .Net to JS calls: 20000 Cost per call:  1.515 microseconds - Total elapsed:   30400 microseconds
+    //    // 2026-08-11 SpawnJS (old) Total .Net to JS calls: 20000 Cost per call: 16.519 microseconds - Total elapsed:  330600 microseconds
+    //    // 2026-08-11 BlazorJS      Total .Net to JS calls: 20000 Cost per call: 91.285 microseconds - Total elapsed: 1825700 microseconds
+    //}
+
+    //{
+    //    var sw = Stopwatch.StartNew();
+    //    var array = JS.NewApply("Array");
+    //    JS.Set("_marray", array);
+    //    double number = 42;
+    //    JS.Set("_number", number);
+    //    var cnt = 20000;
+    //    var callsPerIteration = 1;
+    //    for (var i = 0; i < cnt; i++)
+    //    {
+    //        var num = await JS.GetAsync<double>("_number");
+    //        if (num != number)
+    //        {
+    //            throw new Exception();
+    //        }
+    //    }
+    //    var elapsed = sw.Elapsed.TotalMicroseconds;
+    //    var callCountTotal = callsPerIteration * cnt;
+    //    var costPerCall = elapsed / (cnt * callsPerIteration); // 2 calls per iteration, teh window get and the array index set
+    //    document.CallApplyVoid("write", [$"SpawnJS Total .Net to JS.GetAsync calls: {callCountTotal} Cost per call: {costPerCall} microseconds - Total elapsed: {elapsed} microseconds<br/>"]);
+    //    // 2026-08-11 SpawnJS.Core  Total .Net to JS calls: 20000 Cost per call:  1.515 microseconds - Total elapsed:   30400 microseconds
+    //    // 2026-08-11 SpawnJS (old) Total .Net to JS calls: 20000 Cost per call: 16.519 microseconds - Total elapsed:  330600 microseconds
+    //    // 2026-08-11 BlazorJS      Total .Net to JS calls: 20000 Cost per call: 91.285 microseconds - Total elapsed: 1825700 microseconds
+    //}
+    //{
+    //    var called = 0;
+    //    var cnt = 1000000;
+    //    var callsPerIteration = 1;
+    //    var sw = Stopwatch.StartNew();
+    //    for (var i = 0; i < cnt; i++)
+    //    {
+    //        await ((Delegate)MyAction<object, object>).InvokeGenericAsync([typeof(double), typeof(double)]);
+    //        //await MyAction<double>();
+    //        async ValueTask MyAction<T, T1>()
+    //        {
+    //            called++;
+
+    //        }
+    //    }
+    //    var elapsed = sw.Elapsed.TotalMicroseconds;
+    //    var callCountTotal = callsPerIteration * cnt;
+    //    var costPerCall = elapsed / (cnt * callsPerIteration); // 2 calls per iteration, teh window get and the array index set
+    //    document.CallApplyVoid("write", [$"InvokeGenericAsync calls ValueTask<T>: {callCountTotal} Cost per call: {costPerCall} microseconds - Total elapsed: {elapsed} microseconds Called: {called}<br/>"]);
+    //}
+    // New: InvokeGenericAsync calls ValueTask<T>: 1000000 Cost per call: 2.462 microseconds - Total elapsed: 2462100 microseconds Called: 1000000
+    // New: InvokeGenericAsync calls ValueTask<T>: 1000000 Cost per call: 2.414 microseconds - Total elapsed: 2414099 microseconds Called: 1000000
+    // New: InvokeGenericAsync calls ValueTask<T>: 1000000 Cost per call: 3.986 microseconds - Total elapsed: 3986200 microseconds Called: 1000000
+    // New: InvokeGenericAsync calls ValueTask<T>: 1000000 Cost per call: 3.919 microseconds - Total elapsed: 3919000 microseconds Called: 1000000
+    // Old: InvokeGenericAsync calls ValueTask<T>: 1000000 Cost per call: 4.362 microseconds - Total elapsed: 4418700 microseconds Called: 1000000
 
 
     //((Delegate)MyAction<object>).InvokeGeneric(typeof(string));
@@ -79,10 +156,9 @@ try
     //    if (rbI4 != 5) throw new Exception("Aync readback failed");
     //}
 
-    //var nmt1 = true;
-    using var document = JS.PropertyGetSpawnJSObjectReference("document");
-    ////document.CallApplyVoid("write", new object?[] { "Hello world!" });
-    await document.CallApplyVoidAsync("write", new object?[] { "Hello world!" });
+    ////var nmt1 = true;
+    document.CallApplyVoid("write", new object?[] { "Hello world!<br/>" });
+    await document.CallApplyVoidAsync("write", new object?[] { "Hello world again!<br/>" });
     Console.WriteLine("Test Success !");
 }
 catch (Exception ex)

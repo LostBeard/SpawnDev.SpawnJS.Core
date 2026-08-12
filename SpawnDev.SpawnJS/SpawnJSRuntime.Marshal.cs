@@ -9,20 +9,9 @@ namespace SpawnDev.SpawnJS
     {
         // Per-type marshaller cache. Populated by GetMarshaller so a resolved marshaller can be reused.
         ConcurrentDictionary<Type, JSMarshaller> _typeMarshallerCache = new ConcurrentDictionary<Type, JSMarshaller>();
-        // Marshaller used when the target type is null (the void/null case).
-        JSMarshaller? _nullTypeMarshaller = null;
         // One-shot task that loads this assembly's [JSExport] table on the JS side. Awaited before the
         // first async call so the JS side can resolve completions back into managed code.
         Task? _loadAssemblyExportsTask = null;
-
-        /// <summary>
-        /// Non-generic entry to <see cref="GetMarshaller{TType}"/>. Bridges a runtime <see cref="Type"/> to
-        /// the generic method via <see cref="DelegateExtensions.InvokeGeneric"/>.
-        /// </summary>
-        public JSMarshaller GetMarshaller(Type type)
-        {
-            return (JSMarshaller)((Delegate)GetMarshaller<object>).InvokeGeneric(type ??= typeof(VoidType))!;
-        }
         /// <summary>
         /// Selects the marshaller for <typeparamref name="TType"/>. Marshallers are scanned in REVERSE
         /// registration order so later (more specific) registrations win. A marshaller may hand back a
@@ -32,7 +21,7 @@ namespace SpawnDev.SpawnJS
         public JSMarshaller<TType> GetMarshaller<TType>()
         {
             var type = typeof(TType);
-            var selectionType = Nullable.GetUnderlyingType(type) ?? type;
+            //var selectionType = Nullable.GetUnderlyingType(type) ?? type;
             if (_typeMarshallerCache.TryGetValue(type, out var cachedMarshaller))
             {
                 return (JSMarshaller<TType>)cachedMarshaller;
@@ -42,21 +31,14 @@ namespace SpawnDev.SpawnJS
             for (var i = length - 1; i >= 0; i--)
             {
                 var candidate = Marshallers[i];
-                if (!candidate.CanMarshal(selectionType)) continue;
+                if (!candidate.CanMarshal(type)) continue;
                 // GetMarshaller lets a marshaller hand back a per-type specialization (UnionMarshaller
                 // returns one bound to the concrete Union<...> arms). Cache and use THAT, not the
                 // generic candidate - otherwise the specialization hook does nothing.
                 var typeMarshaller = candidate.GetMarshaller<TType>();
                 if (typeMarshaller == null) continue;
                 marshaller = typeMarshaller;
-                if (type == null)
-                {
-                    _nullTypeMarshaller = typeMarshaller;
-                }
-                else
-                {
-                    _typeMarshallerCache.TryAdd(type, typeMarshaller);
-                }
+                _typeMarshallerCache.TryAdd(type, typeMarshaller);
                 break;
             }
             if (marshaller == null) throw new Exception($"GetMarshaller failed: {type?.Name}");
@@ -241,12 +223,22 @@ namespace SpawnDev.SpawnJS
         /// </summary>
         /// <param name="dotnetInstance">ONLY allowed JSObject in entire library and will ONLY be called once</param>
         /// <returns></returns>
-        [JSImport("globalThis.SpawnJSInterop.spawnJSObjectHold")]
-        internal static partial double spawnJSObjectHold(JSObject dotnetInstance);
+        [JSImport("globalThis.SpawnJSInterop._registerInstance")]
+        internal static partial double _registerInstance(
+            JSObject dotnetInstance,
+            [JSMarshalAs<JSType.Function>] Action onMethodAdded,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.String>>] Action<double, string> onAsyncResolvedVoid,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Number, JSType.String>>] Action<double, double, string> onAsyncResolvedDouble,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Boolean, JSType.String>>] Action<double, bool, string> onAsyncResolvedBool,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.String, JSType.String>>] Action<double, string, string> onAsyncResolvedString,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Any, JSType.String>>] Action<double, object, string> onAsyncResolvedDoubleNullable,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Any, JSType.String>>] Action<double, object, string> onAsyncResolvedBooleanNullable);
 
         [JSImport("globalThis.SpawnJSInterop.spawnJSObjectHoldExists")]
         internal static partial bool SpawnJSObjectHoldExists(double sjsId);
 
+        [JSImport("globalThis.SpawnJSInterop.refreshMethodMap")]
+        internal static partial string[] _refreshMethodMap();
 
         // propertyTypeInfo: returns "<typeof> <toStringTag>" for a property, or null if absent.
         [JSImport("globalThis.SpawnJSInterop.propertyTypeInfo")]
@@ -261,6 +253,105 @@ namespace SpawnDev.SpawnJS
         // exists to avoid), and every real JS key is a string or an array index anyway. Each JSImport is
         // duplicated per key type (string + double) so no boxing or Any marshalling occurs.
         #region propertyGet
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial string _propertyGetWithReplacerString(double sjsId, double methodIndex, string key);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial double _propertyGetWithReplacerDouble(double sjsId, double methodIndex, string key);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial bool _propertyGetWithReplacerBoolean(double sjsId, double methodIndex, string key);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial double? _propertyGetWithReplacerDoubleNullable(double sjsId, double methodIndex, string key);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial bool? _propertyGetWithReplacerBooleanNullable(double sjsId, double methodIndex, string key);
+
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial string _propertyGetWithReplacerString(double sjsId, double methodIndex, double key);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial double _propertyGetWithReplacerDouble(double sjsId, double methodIndex, double key);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial bool _propertyGetWithReplacerBoolean(double sjsId, double methodIndex, double key);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial double? _propertyGetWithReplacerDoubleNullable(double sjsId, double methodIndex, double key);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial bool? _propertyGetWithReplacerBooleanNullable(double sjsId, double methodIndex, double key);
+
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial string _propertyGetWithReplacerString(double sjsId, double methodIndex, string key, double replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial double _propertyGetWithReplacerDouble(double sjsId, double methodIndex, string key, double replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial bool _propertyGetWithReplacerBoolean(double sjsId, double methodIndex, string key, double replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial double? _propertyGetWithReplacerDoubleNullable(double sjsId, double methodIndex, string key, double replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial bool? _propertyGetWithReplacerBooleanNullable(double sjsId, double methodIndex, string key, double replacerConfig);
+
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial string _propertyGetWithReplacerString(double sjsId, double methodIndex, double key, double replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial double _propertyGetWithReplacerDouble(double sjsId, double methodIndex, double key, double replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial bool _propertyGetWithReplacerBoolean(double sjsId, double methodIndex, double key, double replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial double? _propertyGetWithReplacerDoubleNullable(double sjsId, double methodIndex, double key, double replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial bool? _propertyGetWithReplacerBooleanNullable(double sjsId, double methodIndex, double key, double replacerConfig);
+
+
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial string _propertyGetWithReplacerString(double sjsId, double methodIndex, string key, string replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial double _propertyGetWithReplacerDouble(double sjsId, double methodIndex, string key, string replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial bool _propertyGetWithReplacerBoolean(double sjsId, double methodIndex, string key, string replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial double? _propertyGetWithReplacerDoubleNullable(double sjsId, double methodIndex, string key, string replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial bool? _propertyGetWithReplacerBooleanNullable(double sjsId, double methodIndex, string key, string replacerConfig);
+
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial string _propertyGetWithReplacerString(double sjsId, double methodIndex, double key, string replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial double _propertyGetWithReplacerDouble(double sjsId, double methodIndex, double key, string replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial bool _propertyGetWithReplacerBoolean(double sjsId, double methodIndex, double key, string replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial double? _propertyGetWithReplacerDoubleNullable(double sjsId, double methodIndex, double key, string replacerConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertyGetWithReplacer")]
+        internal static partial bool? _propertyGetWithReplacerBooleanNullable(double sjsId, double methodIndex, double key, string replacerConfig);
+
+
+
         [JSImport("globalThis.SpawnJSInterop.propertyGet")]
         internal static partial string _propertyGetString(double sjsId, string key);
 
@@ -365,6 +456,58 @@ namespace SpawnDev.SpawnJS
         internal static partial void _propertySetJson(double sjsId, string key, string value);
 
 
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, string key, string value, double reviverIndex);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, string key, double value, double reviverIndex);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, string key, string value, double reviverIndex, string reviverConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, string key, double value, double reviverIndex, string reviverConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, string key, string value, double reviverIndex, double reviverConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, string key, double value, double reviverIndex, double reviverConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, string key, string value, double reviverIndex, bool reviverConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, string key, double value, double reviverIndex, bool reviverConfig);
+
+
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, double key, string value, double reviverIndex);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, double key, double value, double reviverIndex);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, double key, string value, double reviverIndex, string reviverConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, double key, double value, double reviverIndex, string reviverConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, double key, string value, double reviverIndex, double reviverConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, double key, double value, double reviverIndex, double reviverConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, double key, string value, double reviverIndex, bool reviverConfig);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
+        internal static partial void _propertySetWithReviver(double sjsId, double key, double value, double reviverIndex, bool reviverConfig);
+
+
         [JSImport("globalThis.SpawnJSInterop.propertySet")]
         internal static partial void _propertySet(double sjsId, double key, string value);
 
@@ -392,24 +535,6 @@ namespace SpawnDev.SpawnJS
         // returnType index tells JS how to shape it (see ReturnType and the JS _serializeToNet switch).
         #region MarshalledArgsAndReturnType
         [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
-        internal static partial bool? _spawnJSInteropCallBooleanNullable(double returnType, string methodName, double argsId);
-
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
-        internal static partial double? _spawnJSInteropCallDoubleNullable(double returnType, string methodName, double argsId);
-
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
-        internal static partial bool _spawnJSInteropCallBoolean(double returnType, string methodName, double argsId);
-
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
-        internal static partial double _spawnJSInteropCallDouble(double returnType, string methodName, double argsId);
-
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
-        internal static partial string _spawnJSInteropCallString(double returnType, string methodName, double argsId);
-
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
-        internal static partial void _spawnJSInteropCallVoid(double returnType, string methodName, double argsId);
-
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
         internal static partial bool? _spawnJSInteropCallBooleanNullable(double returnType, double methodIndex, double argsId);
 
         [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
@@ -433,11 +558,11 @@ namespace SpawnDev.SpawnJS
         // TaskCompletionSource. dotnetId identifies this app's DotnetInstance so JS can reach the exports.
         #region MarshalledArgsAndReturnTypeAsync
 
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCallAsync")]
-        internal static partial void _spawnJSInteropCallAsync(double returnType, double dotnetId, double asyncCallId, string methodName, double argsId);
+        //[JSImport("globalThis.SpawnJSInterop._spawnJSInteropCallAsync")]
+        //internal static partial void _spawnJSInteropCallAsync(double returnType, double dotnetId, double asyncCallId, string methodName, double argsId);
 
         [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCallAsync")]
-        internal static partial void _spawnJSInteropCallAsync(double returnType, double dotnetId, double asyncCallId, double methodNameIndex, double argsId);
+        internal static partial void _spawnJSInteropCallAsync(double returnType, double dotnetId, double asyncCallId, double methodIndex, double argsId);
 
 
         // Loads this assembly's [JSExport] table on the JS side so the async resolvers can be invoked.
@@ -532,81 +657,63 @@ namespace SpawnDev.SpawnJS
             T ret = default!;
             var argsId = jsArgs?.Id ?? UndefinedId;
             var methodIndex = InteropMethods.IndexOf(methodName);
+            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {InteropMethods.Length} {methodName}");
             try
             {
                 switch (returnTypeIndex)
                 {
                     case ReturnType.Void:
                         {
-                            if (methodIndex == -1)
-                                _spawnJSInteropCallVoid((double)returnTypeIndex, methodName, argsId);
-                            else
-                                _spawnJSInteropCallVoid((double)returnTypeIndex, methodIndex, argsId);
+                            _spawnJSInteropCallVoid((double)returnTypeIndex, methodIndex, argsId);
                         }
                         break;
                     case ReturnType.Double:
                         {
-                            var fromJS = methodIndex == -1 
-                                ? _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId) 
-                                : _spawnJSInteropCallDouble((double)returnTypeIndex, methodIndex, argsId);
+                            var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodIndex, argsId);
                             ret = inMarshaller!.JSToNet(fromJS);
                         }
                         break;
                     case ReturnType.Boolean:
                         {
-                            var fromJS = methodIndex == -1 
-                                ? _spawnJSInteropCallBoolean((double)returnTypeIndex, methodName, argsId) 
-                                : _spawnJSInteropCallBoolean((double)returnTypeIndex, methodIndex, argsId);
+                            var fromJS = _spawnJSInteropCallBoolean((double)returnTypeIndex, methodIndex, argsId);
                             ret = inMarshaller!.JSToNet(fromJS);
                         }
                         break;
                     case ReturnType.DoubleNullable:
                         {
-                            var fromJS = methodIndex == -1
-                                ? _spawnJSInteropCallDoubleNullable((double)returnTypeIndex, methodName, argsId)
-                                : _spawnJSInteropCallDoubleNullable((double)returnTypeIndex, methodIndex, argsId);
+                            var fromJS = _spawnJSInteropCallDoubleNullable((double)returnTypeIndex, methodIndex, argsId);
                             ret = inMarshaller!.JSToNet(fromJS);
                         }
                         break;
                     case ReturnType.BooleanNullable:
                         {
-                            var fromJS = methodIndex == -1
-                                ? _spawnJSInteropCallBooleanNullable((double)returnTypeIndex, methodName, argsId)
-                                : _spawnJSInteropCallBooleanNullable((double)returnTypeIndex, methodIndex, argsId);
+                            var fromJS = _spawnJSInteropCallBooleanNullable((double)returnTypeIndex, methodIndex, argsId);
                             ret = inMarshaller!.JSToNet(fromJS);
                         }
                         break;
                     case ReturnType.String:
                         {
-                            var fromJS = methodIndex == -1
-                                ? _spawnJSInteropCallString((double)returnTypeIndex, methodName, argsId)
-                                : _spawnJSInteropCallString((double)returnTypeIndex, methodIndex, argsId);
+                            var fromJS = _spawnJSInteropCallString((double)returnTypeIndex, methodIndex, argsId);
                             ret = inMarshaller!.JSToNet(fromJS);
                         }
                         break;
                     case ReturnType.SpawnJSObjectReference:
                         {
-                            var fromJS = methodIndex == -1
-                                ? _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId)
-                                : _spawnJSInteropCallDouble((double)returnTypeIndex, methodIndex, argsId);
+                            var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodIndex, argsId);
                             var spawnJSObjectReference = SpawnJSObjectReference.FromID(fromJS, false);
                             ret = inMarshaller!.JSToNet(spawnJSObjectReference!);
                         }
                         break;
                     case ReturnType.SpawnJSObjectReferenceNonNullable:
                         {
-                            var fromJS = methodIndex == -1
-                                ? _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId)
-                                : _spawnJSInteropCallDouble((double)returnTypeIndex, methodIndex, argsId);
+                            var fromJS = _spawnJSInteropCallDouble((double)returnTypeIndex, methodIndex, argsId);
                             var spawnJSObjectReference = SpawnJSObjectReference.FromID(fromJS, true);
                             ret = inMarshaller!.JSToNet(spawnJSObjectReference!);
                         }
                         break;
                     case ReturnType.Json:
                         {
-                            var fromJS = methodIndex == -1
-                                ? _spawnJSInteropCallString((double)returnTypeIndex, methodName, argsId)
-                                : _spawnJSInteropCallString((double)returnTypeIndex, methodIndex, argsId);
+                            var fromJS = _spawnJSInteropCallString((double)returnTypeIndex, methodIndex, argsId);
                             ret = inMarshaller!.JSToNet(fromJS);
                         }
                         break;
@@ -624,22 +731,6 @@ namespace SpawnDev.SpawnJS
             }
             return ret;
         }
-        ///// <summary>
-        ///// Call any SpawnJSInterop static method
-        ///// </summary>
-        //internal object? InteropCallApply(Type? returnType, string methodName, object?[]? args = null)
-        //{
-        //    return ((Delegate)InteropCallApply<object>).InvokeGeneric(returnType ??= typeof(VoidType), methodName, args);
-        //}
-
-        ///// <summary>
-        ///// Non-generic entry to <see cref="InteropCallApplyAsync{T}"/>, bridging a runtime return
-        ///// <see cref="Type"/> to the generic method.
-        ///// </summary>
-        //internal async Task<object?> InteropCallApplyAsync(Type returnType, string methodName, object?[]? args = null)
-        //{
-        //    return await ((Delegate)InteropCallApplyAsync<object>).InvokeGenericAsync(returnType ??= typeof(VoidType), methodName, args);
-        //}
         /// <summary>
         /// Calls a SpawnJSInterop static method asynchronously. A per-call id is registered against a
         /// TaskCompletionSource; the JS side runs the underlying promise then invokes an AsyncCallResolved*
@@ -796,15 +887,9 @@ namespace SpawnDev.SpawnJS
             try
             {
                 var argsId = jsArgs?.Id ?? UndefinedId;
-                var methodNameIndex = InteropMethods.IndexOf(methodName);
-                if (methodNameIndex == -1)
-                {
-                    _spawnJSInteropCallAsync((double)returnMarshaller.ReturnType, DotnetInstance.Id, asyncCallbackId, methodNameIndex, argsId);
-                }
-                else
-                {
-                    _spawnJSInteropCallAsync((double)returnMarshaller.ReturnType, DotnetInstance.Id, asyncCallbackId, methodName, argsId);
-                }
+                var methodIndex = InteropMethods.IndexOf(methodName);
+                if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {InteropMethods.Length} {methodName}");
+                _spawnJSInteropCallAsync((double)returnMarshaller.ReturnType, DotnetInstance.Id, asyncCallbackId, methodIndex, argsId);
                 // wait for the tcs to complete or throw
                 return await tcs.Task.ConfigureAwait(false);
             }
@@ -854,22 +939,22 @@ namespace SpawnDev.SpawnJS
             }
             return await _InteropCallApplyAsync<T>(methodName, jsArgs);
         }
-        // NOTE: Callback (.Net method passed to JS and invoked directly) is not wired up yet. These two
-        // exports are placeholders for that path and currently only log.
-        [JSExport]
-        static void FireCallback(double callbackId, double argsId)
-        {
-            Console.WriteLine($"FireCallback: {callbackId} {argsId}");
-        }
-        [JSExport]
-        static async Task FireCallbackAsync(double callbackId, double argsId)
-        {
-            Console.WriteLine($"FireCallbackAsync: {callbackId} {argsId}");
-            await Task.Delay(5000);
-        }
+        //// NOTE: Callback (.Net method passed to JS and invoked directly) is not wired up yet. These two
+        //// exports are placeholders for that path and currently only log.
+        //[JSExport]
+        //static void FireCallback(double callbackId, double argsId)
+        //{
+        //    Console.WriteLine($"FireCallback: {callbackId} {argsId}");
+        //}
+        //[JSExport]
+        //static async Task FireCallbackAsync(double callbackId, double argsId)
+        //{
+        //    Console.WriteLine($"FireCallbackAsync: {callbackId} {argsId}");
+        //    await Task.Delay(5000);
+        //}
 
         // Monotonic id handed to JS with each async call and echoed back to match the completion to its task.
-        static double _asyncCallbackId = 0;
+        double _asyncCallbackId = 0;
 
         // Pending async completions, keyed by asyncCallbackId, one dictionary per JS result shape. The
         // matching resolver [JSExport] below removes and invokes the entry when JS reports the result.
@@ -879,38 +964,5 @@ namespace SpawnDev.SpawnJS
         static ConcurrentDictionary<double, Action<bool, string?>> _booleanCallbacks = new ConcurrentDictionary<double, Action<bool, string?>>();
         static ConcurrentDictionary<double, Action<bool?, string?>> _booleanNullableCallbacks = new ConcurrentDictionary<double, Action<bool?, string?>>();
         static ConcurrentDictionary<double, Action<string?, string?>> _stringCallbacks = new ConcurrentDictionary<double, Action<string?, string?>>();
-
-        // Resolvers invoked by JS (_spawnJSInteropCallAsync) to complete a pending async call. error is
-        // non-null when the JS promise rejected.
-        [JSExport]
-        static void AsyncCallResolvedVoid(double asyncCallId, string? error)
-        {
-            if (_voidCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(error);
-        }
-        [JSExport]
-        static void AsyncCallResolvedDouble(double asyncCallId, double value, string? error)
-        {
-            if (_doubleCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
-        }
-        [JSExport]
-        static void AsyncCallResolvedDoubleNullable(double asyncCallId, double? value, string? error)
-        {
-            if (_doubleNullableCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
-        }
-        [JSExport]
-        static void AsyncCallResolvedBoolean(double asyncCallId, bool value, string? error)
-        {
-            if (_booleanCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
-        }
-        [JSExport]
-        static void AsyncCallResolvedBooleanNullable(double asyncCallId, bool? value, string? error)
-        {
-            if (_booleanNullableCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
-        }
-        [JSExport]
-        static void AsyncCallResolvedString(double asyncCallId, string? value, string? error)
-        {
-            if (_stringCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
-        }
     }
 }

@@ -10,7 +10,7 @@ namespace SpawnDev.SpawnJS
     /// Design rule that defines this library: <see cref="JSObject"/> (Microsoft's WASM interop handle) is
     /// NOT used anywhere. Its disposal quirk was the multi-year blocker for the previous interop attempts,
     /// and it leaked into Gemineachy. The ONLY place a <see cref="JSObject"/> is permitted is the single
-    /// <see cref="spawnJSObjectHold(JSObject)"/> call that hands this app's DotnetInstance to the JS side -
+    /// <see cref="_registerInstance(JSObject)"/> call that hands this app's DotnetInstance to the JS side -
     /// and never again. Everything else references JS values by a numeric id (see
     /// <see cref="SpawnJSObjectReference"/>), so nothing crosses the boundary that needs disposing on the
     /// Microsoft interop table.<br/>
@@ -45,6 +45,10 @@ namespace SpawnDev.SpawnJS
         /// </summary>
         private SpawnJSObjectReference spawnJSObjects = new SpawnJSObjectReference(SpawnJSObjects);
         /// <summary>
+        /// A reference pointing at the JS-side object table (the <see cref="SpawnJSInterop"/> sentinel id).
+        /// </summary>
+        private SpawnJSObjectReference spawnJSInterop = new SpawnJSObjectReference(SpawnJSInterop);
+        /// <summary>
         /// When true, marshaller selection is logged to the console. Off by default so libraries stay quiet.
         /// </summary>
         public bool Verbose;
@@ -56,9 +60,6 @@ namespace SpawnDev.SpawnJS
         private SpawnJSRuntime() : base(GlobalThis)
         {
             _instance = this;
-            // The one and only permitted JSObject use: hand this app's DotnetInstance to the JS side and
-            // immediately reduce it to a numeric SpawnJSObjectReference id. Never touched as a JSObject again.
-            DotnetInstance = new SpawnJSObjectReference((long)spawnJSObjectHold(JSHost.DotnetInstance));
             // Registration order matters: GetMarshaller scans this list in REVERSE, so a marshaller added
             // later takes precedence when more than one reports it can marshal a type. The more specific /
             // higher-priority handlers (arrays, object references) are therefore added last.
@@ -72,8 +73,90 @@ namespace SpawnDev.SpawnJS
             Marshallers.Add(new SpawnJSObjectReferenceMarshaller());
             Marshallers.Add(new ArrayMarshaller<object>());
             Marshallers.Add(new ListMarshaller<object>());
+            Marshallers.Add(new HeapViewDescriptorMarshaller());
+            // The one and only permitted JSObject use: hand this app's DotnetInstance to the JS side and
+            // immediately reduce it to a numeric SpawnJSObjectReference id. Never touched as a JSObject again.
+            DotnetInstance = new SpawnJSObjectReference(
+                (long)_registerInstance(JSHost.DotnetInstance,
+                _JSToNetMappedMethodsChanged,
+                AsyncCallResolvedVoid,
+                AsyncCallResolvedDouble,
+                AsyncCallResolvedBoolean,
+                AsyncCallResolvedString,
+                AsyncCallResolvedDoubleNullable,
+                AsyncCallResolvedBooleanNullable));
             // load method names to enable indexed based interop calling (vs string)
-            InteropMethods = Get<string[]>("SpawnJSInterop._methodMapNames");
+            InteropMethods = _refreshMethodMap();
         }
+        /// <summary>
+        /// Get the current heap size
+        /// </summary>
+        /// <returns></returns>
+        public long GetHeapSize() => (long)spawnJSInterop.Call<double, double>("getHeapSize", DotnetInstance.Id);
+        /// <summary>
+        /// Force the heap to grow. Useful for debugging heap growth issues.
+        /// </summary>
+        /// <returns></returns>
+        public long GrowHeap()
+        {
+            var tmp = new List<byte[]>();
+            var heapSize = GetHeapSize();
+            while (true)
+            {
+                var heapSizeNow = GetHeapSize();
+                var diff = heapSizeNow - heapSize;
+                if (diff > 0) return diff;
+                var data = new byte[16000000];
+                tmp.Add(data);
+            }
+        }
+        private void _JSToNetMappedMethodsChanged()
+        {
+            Console.WriteLine($"_JSToNetMappedMethodsChanged");
+            InteropMethods = _refreshMethodMap();
+        }
+
+        /// <summary>
+        /// Returns value as type T
+        /// </summary>
+        /// <typeparam name="T">The type to return value as</typeparam>
+        /// <returns>value as type T</returns>
+        public T As<T>(object value) => InteropCall<double, object, T>("returnMe", Id, value);
+
+        // Resolvers invoked by JS (_spawnJSInteropCallAsync) to complete a pending async call. error is
+        // non-null when the JS promise rejected.
+        void AsyncCallResolvedVoid(double asyncCallId, string? error)
+        {
+            if (_voidCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(error);
+        }
+        void AsyncCallResolvedDouble(double asyncCallId, double value, string? error)
+        {
+            if (_doubleCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
+        }
+        void AsyncCallResolvedBoolean(double asyncCallId, bool value, string? error)
+        {
+            if (_booleanCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
+        }
+        void AsyncCallResolvedString(double asyncCallId, string? value, string? error)
+        {
+            if (_stringCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
+        }
+        void AsyncCallResolvedDoubleNullable(double asyncCallId, object? value, string? error)
+        {
+            //if (_doubleNullableCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
+        }
+        void AsyncCallResolvedBooleanNullable(double asyncCallId, object? value, string? error)
+        {
+            //if (_doubleNullableCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
+        }
+
+        //void AsyncCallResolvedDoubleNullable(double asyncCallId, double? value, string? error)
+        //{
+        //    if (_doubleNullableCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
+        //}
+        //void AsyncCallResolvedBooleanNullable(double asyncCallId, bool? value, string? error)
+        //{
+        //    if (_booleanNullableCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
+        //}
     }
 }

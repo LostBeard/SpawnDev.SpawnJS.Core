@@ -7,34 +7,147 @@
 // "releases" it (spawnJSObjectRelease) so it can be garbage-collected.
 //
 // Negative ids are reserved sentinels resolved without a table lookup:
-//   -1 globalThis, -2 undefined, -3 null, -4 the spawnJSObjects table itself.
+//   -1 globalThis, -2 undefined, -3 null, -4 the spawnJSObjects table, SpawnJSInterop.
 //
 // Calls flow through _spawnJSInteropCall (sync) / _spawnJSInteropCallAsync (async): .Net names a static
 // method here plus a returnType code (see ReturnType.cs), and _serializeToNet shapes the result to match.
 (function () {
     if (globalThis.SpawnJSInterop) return;
-
     class SpawnJSInterop {
+        static _revivers = [];
+        static _replacers = [];
         // method names for index based calling as an alternative to string
         static _methodMapNames = [];
         // methods mapped by index for index based calling as an alternative to string
         static _methodMap = [];
         // enables verbose logging
-        static verbose = false;
+        static verbose = true;
         // The id -> JS value table. Holds every value .Net currently references.
         static spawnJSObjects = {};
         // Monotonic id source; never reused, so a stale .Net id can never collide with a live value.
         static _sjsObjectIdNext = 0;
+        // .Net Wasm app instance infos
+        static _instances = {};
         // static constructor
         static {
-            var keys = Reflect.ownKeys(SpawnJSInterop);
-            for (const pName of keys) {
-                var propVal = SpawnJSInterop[pName];
-                if (typeof propVal === 'function') {
-                    SpawnJSInterop._methodMap.push(propVal.bind(SpawnJSInterop))
-                    SpawnJSInterop._methodMapNames.push(pName);
+            SpawnJSInterop.registerReviver('__reviverTest', (key, value) => {
+                if (SpawnJSInterop.verbose) console.log('reviver test', key, value);
+                return value;
+            });
+            SpawnJSInterop.registerReplacer('__replacerTest', (key, value) => {
+                if (SpawnJSInterop.verbose) console.log('replacer test', key, value);
+                return value;
+            });
+            SpawnJSInterop.refreshMethodMap();
+        }
+        static _registerInstance(dotnet, onMethodAdded, resolveVoid, resolveDouble, resolveBoolean, resolveVoidString, resolveDoubleNullable, resolveBooleanNullable) {
+            if (!dotnet) throw new Error('dotnet not set');
+            var instanceInfo = SpawnJSInterop._getInstaceFromDotNet(dotnet);
+            if (instanceInfo) return instanceInfo.dotnetId;
+            var dotnetId = SpawnJSInterop.spawnJSObjectHold(dotnet);
+            var instanceInfo = { dotnet, dotnetId, onMethodAdded, resolveVoid, resolveDouble, resolveBoolean, resolveVoidString, resolveDoubleNullable, resolveBooleanNullable };
+            SpawnJSInterop._instances[dotnetId] = instanceInfo;
+            console.log('Instance registered', instanceInfo);
+            return dotnetId;
+        }
+        static getInstace(dotnetId) {
+            return SpawnJSInterop._instances[dotnetId];
+        }
+        static _getInstaceFromDotNet(dotnet) {
+            for (const dotnetIdExisting in SpawnJSInterop._instances) {
+                if (Object.hasOwn(SpawnJSInterop._instances, dotnetIdExisting)) {
+                    var existingInfo = SpawnJSInterop._instances[dotnetIdExisting];
+                    if (existingInfo.dotnet == dotnet) {
+                        return existingInfo;
+                    }
                 }
             }
+        }
+        static __replacerJson(key, value, directCall) {
+            if (directCall) value = JSON.stringify(value);
+            return value;
+        }
+        static __reviverJson(key, value, directCall) {
+            if (directCall) value = JSON.parse(value);
+            return value;
+        }
+        static _unregisterInstance(dotnetId) {
+            delete SpawnJSInterop._instances[dotnetId];
+        }
+        static _getMappedMethodNames() {
+            return SpawnJSInterop._methodMapNames;
+        }
+        // refreshes the method map by looking for any new methods and adds them
+        static refreshMethodMap() {
+            var changed = false;
+            var keys = Reflect.ownKeys(SpawnJSInterop);
+            for (const pName of keys) {
+                if (SpawnJSInterop._methodMapNames.indexOf(pName) !== -1) continue;
+                var propVal = SpawnJSInterop[pName];
+                if (typeof propVal === 'function') {
+                    var fn = propVal.bind(SpawnJSInterop);
+                    changed = true;
+                    SpawnJSInterop._methodMap.push(fn);
+                    SpawnJSInterop._methodMapNames.push(pName);
+                    if (pName.indexOf('__reviver') === 0) {
+                        SpawnJSInterop._revivers.push(fn);
+                    } else if (pName.indexOf('__replacer') === 0) {
+                        SpawnJSInterop._replacers.push(fn);
+                    }
+                }
+            }
+            if (changed) {
+                // notify existing instances
+                for (const dotnetIdExisting in SpawnJSInterop._instances) {
+                    if (Object.hasOwn(SpawnJSInterop._instances, dotnetIdExisting)) {
+                        var existingInfo = SpawnJSInterop._instances[dotnetIdExisting];
+                        try {
+                            existingInfo.onMethodAdded();
+                        } catch { }
+                    }
+                }
+            }
+            return SpawnJSInterop._methodMapNames;
+        }
+        // array of { name, reviver }
+        static registerReplacers(replacers) {
+            var cnt = 0;
+            if (!replacers) return cnt;
+            for (var replacerObj of replacers) {
+                var succ = SpawnJSInterop.registerReplacer(replacerObj.name, replacerObj.replacer);
+                if (succ) cnt++;
+            }
+            return cnt;
+        }
+        static registerReplacer(name, replacer) {
+            if (name.indexOf('__replacer') !== 0) throw new Error('Replacer names must start with __replacer');
+            if (SpawnJSInterop[name]) {
+                // already exists. fail quitely as it could just mean another app loaded that uses the same replacers
+                return false;
+            }
+            SpawnJSInterop[name] = replacer;
+            SpawnJSInterop.refreshMethodMap();
+            return true;
+        }
+        // array of { name, reviver }
+        static registerRevivers(revivers) {
+            var cnt = 0;
+            if (!revivers) return cnt;
+            for (var reviverObj of revivers) {
+                var succ = SpawnJSInterop.registerReviver(reviverObj.name, reviverObj.reviver);
+                if (succ) cnt++;
+            }
+            return cnt;
+        }
+        static registerReviver(name, reviver) {
+            if (name.indexOf('__reviver') !== 0 ) throw new Error('Reviver names must start with __reviver');
+            if (SpawnJSInterop[name]) {
+                // already exists. fail quitely as it could just mean another app loaded that uses the same revivers
+                return false;
+            }
+            SpawnJSInterop[name] = reviver;
+            SpawnJSInterop.refreshMethodMap();
+            return true;
         }
         // creates a new Object, adds it to the hold and returns it
         static spawnJSObjectNewObject() {
@@ -63,6 +176,7 @@
             if (objectToHold === undefined) return -2;
             if (objectToHold === null) return -3;
             if (objectToHold === SpawnJSInterop.spawnJSObjects) return -4;
+            if (objectToHold === SpawnJSInterop) return -5;
             var sjsId = ++SpawnJSInterop._sjsObjectIdNext;
             SpawnJSInterop.spawnJSObjects[sjsId] = objectToHold;
             return sjsId;
@@ -74,8 +188,11 @@
                 case -2: return undefined;
                 case -3: return null;
                 case -4: return SpawnJSInterop.spawnJSObjects;
+                case -5: return SpawnJSInterop;
             }
-            if (!SpawnJSInterop.spawnJSObjectHoldExists(sjsId)) throw new Error('SpawnJSObjectGet object not found.');
+            if (!SpawnJSInterop.spawnJSObjectHoldExists(sjsId)) {
+                throw new Error('SpawnJSObjectGet object not found.');
+            }
             return SpawnJSInterop.spawnJSObjects[sjsId];
         }// get an obejct from the hold and replace it with a new one
         static spawnJSObjectGetAndReplace(sjsId, newValue) {
@@ -84,8 +201,11 @@
                 case -2: return undefined;
                 case -3: return null;
                 case -4: return SpawnJSInterop.spawnJSObjects;
+                case -5: return SpawnJSInterop;
             }
-            if (!SpawnJSInterop.spawnJSObjectHoldExists(sjsId)) throw new Error('SpawnJSObjectGet object not found.');
+            if (!SpawnJSInterop.spawnJSObjectHoldExists(sjsId)) {
+                throw new Error('SpawnJSObjectGet object not found.');
+            }
             var ret = SpawnJSInterop.spawnJSObjects[sjsId];
             SpawnJSInterop.spawnJSObjects[sjsId] = newValue;
             return ret;
@@ -103,8 +223,29 @@
             var ret = !args ? new pathInfo.target() : new pathInfo.target(...args);
             return ret;
         }
+        // call a property constructor
+        static propertyNew(sjsId, key, ...args) {
+            var ret = undefined;
+            var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
+            var pathInfo = SpawnJSInterop.pathObjectInfo(obj, key);
+            if (pathInfo.shortCircuit) return ret;
+            var ret = !args ? new pathInfo.target() : new pathInfo.target(...args);
+            return ret;
+        }
         // call a property
         static propertyCallApply(sjsId, key, args) {
+            var ret = undefined;
+            var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
+            var pathInfo = SpawnJSInterop.pathObjectInfo(obj, key);
+            if (pathInfo.shortCircuit) return ret;
+            var ret = pathInfo.target.apply(pathInfo.parent, args);
+            if (typeof ret === 'function') {
+                ret = ret.bind(pathInfo.parent);
+            }
+            return ret;
+        }
+        // call a property
+        static propertyCall(sjsId, key, ...args) {
             var ret = undefined;
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
             var pathInfo = SpawnJSInterop.pathObjectInfo(obj, key);
@@ -127,6 +268,26 @@
                 ret = pathInfo.target;
             }
             return ret;
+        }
+        // get a property
+        static propertyGetWithReplacer(sjsId, key, methodName, replacerConfig) {
+            var ret = undefined;
+            var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
+            var pathInfo = SpawnJSInterop.pathObjectInfo(obj, key);
+            if (pathInfo.shortCircuit) return ret;
+            if (typeof pathInfo.target === 'function') {
+                ret = pathInfo.target.bind(pathInfo.parent);
+            } else {
+                ret = pathInfo.target;
+            }
+            var replacer = typeof methodName === 'string' ? SpawnJSInterop[methodName] : SpawnJSInterop._methodMap[methodName];
+            if (!replacer) throw new Error(`Reviver not found: ${methodName}`);
+            ret = !replacer ? ret : replacer(pathInfo.propertyName, ret, true, replacerConfig);
+            return ret;
+        }
+        // useful when .Net Wasm wants to clonme a JSObjectReference or simply convert from one type to another
+        static returnMe(value) {
+            return value;
         }
         // get a property as json
         static propertyGetJson(sjsId, key) {
@@ -163,12 +324,76 @@
             var value = JSON.parse(json);
             parent[propertyName] = value;
         }
+        static getHeapSize(dotnetId) {
+            var dotnet = SpawnJSInterop.spawnJSObjectGet(dotnetId);
+            var buffer = SpawnJSInterop.wasmMemoryBuffer(dotnet);
+            return buffer.byteLength;
+        }
+        static __reviverHeapView(key, value, directCall, reviverConfig) {
+            if (directCall && value && typeof value === 'string') {
+                var heapViewInfo = JSON.parse(value);
+                if (!heapViewInfo.type) heapViewInfo.type = 'Uint8Array';
+                heapViewInfo.cnt = 0;
+                heapViewInfo.instance = SpawnJSInterop.getInstace(heapViewInfo.dotnetId);
+                heapViewInfo.dotnet = SpawnJSInterop.spawnJSObjectGet(heapViewInfo.dotnetId);
+                // 
+                heapViewInfo.buffer = SpawnJSInterop.wasmMemoryBuffer(heapViewInfo.dotnet);
+                value = new globalThis[heapViewInfo.type](heapViewInfo.buffer, heapViewInfo.offset, heapViewInfo.length);
+                value.heapViewInfo = heapViewInfo;
+                //
+                console.log('heapViewInfo', directCall, heapViewInfo, value);
+            } else if (value && typeof value === 'object' && SpawnJSInterop._in('heapViewInfo', value)) {
+                // auto-reattach if needed
+                // this allows creating a fresh HeapView if needed on `set` and `call` (with the exception of call reattach only working if the view is in teh root args list. no object walking is done)
+                var heapViewInfo = value.heapViewInfo;
+                if (heapViewInfo.buffer && heapViewInfo.buffer.detached) {
+                    console.log('buffer is detached');
+                    heapViewInfo.buffer = SpawnJSInterop.wasmMemoryBuffer(heapViewInfo.dotnet);
+                    value = new globalThis[heapViewInfo.type](heapViewInfo.buffer, heapViewInfo.offset, heapViewInfo.length);
+                    value.heapViewInfo = heapViewInfo;
+                    heapViewInfo.cnt++;
+                }
+            }
+            return value;
+        }
+        // creates a new Object, adds it to the hold and returns it
+        static spawnJSObjectNewHeapView(dotnetId, offset, length, type) {
+            var instance = SpawnJSInterop.getInstace(dotnetId);
+            var dotnet = SpawnJSInterop.spawnJSObjectGet(dotnetId);
+            var buffer = SpawnJSInterop.wasmMemoryBuffer(dotnet);
+            value = new globalThis[mapInfo.type](buffer, offset, length);
+            // mark it
+            value.__reviverHeap = {
+                dotnetId,
+                offset,
+                length,
+                type,
+                dotnet,
+            };
+            //
+            return SpawnJSInterop.spawnJSObjectHold(value);
+        }
+        // set property to using a SpawnJSInterop[methodName](value) call
+        // methodName can be a SpawnJSInterop methodName or a methodIndex
+        // revivers are Javascript methods
+        static propertySetWithReviver(sjsId, key, value, methodName, reviverConfig) {
+            var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
+            if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
+            var { parent, propertyName, shortCircuit } = SpawnJSInterop.pathObjectInfo(obj, key);
+            if (shortCircuit) return;
+            var reviver = typeof methodName === 'string' ? SpawnJSInterop[methodName] : SpawnJSInterop._methodMap[methodName];
+            if (!reviver) throw new Error(`Reviver not found: ${methodName}`);
+            value = reviver(propertyName, value, true, reviverConfig);
+            parent[propertyName] = value;
+        }
         // set property
         static propertySet(sjsId, key, value) {
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
             if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
             var { parent, propertyName, shortCircuit } = SpawnJSInterop.pathObjectInfo(obj, key);
             if (shortCircuit) return;
+            // revivers
+            value = SpawnJSInterop.reviveValue(propertyName, value, false);
             parent[propertyName] = value;
         }
         // set property null
@@ -231,7 +456,6 @@
             }
             return constructorNames;
         }
-
         // returns string[] of the target's property names.
         // hasOwnProperty true restricts to the object's own enumerable keys (Object.keys); false walks the
         // prototype chain too, which is what you need to enumerate a DOM object's API rather than just the
@@ -249,6 +473,22 @@
         static objectEquals(obj1, obj2, full) {
             return full ? obj1 === obj2 : obj1 == obj2;
         }
+        static reviveValue(key, initialValue, directCall) {
+            // Pipe the value through each reviver sequentially
+            return SpawnJSInterop._revivers.reduce((currentValue, currentReviver) => {
+                // Short-circuit: if a previous reviver dropped the value, skip the rest
+                if (currentValue === undefined) return undefined;
+                return currentReviver(key, currentValue, directCall); // the true tells the reviver this is a call revive as opposed to a propertySet revive
+            }, initialValue);
+        }
+        static replaceValue(key, initialValue, directCall) {
+            // Pipe the value through each reviver sequentially
+            return SpawnJSInterop._replacers.reduce((currentValue, currentReplacer) => {
+                // Short-circuit: if a previous reviver dropped the value, skip the rest
+                if (currentValue === undefined) return undefined;
+                return currentReplacer(key, currentValue, directCall); // the true tells the reviver this is a call revive as opposed to a propertySet revive
+            }, initialValue);
+        }
         // returns string
         static getTypeInfo(sjsId) {
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
@@ -256,32 +496,52 @@
             var jsType = typeof (obj);
             return `${jsType} ${jsClass}`;
         }
+        // returns the types the object inherits from
         // returns string[]
         static getPropertyConstructorNames(parent, key) {
             return SpawnJSInterop.getConstructorNames(parent[key]);
         }
-
         // Main .Net to JS entrypoint (synchronous).
         // The args array is fetched AND replaced with a fresh empty [] in the same slot, so the .Net side's
         // pooled argument-array reference (same id) comes back emptied and ready to reuse on the next call.
-        static _spawnJSInteropCall(returnType, methodName, argsId) {
+        static _spawnJSInteropCall(returnType, methodName, argsId, replacerId, replacerConfig) {
             var target = typeof methodName === 'string' ? SpawnJSInterop[methodName] : SpawnJSInterop._methodMap[methodName];
             var args = argsId === null || argsId === undefined ? null : SpawnJSInterop.spawnJSObjectGetAndReplace(argsId, []);
+            // iterate _revivers to process args if needed
+            if (args) {
+                for (let i = 0; i < args.length; i++) {
+                    args[i] = SpawnJSInterop.reviveValue(i, args[i], false);
+                }
+            }
             var ret = !args ? target() : target(...args);
+            // run replacers
+            var replacer = !replacerId ? null : typeof replacerId === 'string' ? SpawnJSInterop[replacerId] : SpawnJSInterop._methodMap[replacerId];
+            if (replacer) ret = replacer(null, ret, true, replacerConfig);
+            else ret = SpawnJSInterop.replaceValue(null, ret, false);
             // shape the result to match the .Net side's expected returnType
             ret = SpawnJSInterop._serializeToNet(returnType, ret);
             return ret;
         }
         // Main .Net to JS entrypoint
-        static async _spawnJSInteropCallAsync(returnType, dotnetId, asyncCallId, methodName, argsId) {
+        static async _spawnJSInteropCallAsync(returnType, dotnetId, asyncCallId, methodName, argsId, replacerId, replacerConfig) {
             var target = typeof methodName === 'string' ? SpawnJSInterop[methodName] : SpawnJSInterop._methodMap[methodName];
+            var instance = SpawnJSInterop.getInstace(dotnetId);
             var dotnet = SpawnJSInterop.spawnJSObjectGet(dotnetId);
             var args = argsId === null || argsId === undefined ? null : SpawnJSInterop.spawnJSObjectGetAndReplace(argsId, []);
+            if (args) {
+                for (let i = 0; i < args.length; i++) {
+                    args[i] = SpawnJSInterop.reviveValue(i, args[i], false);
+                }
+            }
             var error = null;
             var ret = null;
             try {
                 ret = !args ? target() : target(...args);
                 ret = await ret;
+                // run replacers
+                var replacer = !replacerId ? null : typeof replacerId === 'string' ? SpawnJSInterop[replacerId] : SpawnJSInterop._methodMap[replacerId];
+                if (replacer) ret = replacer(null, ret, true, replacerConfig);
+                else ret = SpawnJSInterop.replaceValue(null, ret, false);
                 // prepare using returnType
                 ret = SpawnJSInterop._serializeToNet(returnType, ret);
             } catch (ex) {
@@ -290,37 +550,38 @@
             }
             switch (returnType) {
                 case 0: // void
-                    dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedVoid(asyncCallId, error);
+                    instance.resolveVoid(asyncCallId, error);
                     break;
                 case 1: // Double
-                    dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedDouble(asyncCallId, ret, error);
+                    instance.resolveDouble(asyncCallId, ret, error);
                     break;
                 case 2: // Boolean
-                    dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedBoolean(asyncCallId, ret, error);
+                    instance.resolveBoolean(asyncCallId, ret, error);
                     break;
                 case 3: // DoubleNullable
-                    dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedDoubleNullable(asyncCallId, ret, error);
+                    instance.resolveDoubleNullable(asyncCallId, ret, error);
                     break;
                 case 4: // BooleanNullable
-                    dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedBooleanNullable(asyncCallId, ret, error);
+                    instance.resolveBooleanNullable(asyncCallId, ret, error);
                     break;
                 case 5: // String
-                    dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedString(asyncCallId, ret, error);
+                    instance.resolveString(asyncCallId, ret, error);
                     break;
                 case 6: // SpawnJSObject
-                    dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedDouble(asyncCallId, ret, error);
+                    instance.resolveDouble(asyncCallId, ret, error);
                     break;
                 case 7: // SpawnJSObjectNonNullable
-                    dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedDouble(asyncCallId, ret, error);
+                    instance.resolveDouble(asyncCallId, ret, error);
                     break;
                 case 8: // Json
-                    dotnet.spawnJSExports.SpawnJSRuntime.AsyncCallResolvedString(asyncCallId, ret, error);
+                    instance.resolveString(asyncCallId, ret, error);
                     break;
                 default:
                     throw new Error(`Unsupported returnType ${returnType}`);
                     break;
             }
         }
+        // converts to an error string or returns a generic error string
         static errorToString(error) {
             if (!error) return "Unknown error";
             // Handle native Error objects (e.g., new Error(), TypeError)
@@ -365,7 +626,37 @@
             // the default is to wrap itand let .Net decide how to handle it
             return SpawnJSInterop.spawnJSObjectHold(ret);
         }
-
+        static wasmMemoryBuffer(dotnet) {
+            var found = SpawnJSInterop.#findWasmMemory(dotnet);
+            if (!found) throw new Error('SpawnJSInterop: could not reach the WebAssembly memory buffer');
+            return found.buffer;
+        }
+        // returns the name of the path the memory buffer was found under, or '' if it was not found
+        static wasmMemoryBufferSource(dotnet) {
+            var found = SpawnJSInterop.#findWasmMemory(dotnet);
+            return found ? found.source : '';
+        }
+        static #findWasmMemory(dotnet) {
+            var rt = dotnet;
+            if (!rt) return null;
+            var candidates = [
+                ['Module.HEAPU8.buffer', () => rt.Module?.HEAPU8?.buffer],
+                ['Module.wasmMemory.buffer', () => rt.Module?.wasmMemory?.buffer],
+                ['localHeapViewU8().buffer', () => rt.localHeapViewU8?.()?.buffer],
+                ['getHeapU8().buffer', () => rt.getHeapU8?.()?.buffer],
+            ];
+            for (var i = 0; i < candidates.length; i++) {
+                var buffer;
+                try { buffer = candidates[i][1](); } catch (ex) { continue; }
+                if (buffer && typeof buffer.byteLength === 'number' && buffer.byteLength > 0) {
+                    return { buffer: buffer, source: candidates[i][0] };
+                }
+            }
+            return null;
+        }
+        // safely checks for a property existence
+        // safely means will not throw, which is needed as simply checking for a
+        // a proeprty can throw an exception (notably on cross-origin windows)
         static _in(key, obj) {
             if (obj === null || obj === void 0) return false;
             try {
@@ -373,7 +664,7 @@
             } catch { }
             return false;
         }
-
+        // returns the path info based on a base object and a property path: `window?.location.href`
         static pathObjectInfo(rootObject, path) {
             if (rootObject === null || rootObject === void 0) {
                 // callers must call with the globalThis if they wish to use it as the rootObject.
@@ -421,5 +712,4 @@
 
     }
     globalThis.SpawnJSInterop = SpawnJSInterop;
-    SpawnJSInterop.init();
 })();
