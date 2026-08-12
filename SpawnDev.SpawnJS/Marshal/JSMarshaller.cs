@@ -43,7 +43,7 @@
         /// <param name="type"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public virtual TType JSToNet(Type type) => throw new NotImplementedException(this.GetType().Name);
+        public virtual TType JSToNet() => throw new NotImplementedException(this.GetType().Name);
         /// <summary>
         /// Convert from ReturnType to .Net type<br/>
         /// Returns null when the JS value is null/undefined or the target type's default value is null.
