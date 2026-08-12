@@ -69,106 +69,106 @@ namespace SpawnDev.SpawnJS
         internal SpawnJSObjectReference NewJSArray<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
         {
             if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
-            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
-            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
-            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
-            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
-            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
-            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
-            GetMarshaller<T7>().NetToJS(typeof(T7), jsArgs!, 6, arg7!);
-            GetMarshaller<T8>().NetToJS(typeof(T8), jsArgs!, 7, arg8!);
-            GetMarshaller<T9>().NetToJS(typeof(T9), jsArgs!, 8, arg9!);
-            GetMarshaller<T10>().NetToJS(typeof(T10), jsArgs!, 9, arg10!);
+            GetMarshaller<T1>().NetToJS(jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(jsArgs!, 5, arg6!);
+            GetMarshaller<T7>().NetToJS(jsArgs!, 6, arg7!);
+            GetMarshaller<T8>().NetToJS(jsArgs!, 7, arg8!);
+            GetMarshaller<T9>().NetToJS(jsArgs!, 8, arg9!);
+            GetMarshaller<T10>().NetToJS(jsArgs!, 9, arg10!);
             return jsArgs;
         }
         internal SpawnJSObjectReference NewJSArray<T1, T2, T3, T4, T5, T6, T7, T8, T9>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
         {
             if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
-            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
-            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
-            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
-            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
-            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
-            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
-            GetMarshaller<T7>().NetToJS(typeof(T7), jsArgs!, 6, arg7!);
-            GetMarshaller<T8>().NetToJS(typeof(T8), jsArgs!, 7, arg8!);
-            GetMarshaller<T9>().NetToJS(typeof(T9), jsArgs!, 8, arg9!);
+            GetMarshaller<T1>().NetToJS(jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(jsArgs!, 5, arg6!);
+            GetMarshaller<T7>().NetToJS(jsArgs!, 6, arg7!);
+            GetMarshaller<T8>().NetToJS(jsArgs!, 7, arg8!);
+            GetMarshaller<T9>().NetToJS(jsArgs!, 8, arg9!);
             return jsArgs;
         }
         internal SpawnJSObjectReference NewJSArray<T1, T2, T3, T4, T5, T6, T7, T8>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
         {
             if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
-            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
-            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
-            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
-            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
-            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
-            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
-            GetMarshaller<T7>().NetToJS(typeof(T7), jsArgs!, 6, arg7!);
-            GetMarshaller<T8>().NetToJS(typeof(T8), jsArgs!, 7, arg8!);
+            GetMarshaller<T1>().NetToJS(jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(jsArgs!, 5, arg6!);
+            GetMarshaller<T7>().NetToJS(jsArgs!, 6, arg7!);
+            GetMarshaller<T8>().NetToJS(jsArgs!, 7, arg8!);
             return jsArgs;
         }
         internal SpawnJSObjectReference NewJSArray<T1, T2, T3, T4, T5, T6, T7>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
         {
             if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
-            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
-            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
-            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
-            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
-            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
-            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
-            GetMarshaller<T7>().NetToJS(typeof(T7), jsArgs!, 6, arg7!);
+            GetMarshaller<T1>().NetToJS(jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(jsArgs!, 5, arg6!);
+            GetMarshaller<T7>().NetToJS(jsArgs!, 6, arg7!);
             return jsArgs;
         }
         internal SpawnJSObjectReference NewJSArray<T1, T2, T3, T4, T5, T6>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
         {
             if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
-            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
-            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
-            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
-            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
-            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
-            GetMarshaller<T6>().NetToJS(typeof(T6), jsArgs!, 5, arg6!);
+            GetMarshaller<T1>().NetToJS(jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(jsArgs!, 5, arg6!);
             return jsArgs;
         }
         internal SpawnJSObjectReference NewJSArray<T1, T2, T3, T4, T5>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
-            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
-            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
-            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
-            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
-            GetMarshaller<T5>().NetToJS(typeof(T5), jsArgs!, 4, arg5!);
+            GetMarshaller<T1>().NetToJS(jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(jsArgs!, 4, arg5!);
             return jsArgs;
         }
         internal SpawnJSObjectReference NewJSArray<T1, T2, T3, T4>(T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
-            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
-            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
-            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
-            GetMarshaller<T4>().NetToJS(typeof(T4), jsArgs!, 3, arg4!);
+            GetMarshaller<T1>().NetToJS(jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(jsArgs!, 3, arg4!);
             return jsArgs;
         }
         internal SpawnJSObjectReference NewJSArray<T1, T2, T3>(T1 arg1, T2 arg2, T3 arg3)
         {
             if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
-            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
-            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
-            GetMarshaller<T3>().NetToJS(typeof(T3), jsArgs!, 2, arg3!);
+            GetMarshaller<T1>().NetToJS(jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(jsArgs!, 2, arg3!);
             return jsArgs;
         }
         internal SpawnJSObjectReference NewJSArray<T1, T2>(T1 arg1, T2 arg2)
         {
             if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
-            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
-            GetMarshaller<T2>().NetToJS(typeof(T2), jsArgs!, 1, arg2!);
+            GetMarshaller<T1>().NetToJS(jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(jsArgs!, 1, arg2!);
             return jsArgs;
         }
         internal SpawnJSObjectReference NewJSArray<T1>(T1 arg1)
         {
             if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
-            GetMarshaller<T1>().NetToJS(typeof(T1), jsArgs!, 0, arg1!);
+            GetMarshaller<T1>().NetToJS(jsArgs!, 0, arg1!);
             return jsArgs;
         }
         #endregion
@@ -518,7 +518,7 @@ namespace SpawnDev.SpawnJS
                     {
                         var marshaller = GetMarshaller<T1>();
                         if (marshaller == null) jsArgs.PropertySetNull(i);
-                        else marshaller.NetToJS(itemType, jsArgs!, i, value!);
+                        else marshaller.NetToJS(jsArgs!, i, value!);
                     }
                 }
             }
@@ -549,7 +549,7 @@ namespace SpawnDev.SpawnJS
                             var fromJS = methodIndex == -1 
                                 ? _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId) 
                                 : _spawnJSInteropCallDouble((double)returnTypeIndex, methodIndex, argsId);
-                            ret = inMarshaller!.JSToNet(returnType!, fromJS);
+                            ret = inMarshaller!.JSToNet(fromJS);
                         }
                         break;
                     case ReturnType.Boolean:
@@ -557,7 +557,7 @@ namespace SpawnDev.SpawnJS
                             var fromJS = methodIndex == -1 
                                 ? _spawnJSInteropCallBoolean((double)returnTypeIndex, methodName, argsId) 
                                 : _spawnJSInteropCallBoolean((double)returnTypeIndex, methodIndex, argsId);
-                            ret = inMarshaller!.JSToNet(returnType, fromJS);
+                            ret = inMarshaller!.JSToNet(fromJS);
                         }
                         break;
                     case ReturnType.DoubleNullable:
@@ -565,7 +565,7 @@ namespace SpawnDev.SpawnJS
                             var fromJS = methodIndex == -1
                                 ? _spawnJSInteropCallDoubleNullable((double)returnTypeIndex, methodName, argsId)
                                 : _spawnJSInteropCallDoubleNullable((double)returnTypeIndex, methodIndex, argsId);
-                            ret = inMarshaller!.JSToNet(returnType!, fromJS);
+                            ret = inMarshaller!.JSToNet(fromJS);
                         }
                         break;
                     case ReturnType.BooleanNullable:
@@ -573,7 +573,7 @@ namespace SpawnDev.SpawnJS
                             var fromJS = methodIndex == -1
                                 ? _spawnJSInteropCallBooleanNullable((double)returnTypeIndex, methodName, argsId)
                                 : _spawnJSInteropCallBooleanNullable((double)returnTypeIndex, methodIndex, argsId);
-                            ret = inMarshaller!.JSToNet(returnType!, fromJS);
+                            ret = inMarshaller!.JSToNet(fromJS);
                         }
                         break;
                     case ReturnType.String:
@@ -581,7 +581,7 @@ namespace SpawnDev.SpawnJS
                             var fromJS = methodIndex == -1
                                 ? _spawnJSInteropCallString((double)returnTypeIndex, methodName, argsId)
                                 : _spawnJSInteropCallString((double)returnTypeIndex, methodIndex, argsId);
-                            ret = inMarshaller!.JSToNet(returnType!, fromJS);
+                            ret = inMarshaller!.JSToNet(fromJS);
                         }
                         break;
                     case ReturnType.SpawnJSObjectReference:
@@ -590,7 +590,7 @@ namespace SpawnDev.SpawnJS
                                 ? _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId)
                                 : _spawnJSInteropCallDouble((double)returnTypeIndex, methodIndex, argsId);
                             var spawnJSObjectReference = SpawnJSObjectReference.FromID(fromJS, false);
-                            ret = inMarshaller!.JSToNet(returnType!, spawnJSObjectReference!);
+                            ret = inMarshaller!.JSToNet(spawnJSObjectReference!);
                         }
                         break;
                     case ReturnType.SpawnJSObjectReferenceNonNullable:
@@ -599,7 +599,7 @@ namespace SpawnDev.SpawnJS
                                 ? _spawnJSInteropCallDouble((double)returnTypeIndex, methodName, argsId)
                                 : _spawnJSInteropCallDouble((double)returnTypeIndex, methodIndex, argsId);
                             var spawnJSObjectReference = SpawnJSObjectReference.FromID(fromJS, true);
-                            ret = inMarshaller!.JSToNet(returnType!, spawnJSObjectReference!);
+                            ret = inMarshaller!.JSToNet(spawnJSObjectReference!);
                         }
                         break;
                     case ReturnType.Json:
@@ -607,7 +607,7 @@ namespace SpawnDev.SpawnJS
                             var fromJS = methodIndex == -1
                                 ? _spawnJSInteropCallString((double)returnTypeIndex, methodName, argsId)
                                 : _spawnJSInteropCallString((double)returnTypeIndex, methodIndex, argsId);
-                            ret = inMarshaller!.JSToNet(returnType!, fromJS);
+                            ret = inMarshaller!.JSToNet(fromJS);
                         }
                         break;
                     default:
@@ -624,22 +624,22 @@ namespace SpawnDev.SpawnJS
             }
             return ret;
         }
-        /// <summary>
-        /// Call any SpawnJSInterop static method
-        /// </summary>
-        internal object? InteropCallApply(Type? returnType, string methodName, object?[]? args = null)
-        {
-            return ((Delegate)InteropCallApply<object>).InvokeGeneric(returnType ??= typeof(VoidType), methodName, args);
-        }
+        ///// <summary>
+        ///// Call any SpawnJSInterop static method
+        ///// </summary>
+        //internal object? InteropCallApply(Type? returnType, string methodName, object?[]? args = null)
+        //{
+        //    return ((Delegate)InteropCallApply<object>).InvokeGeneric(returnType ??= typeof(VoidType), methodName, args);
+        //}
 
-        /// <summary>
-        /// Non-generic entry to <see cref="InteropCallApplyAsync{T}"/>, bridging a runtime return
-        /// <see cref="Type"/> to the generic method.
-        /// </summary>
-        internal async Task<object?> InteropCallApplyAsync(Type returnType, string methodName, object?[]? args = null)
-        {
-            return await ((Delegate)InteropCallApplyAsync<object>).InvokeGenericAsync(returnType ??= typeof(VoidType), methodName, args);
-        }
+        ///// <summary>
+        ///// Non-generic entry to <see cref="InteropCallApplyAsync{T}"/>, bridging a runtime return
+        ///// <see cref="Type"/> to the generic method.
+        ///// </summary>
+        //internal async Task<object?> InteropCallApplyAsync(Type returnType, string methodName, object?[]? args = null)
+        //{
+        //    return await ((Delegate)InteropCallApplyAsync<object>).InvokeGenericAsync(returnType ??= typeof(VoidType), methodName, args);
+        //}
         /// <summary>
         /// Calls a SpawnJSInterop static method asynchronously. A per-call id is registered against a
         /// TaskCompletionSource; the JS side runs the underlying promise then invokes an AsyncCallResolved*
@@ -694,7 +694,7 @@ namespace SpawnDev.SpawnJS
                         if (error != null) tcs.TrySetException(new Exception(error));
                         else
                         {
-                            var ret = returnMarshaller.JSToNet(typeOfT, value!);
+                            var ret = returnMarshaller.JSToNet(value!);
                             tcs.TrySetResult(ret);
                         }
                     });
@@ -706,7 +706,7 @@ namespace SpawnDev.SpawnJS
                             if (error != null) tcs.TrySetException(new Exception(error));
                             else
                             {
-                                var ret = returnMarshaller.JSToNet(typeOfT, value);
+                                var ret = returnMarshaller.JSToNet(value);
                                 tcs.TrySetResult(ret);
                             }
                         });
@@ -718,7 +718,7 @@ namespace SpawnDev.SpawnJS
                         if (error != null) tcs.TrySetException(new Exception(error));
                         else
                         {
-                            var ret = returnMarshaller.JSToNet(typeOfT, value!);
+                            var ret = returnMarshaller.JSToNet(value!);
                             tcs.TrySetResult(ret);
                         }
                     });
@@ -730,7 +730,7 @@ namespace SpawnDev.SpawnJS
                             if (error != null) tcs.TrySetException(new Exception(error));
                             else
                             {
-                                var ret = returnMarshaller.JSToNet(typeOfT, value);
+                                var ret = returnMarshaller.JSToNet(value);
                                 tcs.TrySetResult(ret);
                             }
                         });
@@ -743,7 +743,7 @@ namespace SpawnDev.SpawnJS
                             if (error != null) tcs.TrySetException(new Exception(error));
                             else
                             {
-                                var ret = returnMarshaller.JSToNet(typeOfT, value!);
+                                var ret = returnMarshaller.JSToNet(value!);
                                 tcs.TrySetResult(ret);
                             }
                         });
@@ -757,7 +757,7 @@ namespace SpawnDev.SpawnJS
                             else
                             {
                                 var spawnJSObjectReference = SpawnJSObjectReference.FromID(value, false);
-                                var ret = returnMarshaller.JSToNet(typeOfT, spawnJSObjectReference!);
+                                var ret = returnMarshaller.JSToNet(spawnJSObjectReference!);
                                 tcs.TrySetResult(ret);
                             }
                         });
@@ -771,7 +771,7 @@ namespace SpawnDev.SpawnJS
                             else
                             {
                                 var spawnJSObjectReference = SpawnJSObjectReference.FromID(value, true);
-                                var ret = returnMarshaller.JSToNet(typeOfT, spawnJSObjectReference!);
+                                var ret = returnMarshaller.JSToNet(spawnJSObjectReference!);
                                 tcs.TrySetResult(ret);
                             }
                         });
@@ -784,7 +784,7 @@ namespace SpawnDev.SpawnJS
                             if (error != null) tcs.TrySetException(new Exception(error));
                             else
                             {
-                                var ret = returnMarshaller.JSToNet(typeOfT, value!);
+                                var ret = returnMarshaller.JSToNet(value!);
                                 tcs.TrySetResult(ret);
                             }
                         });
@@ -848,7 +848,7 @@ namespace SpawnDev.SpawnJS
                     {
                         var marshaller = GetMarshaller<T1>();
                         if (marshaller == null) jsArgs.PropertySetNull(i);
-                        else marshaller.NetToJS(itemType, jsArgs!, i, value!);
+                        else marshaller.NetToJS(jsArgs!, i, value!);
                     }
                 }
             }

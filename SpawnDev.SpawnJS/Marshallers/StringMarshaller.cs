@@ -5,8 +5,8 @@ namespace SpawnDev.SpawnJS.Marshallers
     /// <summary>Marshals <see cref="string"/> to/from a JS string (no conversion needed).</summary>
     public class StringMarshaller : JSMarshallerFromString<string>
     {
-        public override string JSToNet(Type typeToConvert, string value) => value;
-        public override void NetToJS(Type? typeToConvert, SpawnJSObjectReference jsParent, double jsKey, string value) => jsParent.PropertySet(jsKey, value);
-        public override void NetToJS(Type? typeToConvert, SpawnJSObjectReference jsParent, string jsKey, string value) => jsParent.PropertySet(jsKey, value);
+        public override string JSToNet(string value) => value;
+        public override void NetToJS(SpawnJSObjectReference jsParent, double jsKey, string value) => jsParent.PropertySet(jsKey, value);
+        public override void NetToJS(SpawnJSObjectReference jsParent, string jsKey, string value) => jsParent.PropertySet(jsKey, value);
     }
 }

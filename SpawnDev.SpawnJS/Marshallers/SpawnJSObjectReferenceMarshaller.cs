@@ -9,8 +9,8 @@ namespace SpawnDev.SpawnJS.Marshallers
     /// </summary>
     public class SpawnJSObjectReferenceMarshaller : JSMarshallerFromSpawnJSObjectReference<SpawnJSObjectReference>
     {
-        public override SpawnJSObjectReference JSToNet(Type typeToConvert, SpawnJSObjectReference value) => value;
-        public override void NetToJS(Type? typeToConvert, SpawnJSObjectReference jsParent, double jsKey, SpawnJSObjectReference value) => jsParent.PropertySet(jsKey, value);
-        public override void NetToJS(Type? typeToConvert, SpawnJSObjectReference jsParent, string jsKey, SpawnJSObjectReference value) => jsParent.PropertySet(jsKey, value);
+        public override SpawnJSObjectReference JSToNet(SpawnJSObjectReference value) => value;
+        public override void NetToJS(SpawnJSObjectReference jsParent, double jsKey, SpawnJSObjectReference value) => jsParent.PropertySet(jsKey, value);
+        public override void NetToJS(SpawnJSObjectReference jsParent, string jsKey, SpawnJSObjectReference value) => jsParent.PropertySet(jsKey, value);
     }
 }

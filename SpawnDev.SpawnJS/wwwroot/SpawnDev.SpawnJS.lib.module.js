@@ -1,6 +1,4 @@
-﻿console.log('SpawnJSInterop');
-
-// SpawnJSInterop - the Javascript half of SpawnJS.
+﻿// SpawnJSInterop - the Javascript half of SpawnJS.
 //
 // Architecture: every JS value that .Net needs to reference is kept in an id-keyed table
 // (spawnJSObjects) and addressed from .Net by that numeric id. .Net never receives a live JS object
@@ -17,16 +15,18 @@
     if (globalThis.SpawnJSInterop) return;
 
     class SpawnJSInterop {
+        // method names for index based calling as an alternative to string
         static _methodMapNames = [];
+        // methods mapped by index for index based calling as an alternative to string
         static _methodMap = [];
+        // enables verbose logging
         static verbose = false;
         // The id -> JS value table. Holds every value .Net currently references.
         static spawnJSObjects = {};
         // Monotonic id source; never reused, so a stale .Net id can never collide with a live value.
         static _sjsObjectIdNext = 0;
+        // static constructor
         static {
-            SpawnJSInterop._methodMap = [];
-            SpawnJSInterop._methodMapNames = [];
             var keys = Reflect.ownKeys(SpawnJSInterop);
             for (const pName of keys) {
                 var propVal = SpawnJSInterop[pName];
@@ -36,18 +36,21 @@
                 }
             }
         }
+        // creates a new Object, adds it to the hold and returns it
         static spawnJSObjectNewObject() {
             return SpawnJSInterop.spawnJSObjectHold({});
         }
+        // creates a new Array, adds it to the hold and returns it
         static spawnJSObjectNewArray() {
             return SpawnJSInterop.spawnJSObjectHold([]);
         }
-        // removes the SpawnJSObject from spawnJSObjects so it can be garbage collected
+        // removes the object from the hold and returns it
         static spawnJSObjectRelease(sjsId) {
             var ret = SpawnJSInterop.spawnJSObjects[sjsId];
             delete SpawnJSInterop.spawnJSObjects[sjsId];
             return ret;
         }
+        // removes the object from the hold, JSON.stringifies it and returns it
         static spawnJSObjectReleaseAsJson(sjsId) {
             var ret = SpawnJSInterop.spawnJSObjects[sjsId];
             delete SpawnJSInterop.spawnJSObjects[sjsId];
@@ -64,6 +67,7 @@
             SpawnJSInterop.spawnJSObjects[sjsId] = objectToHold;
             return sjsId;
         }
+        // get an object from the hold
         static spawnJSObjectGet(sjsId) {
             switch (sjsId) {
                 case -1: return globalThis;
@@ -73,7 +77,7 @@
             }
             if (!SpawnJSInterop.spawnJSObjectHoldExists(sjsId)) throw new Error('SpawnJSObjectGet object not found.');
             return SpawnJSInterop.spawnJSObjects[sjsId];
-        }
+        }// get an obejct from the hold and replace it with a new one
         static spawnJSObjectGetAndReplace(sjsId, newValue) {
             switch (sjsId) {
                 case -1: return globalThis;
@@ -86,16 +90,11 @@
             SpawnJSInterop.spawnJSObjects[sjsId] = newValue;
             return ret;
         }
-        // returns true if the hold exists
+        // returns true if the item id exists in the hold
         static spawnJSObjectHoldExists(sjsId) {
             return sjsId in SpawnJSInterop.spawnJSObjects;
         }
-
-        static propertyCallApplySJS(sjsId, key, argsId) {
-            var args = SpawnJSInterop.spawnJSObjectGet(argsId);
-            return propertyCallApply(sjsId, key, args);
-        }
-
+        // call a property constructor
         static propertyNewApply(sjsId, key, args) {
             var ret = undefined;
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
@@ -104,7 +103,7 @@
             var ret = !args ? new pathInfo.target() : new pathInfo.target(...args);
             return ret;
         }
-
+        // call a property
         static propertyCallApply(sjsId, key, args) {
             var ret = undefined;
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
@@ -116,7 +115,7 @@
             }
             return ret;
         }
-
+        // get a property
         static propertyGet(sjsId, key) {
             var ret = undefined;
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
@@ -129,13 +128,13 @@
             }
             return ret;
         }
-
+        // get a property as json
         static propertyGetJson(sjsId, key) {
             var ret = SpawnJSInterop.propertyGet(sjsId, key);
             ret = JSON.stringify(ret);
             return ret;
         }
-
+        // get a property as a SpawnJSObjectReference
         static propertyGetSpawnJSObjectReference(sjsId, key, force) {
             var ret = SpawnJSInterop.propertyGet(sjsId, key);
             if (force) {
@@ -145,9 +144,8 @@
             }
             return ret;
         }
-
         // This is where SpawnJSObjectReference revives itself into JS via its sjsId
-        // returns undefined
+        // set property to a SpawnJSObjectReference
         static propertySetSpawnJSObject(sjsId, key, valueId) {
             var value = SpawnJSInterop.spawnJSObjectGet(valueId);
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
@@ -156,7 +154,7 @@
             if (shortCircuit) return;
             parent[propertyName] = value;
         }
-
+        // set property to a Json
         static propertySetJson(sjsId, key, json) {
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
             if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
@@ -165,8 +163,7 @@
             var value = JSON.parse(json);
             parent[propertyName] = value;
         }
-
-        // returns undefined
+        // set property
         static propertySet(sjsId, key, value) {
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
             if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
@@ -174,8 +171,7 @@
             if (shortCircuit) return;
             parent[propertyName] = value;
         }
-
-        // returns undefined
+        // set property null
         static propertySetNull(sjsId, key) {
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
             if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
@@ -183,8 +179,7 @@
             if (shortCircuit) return;
             parent[propertyName] = null;
         }
-
-        // returns undefined
+        // set property undefined
         static propertySetUndefined(sjsId, key) {
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
             if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
@@ -192,8 +187,7 @@
             if (shortCircuit) return;
             parent[propertyName] = undefined;
         }
-
-        // returns bool
+        // deletes property
         static propertyDelete(sjsId, key) {
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
             if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
@@ -201,8 +195,7 @@
             if (shortCircuit) return true;
             return delete parent[propertyName];
         }
-
-        // returns bool
+        // returns bool if the key is in the target
         static propertyIn(sjsId, key) {
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
             if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
@@ -210,7 +203,7 @@
             if (shortCircuit) return false;
             return SpawnJSInterop._in(propertyName, parent);
         }
-
+        // property info
         // returns string or null if the property was not found
         static propertyTypeInfo(sjsId, key) {
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
@@ -222,7 +215,7 @@
             var jsType = typeof (value);
             return `${jsType} ${jsClass}`;
         }
-
+        // object constructor names
         // returns string[]
         static getConstructorNames(obj) {
             var constructorNames = [];

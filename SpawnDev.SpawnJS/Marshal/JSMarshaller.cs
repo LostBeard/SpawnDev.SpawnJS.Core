@@ -12,9 +12,9 @@
         protected SpawnJSRuntime JS => SpawnJSRuntime.Instance ?? throw new InvalidOperationException("SpawnJSRuntime has not been created.");
         /// <summary>
         /// Returns true if the data type can be marshalled.<br/>
-        /// <paramref name="typeToConvert"/> may be null when the .Net value being marshalled is null.
+        /// <paramref name="type"/> may be null when the .Net value being marshalled is null.
         /// </summary>
-        public abstract bool CanMarshal(Type typeToConvert);
+        public abstract bool CanMarshal(Type type);
         /// <summary>
         /// If this class reported true to CanMarshal, GetMarshaller may be called to get the marshaller to do the marshalling<br/>
         /// </summary>
@@ -32,56 +32,57 @@
     /// </summary>
     public abstract class JSMarshaller<TType> : JSMarshaller
     {
+        public virtual Type RegisteredType => typeof(TType);
         /// <summary>
         /// Returns true if the data type can be marshalled
         /// </summary>
-        public override bool CanMarshal(Type typeToConvert) => typeof(TType) == typeToConvert;
+        public override bool CanMarshal(Type type) => typeof(TType) == type;
         /// <summary>
         /// Not data interop
         /// </summary>
-        /// <param name="typeToConvert"></param>
+        /// <param name="type"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public virtual TType JSToNet(Type typeToConvert) => throw new NotImplementedException(this.GetType().Name);
+        public virtual TType JSToNet(Type type) => throw new NotImplementedException(this.GetType().Name);
         /// <summary>
         /// Convert from ReturnType to .Net type<br/>
         /// Returns null when the JS value is null/undefined or the target type's default value is null.
         /// </summary>
-        public virtual TType JSToNet(Type typeToConvert, bool value) => throw new NotImplementedException(this.GetType().Name);
+        public virtual TType JSToNet(bool value) => throw new NotImplementedException(this.GetType().Name);
         /// <summary>
         /// Convert from ReturnType to .Net type<br/>
         /// Returns null when the JS value is null/undefined or the target type's default value is null.
         /// </summary>
-        public virtual TType JSToNet(Type typeToConvert, bool? value) => throw new NotImplementedException(this.GetType().Name);
+        public virtual TType JSToNet(bool? value) => throw new NotImplementedException(this.GetType().Name);
         /// <summary>
         /// Convert from ReturnType to .Net type<br/>
         /// Returns null when the JS value is null/undefined or the target type's default value is null.
         /// </summary>
-        public virtual TType JSToNet(Type typeToConvert, double value) => throw new NotImplementedException(this.GetType().Name);
+        public virtual TType JSToNet(double value) => throw new NotImplementedException(this.GetType().Name);
         /// <summary>
         /// Convert from ReturnType to .Net type<br/>
         /// Returns null when the JS value is null/undefined or the target type's default value is null.
         /// </summary>
-        public virtual TType JSToNet(Type typeToConvert, double? value) => throw new NotImplementedException(this.GetType().Name);
+        public virtual TType JSToNet(double? value) => throw new NotImplementedException(this.GetType().Name);
         /// <summary>
         /// Convert from ReturnType to .Net type<br/>
         /// Returns null when the JS value is null/undefined or the target type's default value is null.
         /// </summary>
-        public virtual TType JSToNet(Type typeToConvert, string value) => throw new NotImplementedException(this.GetType().Name);
+        public virtual TType JSToNet(string value) => throw new NotImplementedException(this.GetType().Name);
         /// <summary>
         /// Convert from ReturnType to .Net type<br/>
         /// Returns null when the JS value is null/undefined or the target type's default value is null.
         /// </summary>
-        public virtual TType JSToNet(Type typeToConvert, SpawnJSObjectReference value) => throw new NotImplementedException(this.GetType().Name);
+        public virtual TType JSToNet(SpawnJSObjectReference value) => throw new NotImplementedException(this.GetType().Name);
         /// <summary>
         /// Given a JS parent object, the JS property key, and the .Net value: write the value.<br/>
-        /// <paramref name="typeToConvert"/> and <paramref name="value"/> may be null when the .Net value being marshalled is null.
+        /// <paramref name="type"/> and <paramref name="value"/> may be null when the .Net value being marshalled is null.
         /// </summary>
-        public abstract void NetToJS(Type typeToConvert, SpawnJSObjectReference jsParent, string jsKey, TType value);
+        public abstract void NetToJS(SpawnJSObjectReference jsParent, string jsKey, TType value);
         /// <summary>
         /// Given a JS parent object, the JS property key, and the .Net value: write the value.<br/>
-        /// <paramref name="typeToConvert"/> and <paramref name="value"/> may be null when the .Net value being marshalled is null.
+        /// <paramref name="type"/> and <paramref name="value"/> may be null when the .Net value being marshalled is null.
         /// </summary>
-        public abstract void NetToJS(Type typeToConvert, SpawnJSObjectReference jsParent, double jsKey, TType value);
+        public abstract void NetToJS(SpawnJSObjectReference jsParent, double jsKey, TType value);
     }
 }

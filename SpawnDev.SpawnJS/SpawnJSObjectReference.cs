@@ -119,17 +119,17 @@ namespace SpawnDev.SpawnJS
         public T Get<T>(double key) => JS.InteropCall<double, double, T>("propertyGet", Id, key);
         public T Get<T>(string key) => JS.InteropCall<double, string, T>("propertyGet", Id, key);
 
-        public object? Get(Type type, object key) => JS.InteropCallApply(type, "propertyGet", new object?[] { Id, key });
-        public object? Get(Type type, double key) => JS.InteropCallApply(type, "propertyGet", new object?[] { Id, key });
-        public object? Get(Type type, string key) => JS.InteropCallApply(type, "propertyGet", new object?[] { Id, key });
+        //public object? Get(Type type, object key) => JS.InteropCallApply(type, "propertyGet", new object?[] { Id, key });
+        //public object? Get(Type type, double key) => JS.InteropCallApply(type, "propertyGet", new object?[] { Id, key });
+        //public object? Get(Type type, string key) => JS.InteropCallApply(type, "propertyGet", new object?[] { Id, key });
 
         public Task<T> GetAsync<T>(object key) => JS.InteropCallAsync<double, object, T>("propertyGet", Id, key);
         public Task<T> GetAsync<T>(double key) => JS.InteropCallAsync<double, double, T>("propertyGet", Id, key);
         public Task<T> GetAsync<T>(string key) => JS.InteropCallAsync<double, string, T>("propertyGet", Id, key);
 
-        public Task<object?> GetAsync(Type type, object key) => JS.InteropCallApplyAsync(type, "propertyGet", new object?[] { Id, key });
-        public Task<object?> GetAsync(Type type, double key) => JS.InteropCallApplyAsync(type, "propertyGet", new object?[] { Id, key });
-        public Task<object?> GetAsync(Type type, string key) => JS.InteropCallApplyAsync(type, "propertyGet", new object?[] { Id, key });
+        //public Task<object?> GetAsync(Type type, object key) => JS.InteropCallApplyAsync(type, "propertyGet", new object?[] { Id, key });
+        //public Task<object?> GetAsync(Type type, double key) => JS.InteropCallApplyAsync(type, "propertyGet", new object?[] { Id, key });
+        //public Task<object?> GetAsync(Type type, string key) => JS.InteropCallApplyAsync(type, "propertyGet", new object?[] { Id, key });
 
         public T CallApply<T>(object key, object?[]? args = null) => JS.InteropCall<double, object, object?[]?, T>("propertyCallApply", Id, key, args);
         public T CallApply<T>(double key, object?[]? args = null) => JS.InteropCall<double, double, object?[]?, T>("propertyCallApply", Id, key, args);

@@ -30,10 +30,10 @@ namespace SpawnDev.SpawnJS.Marshallers
             return (JSMarshaller<T>)Activator.CreateInstance(typedMarshaller)!;
         }
         /// <inheritdoc/>
-        public override List<TElement>? JSToNet(Type type, SpawnJSObjectReference value1)
+        public override List<TElement>? JSToNet(SpawnJSObjectReference value1)
         {
             if (value1 == null) return null;
-            var elementType = type.GetElementType()!;
+            var elementType = RegisteredType.GetElementType()!;
             // Read the JS array length, then pull each element back through the typed Get<TElement> path.
             var length = (int)value1.PropertyGetDouble("length");
             var retArray = new List<TElement>();
@@ -44,7 +44,7 @@ namespace SpawnDev.SpawnJS.Marshallers
             return retArray;
         }
         /// <inheritdoc/>
-        public override void NetToJS(Type type, SpawnJSObjectReference jsParent, double jsKey, List<TElement>? objects)
+        public override void NetToJS(SpawnJSObjectReference jsParent, double jsKey, List<TElement>? objects)
         {
             // Build a fresh JS array, write each element into it, then assign it to the parent property.
             if (objects == null) { jsParent.PropertySetNull(jsKey); return; }
@@ -53,7 +53,7 @@ namespace SpawnDev.SpawnJS.Marshallers
             jsParent.PropertySet(jsKey, outArray);
         }
         /// <inheritdoc/>
-        public override void NetToJS(Type type, SpawnJSObjectReference jsParent, string jsKey, List<TElement>? objects)
+        public override void NetToJS(SpawnJSObjectReference jsParent, string jsKey, List<TElement>? objects)
         {
             // Build a fresh JS array, write each element into it, then assign it to the parent property.
             if (objects == null) { jsParent.PropertySetNull(jsKey); return; }

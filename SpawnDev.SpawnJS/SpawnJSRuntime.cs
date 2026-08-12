@@ -72,6 +72,7 @@ namespace SpawnDev.SpawnJS
             Marshallers.Add(new SpawnJSObjectReferenceMarshaller());
             Marshallers.Add(new ArrayMarshaller<object>());
             Marshallers.Add(new ListMarshaller<object>());
+            // load method names to enable indexed based interop calling (vs string)
             InteropMethods = Get<string[]>("SpawnJSInterop._methodMapNames");
         }
     }
