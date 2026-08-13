@@ -796,9 +796,13 @@
                 case 2:  // Boolean
                 case 3:  // DoubleNullable
                 case 4:  // BooleanNullable
-                case 5:  // String
                 case 9:  // Int32
                 case 10: // Int32Nullable
+                    return ret;
+                case 5:  // String
+                    if (ret && typeof ret !== 'string') {
+                        ret = ret.toString();
+                    }
                     return ret;
             }
             // the default is to return as is

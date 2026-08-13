@@ -29,6 +29,9 @@ try
     await Task.Delay(1);
 
 
+    var errorS = JS.Get<string>("_error");
+
+
     var data = new byte[] { 10, 20, 30, 40 };
 
     var kk = JS.New("Uint8Array", 8);

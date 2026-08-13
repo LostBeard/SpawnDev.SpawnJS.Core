@@ -15,6 +15,7 @@
             console.log('<< testAsync');
             return msg;
         }
+        globalThis._error = new Error('some error');
     </script>
 </head>
 <body>
