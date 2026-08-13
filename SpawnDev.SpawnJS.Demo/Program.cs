@@ -31,8 +31,8 @@ try
             JS.Set("_fromHeapViewDescriptor", heapViewDescriptor);
             // It can be converted into a Uint8Array using `SpawnJSRuntime.As`
             // ArrayBufferViews created from a HeapViewDescriptor are special;
-            // They are tagged with `_heapViewInfo` which allow it to get rebuilt automatically by the HeapView reviver `__reviverHeapView`
-            // This allows easier use of heap base ArrayBufferViews for performant .Net to JS data transfers
+            // They are tagged with `_heapViewInfo` which allows it to get rebuilt automatically by the HeapView reviver `__reviverHeapView`
+            // This allows easier use of heap based ArrayBufferViews for performant .Net to JS data transfers
             using var uint8ArrayHeapView = JS.As<HeapViewDescriptor, SpawnJSObjectReference>(heapViewDescriptor);
             // settings the heap view Uint8Array to _fromUint8ArrayView
             // after we call GrowHeap _fromUint8ArrayView.buffer.detached will == true
@@ -53,8 +53,6 @@ try
             // uint8ArrayHeapView can continue to be used for calls even after the heap has resized
             var nmt = true;
         }
-        
-
     }
 
     {

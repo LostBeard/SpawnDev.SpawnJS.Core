@@ -14,6 +14,21 @@
 (function () {
     if (globalThis.SpawnJSInterop) return;
     class SpawnJSInterop {
+        static HeapViewCtors = [
+            globalThis.BigInt64Array,                     // 0: BigInt64Array
+            globalThis.BigUint64Array,                    // 1: BigUInt64Array
+            globalThis.Float16Array,                      // 2: Float16Array
+            globalThis.Float32Array,                      // 3: Float32Array
+            globalThis.Float64Array,                      // 4: Float64Array
+            globalThis.Int16Array,                        // 5: Int16Array
+            globalThis.Int32Array,                        // 6: Int32Array
+            globalThis.Int8Array,                         // 7: Int8Array
+            globalThis.Uint16Array,                       // 8: Uint16Array
+            globalThis.Uint32Array,                       // 9: Uint32Array
+            globalThis.Uint8Array,                        // 10: Uint8Array
+            globalThis.Uint8ClampedArray,                 // 11: Uint8ClampedArray
+            globalThis.DataView                           // 12: DataView
+        ];
         static _revivers = [];
         static _replacers = [];
         // method names for index based calling as an alternative to string
@@ -347,28 +362,7 @@
             parent[propertyName] = copy ? value.slice() : value;
         }
         static getArrayBufferViewConstructor(viewType) {
-            var ctor = null;
-            switch (viewType) {
-                // big
-                case 0: ctor = BigInt64Array; break;
-                case 1: ctor = BigUint64Array; break;
-                // float
-                case 2: ctor = typeof Float16Array !== 'undefined' ? Float16Array : null; break; // Float16Array is newer spec
-                case 3: ctor = Float32Array; break;
-                case 4: ctor = Float64Array; break;
-                // int
-                case 5: ctor = Int16Array; break;
-                case 6: ctor = Int32Array; break;
-                case 7: ctor = Int8Array; break;
-                // uint
-                case 8: ctor = Uint16Array; break;
-                case 9: ctor = Uint32Array; break;
-                case 10: ctor = Uint8Array; break;
-                case 11: ctor = Uint8ClampedArray; break;
-                // data view
-                case 12: ctor = DataView; break
-            }
-            return ctor;
+            return SpawnJSInterop.HeapViewCtors[viewType];
         }
         static getHeapSize(dotnetId) {
             var dotnet = SpawnJSInterop.spawnJSObjectGet(dotnetId);
@@ -385,21 +379,23 @@
             return value;
         }
         static __reviverHeapView(key, value, directCall, reviverConfig) {
-            if (directCall && value && typeof value === 'string') {
-                var heapViewInfo = JSON.parse(value);
-                if (!heapViewInfo.viewType) heapViewInfo.viewType = 'Uint8Array';
-                heapViewInfo.instance = SpawnJSInterop.getInstace(heapViewInfo.dotnetId);
-                heapViewInfo.dotnet = SpawnJSInterop.spawnJSObjectGet(heapViewInfo.dotnetId);
-                heapViewInfo.ctor = SpawnJSInterop.getArrayBufferViewConstructor(heapViewInfo.viewType);
-                heapViewInfo.sizeHistory = [];
-                // 
-                heapViewInfo.buffer = SpawnJSInterop.wasmMemoryBuffer(heapViewInfo.dotnet);
-                var value = new heapViewInfo.ctor(heapViewInfo.buffer, heapViewInfo.offset, heapViewInfo.length);
-                value._heapViewInfo = heapViewInfo;
-                heapViewInfo.bufferLength = heapViewInfo.buffer.byteLength;
-                heapViewInfo.sizeHistory.push(heapViewInfo.bufferLength);
-                //
-                if (SpawnJSInterop.verbose) console.log('[SpawnJSInterop] created heap view', heapViewInfo);
+            if (directCall) {
+                if (value && typeof value === 'string') {
+                    var heapViewInfo = JSON.parse(value);
+                    if (!heapViewInfo.viewType) heapViewInfo.viewType = 'Uint8Array';
+                    heapViewInfo.instance = SpawnJSInterop.getInstace(heapViewInfo.dotnetId);
+                    heapViewInfo.dotnet = SpawnJSInterop.spawnJSObjectGet(heapViewInfo.dotnetId);
+                    heapViewInfo.ctor = SpawnJSInterop.getArrayBufferViewConstructor(heapViewInfo.viewType);
+                    heapViewInfo.sizeHistory = [];
+                    // 
+                    heapViewInfo.buffer = SpawnJSInterop.wasmMemoryBuffer(heapViewInfo.dotnet);
+                    var value = new heapViewInfo.ctor(heapViewInfo.buffer, heapViewInfo.offset, heapViewInfo.length);
+                    value._heapViewInfo = heapViewInfo;
+                    heapViewInfo.bufferLength = heapViewInfo.buffer.byteLength;
+                    heapViewInfo.sizeHistory.push(heapViewInfo.bufferLength);
+                    //
+                    if (SpawnJSInterop.verbose) console.log('[SpawnJSInterop] created heap view', heapViewInfo);
+                }
             } else if (value && typeof value === 'object' && SpawnJSInterop._in('_heapViewInfo', value)) {
                 // auto-reattach if needed
                 // this allows creating a fresh HeapView if needed on `set` and `call` (with the exception of call reattach only working if the view is in teh root args list. no object walking is done)
