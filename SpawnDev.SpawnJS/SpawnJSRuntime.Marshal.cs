@@ -456,6 +456,13 @@ namespace SpawnDev.SpawnJS
         internal static partial void _propertySetJson(double sjsId, string key, string value);
 
 
+        [JSImport("globalThis.SpawnJSInterop.propertySetHeapView")]
+        internal static partial void _propertySetHeapView(double sjsId, string key, double dotnetId, string viewType, double offset, double length);
+
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetHeapView")]
+        internal static partial void _propertySetHeapView(double sjsId, double key, double dotnetId, string viewType, double offset, double length);
+
 
         [JSImport("globalThis.SpawnJSInterop.propertySetWithReviver")]
         internal static partial void _propertySetWithReviver(double sjsId, string key, string value, double reviverIndex);

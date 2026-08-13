@@ -23,18 +23,34 @@ try
     {
         fixed (byte* ptr = data)
         {
-            // Convert the raw pointer to a standardized IntPtr or nuint if needed
             IntPtr address = (IntPtr)ptr;
-            var heapView = new HeapViewDescriptor(address.ToInt64(), data.Length);
-            JS.Set("_myHeapView1", heapView);
-            var uint8Array1 = JS.As<SpawnJSObjectReference>(new HeapViewDescriptor(address.ToInt64(), data.Length));
-            var length = uint8Array1.Get<double>("length");
+            var heapViewDescriptor = new HeapViewDescriptor(address.ToInt64(), data.Length);
+            // HeapViewDescriptor gets marshalled to JS as a Uint8Array (can be any ArrayBufferView)
+            // It is pointed at this instances .Net heap ArrayBufffer
+            JS.Set("_fromHeapViewDescriptor", heapViewDescriptor);
+            // It can be converted into a Uint8Array using `SpawnJSRuntime.As`
+            // ArrayBufferViews created from a HeapViewDescriptor are special;
+            // They are tagged with `_heapViewInfo` which allow it to get rebuilt automatically by the HeapView reviver `__reviverHeapView`
+            // This allows easier use of heap base ArrayBufferViews for performant .Net to JS data transfers
+            using var uint8ArrayHeapView = JS.As<HeapViewDescriptor, SpawnJSObjectReference>(heapViewDescriptor);
+            // settings the heap view Uint8Array to _fromUint8ArrayView
+            // after we call GrowHeap _fromUint8ArrayView.buffer.detached will == true
+            // but uint8ArrayHeapView can continue to be used because the HeapView reviver
+            // will replace the detached view with a new view automatically when the view is used in a call
+            JS.Set("_fromUint8ArrayViewBeforeGrow", uint8ArrayHeapView);
+            // force the heap to grow. (a testing feature)
             var growth = JS.GrowHeap();
+            // write how much the heap grew to console
             Console.WriteLine("growth", growth);
-            JS.Set("_myHeapView2", heapView);
-            var uint8Array2 = JS.As<SpawnJSObjectReference>(new HeapViewDescriptor(address.ToInt64(), data.Length));
-            JS.Set("_myHeapView3", uint8Array2);
-            JS.Set("_myHeapView4", uint8Array1);
+            // _fromUint8ArrayViewAfterGrow.buffer.detached == false
+            JS.Set("_fromUint8ArrayViewAfterGrow", uint8ArrayHeapView);
+            // check what is detached
+            var oldDetached = JS.Get<bool>("_fromUint8ArrayViewBeforeGrow.buffer.detached");
+            // oldDetached == true
+            var newDetached = JS.Get<bool>("_fromUint8ArrayViewAfterGrow.buffer.detached");
+            // oldDetached == false
+            // uint8ArrayHeapView can continue to be used for calls even after the heap has resized
+            var nmt = true;
         }
         
 

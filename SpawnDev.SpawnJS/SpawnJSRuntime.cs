@@ -60,6 +60,7 @@ namespace SpawnDev.SpawnJS
         private SpawnJSRuntime() : base(GlobalThis)
         {
             _instance = this;
+            AppJsonContext.Init();
             // Registration order matters: GetMarshaller scans this list in REVERSE, so a marshaller added
             // later takes precedence when more than one reports it can marshal a type. The more specific /
             // higher-priority handlers (arrays, object references) are therefore added last.
@@ -121,7 +122,7 @@ namespace SpawnDev.SpawnJS
         /// </summary>
         /// <typeparam name="T">The type to return value as</typeparam>
         /// <returns>value as type T</returns>
-        public T As<T>(object value) => InteropCall<double, object, T>("returnMe", Id, value);
+        public T As<T1, T>(T1 value) => InteropCall<T1, T>("returnMe", value);
 
         // Resolvers invoked by JS (_spawnJSInteropCallAsync) to complete a pending async call. error is
         // non-null when the JS promise rejected.

@@ -106,6 +106,10 @@ namespace SpawnDev.SpawnJS
             SpawnJSRuntime._propertySetWithReviver(Id, key, value, methodIndex, reviverConfig);
         }
 
+        public void PropertySetHeapView(string key, string viewType, long offset, long length) => SpawnJSRuntime._propertySetHeapView(Id, key, JS.DotnetInstance.Id, viewType, offset, length);
+
+        public void PropertySetHeapView(double key, string viewType, long offset, long length) => SpawnJSRuntime._propertySetHeapView(Id, key, JS.DotnetInstance.Id, viewType, offset, length);
+
         public void PropertySetWithReviver(string reviver, double key, string value)
         {
             var methodIndex = JS.InteropMethods.IndexOf(reviver);
