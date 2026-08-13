@@ -31,6 +31,7 @@ try
 
     var data = new int[] { 10, 20, 30, 40 };
 
+    var kk = JS.New<int>("Uint8Array", 8);
 
     JS.Set("_bytes", data);
 
