@@ -3,26 +3,50 @@
     /// <summary>
     /// A view of the dotnet heap
     /// </summary>
-    public class HeapViewDescriptor
+    public readonly struct HeapViewDescriptor
     {
         /// <summary>
         /// Memory offset
         /// </summary>
-        public long Offset { get; set; }
+        public long Offset { get; }
         /// <summary>
-        /// Length in bytes
+        /// Number of JSArrayBufferView elements
         /// </summary>
-        public long Length { get; set; }
+        public long Length { get; }
         /// <summary>
         /// Revive as this global type</br>
         /// Revives as a Uint8Array by default
         /// </summary>
-        public string? Type { get; set; }
-        public HeapViewDescriptor(long offset, long length, string? type = null)
+        public JSArrayBufferView Type { get; } = JSArrayBufferView.Uint8Array;
+        /// <summary>
+        /// If true this descriptor will be marshalled as a copy and not a live heap view.<br/>
+        /// </summary>
+        public bool Copy { get; }
+        /// <summary>
+        /// New instance
+        /// </summary>
+        /// <param name="offset">byte offset</param>
+        /// <param name="length">Number of JSArrayBufferView elements</param>
+        /// <param name="copy">Copy if true and a live heap view if false</param>
+        public HeapViewDescriptor(long offset, long length, bool copy = true)
+        {
+            Offset = offset;
+            Length = length;
+            Copy = copy;
+        }
+        /// <summary>
+        /// New instance
+        /// </summary>
+        /// <param name="offset">byte offset</param>
+        /// <param name="length">Number of JSArrayBufferView elements</param>
+        /// <param name="type">ArrayBufferView type</param>
+        /// <param name="copy">Copy if true and a live heap view if false</param>
+        public HeapViewDescriptor(long offset, long length, JSArrayBufferView type, bool copy = true)
         {
             Offset = offset;
             Length = length;
             Type = type;
+            Copy = copy;
         }
     }
 }

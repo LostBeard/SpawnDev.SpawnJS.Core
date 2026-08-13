@@ -9,4 +9,20 @@ namespace SpawnDev.SpawnJS.Marshallers
         public override void NetToJS(SpawnJSObjectReference jsParent, double jsKey, bool value) => jsParent.PropertySet(jsKey, value);
         public override void NetToJS(SpawnJSObjectReference jsParent, string jsKey, bool value) => jsParent.PropertySet(jsKey, value);
     }
+    public class ByteArrayMarshaller : JSMarshallerFromSpawnJSObjectReference<byte[]?>
+    {
+        public override byte[]? JSToNet(SpawnJSObjectReference value)
+        {
+
+            return default;
+        }
+        public override void NetToJS(SpawnJSObjectReference jsParent, double jsKey, byte[]? value)
+        {
+            // 
+        }
+        public override void NetToJS(SpawnJSObjectReference jsParent, string jsKey, byte[]? value)
+        {
+
+        }
+    }
 }

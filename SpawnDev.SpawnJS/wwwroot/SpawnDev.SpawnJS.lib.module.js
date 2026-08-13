@@ -140,7 +140,7 @@
             return cnt;
         }
         static registerReviver(name, reviver) {
-            if (name.indexOf('__reviver') !== 0 ) throw new Error('Reviver names must start with __reviver');
+            if (name.indexOf('__reviver') !== 0) throw new Error('Reviver names must start with __reviver');
             if (SpawnJSInterop[name]) {
                 // already exists. fail quitely as it could just mean another app loaded that uses the same revivers
                 return false;
@@ -325,7 +325,55 @@
             parent[propertyName] = value;
         }
         // set property to a HeapView
-        static propertySetHeapView(sjsId, key, dotnetId, viewType, offset, length) {
+        static propertySetHeapView(sjsId, key, dotnetId, viewType, offset, length, copy) {
+            var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
+            if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
+            var { parent, propertyName, shortCircuit } = SpawnJSInterop.pathObjectInfo(obj, key);
+            if (shortCircuit) return;
+            //
+            var heapViewInfo = { dotnetId, viewType, offset, length };
+            if (!heapViewInfo.viewType) heapViewInfo.viewType = 'Uint8Array';
+            heapViewInfo.instance = SpawnJSInterop.getInstace(heapViewInfo.dotnetId);
+            heapViewInfo.dotnet = SpawnJSInterop.spawnJSObjectGet(heapViewInfo.dotnetId);
+            heapViewInfo.sizeHistory = [];
+            // 
+            var ctor = SpawnJSInterop.getArrayBufferViewConstructor(viewType);
+            //
+            heapViewInfo.buffer = SpawnJSInterop.wasmMemoryBuffer(heapViewInfo.dotnet);
+            var value = new ctor(heapViewInfo.buffer, heapViewInfo.offset, heapViewInfo.length);
+            value._heapViewInfo = heapViewInfo;
+            heapViewInfo.bufferLength = heapViewInfo.buffer.byteLength;
+            heapViewInfo.sizeHistory.push(heapViewInfo.bufferLength);
+            //
+            parent[propertyName] = copy ? value.slice() : value;
+        }
+        static getArrayBufferViewConstructor(viewType) {
+            var ctor = null;
+            switch (viewType) {
+                // big
+                case 0: ctor = BigInt64Array; break;
+                case 1: ctor = BigUint64Array; break;
+                // float
+                case 2: ctor = typeof Float16Array !== 'undefined' ? Float16Array : null; break; // Float16Array is newer spec
+                case 3: ctor = Float32Array; break;
+                case 4: ctor = Float64Array; break;
+                // int
+                case 5: ctor = Int16Array; break;
+                case 6: ctor = Int32Array; break;
+                case 7: ctor = Int8Array; break;
+                // uint
+                case 8: ctor = Uint16Array; break;
+                case 9: ctor = Uint32Array; break;
+                case 10: ctor = Uint8Array; break;
+                case 11: ctor = Uint8ClampedArray; break;
+                // data view
+                case 12: ctor = DataView; break;
+                default: throw new Error(`Unsupported viewType: ${viewType}`);
+            }
+            return ctor;
+        }
+        // set property to a HeapView
+        static propertySetHeapViewCopy(sjsId, key, dotnetId, viewType, offset, length) {
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
             if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
             var { parent, propertyName, shortCircuit } = SpawnJSInterop.pathObjectInfo(obj, key);
@@ -338,10 +386,10 @@
             heapViewInfo.sizeHistory = [];
             // 
             heapViewInfo.buffer = SpawnJSInterop.wasmMemoryBuffer(heapViewInfo.dotnet);
-            var value = new globalThis[heapViewInfo.viewType](heapViewInfo.buffer, heapViewInfo.offset, heapViewInfo.length);
-            value._heapViewInfo = heapViewInfo;
-            heapViewInfo.bufferLength = heapViewInfo.buffer.byteLength;
-            heapViewInfo.sizeHistory.push(heapViewInfo.bufferLength);
+            var value = null;
+            var ctor = globalThis[heapViewInfo.viewType];
+            value = new ctor(heapViewInfo.buffer, heapViewInfo.offset, heapViewInfo.length);
+            value = value.slice();
             //
             parent[propertyName] = value;
         }

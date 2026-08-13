@@ -105,10 +105,17 @@ namespace SpawnDev.SpawnJS
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {reviver}");
             SpawnJSRuntime._propertySetWithReviver(Id, key, value, methodIndex, reviverConfig);
         }
+        public void PropertySetHeapView(string key, long offset, long length, bool copy = true)
+            => PropertySetHeapView(key, offset, length, JSArrayBufferView.Uint8Array, copy);
 
-        public void PropertySetHeapView(string key, string viewType, long offset, long length) => SpawnJSRuntime._propertySetHeapView(Id, key, JS.DotnetInstance.Id, viewType, offset, length);
+        public void PropertySetHeapView(double key, long offset, long length, bool copy = true)
+            => PropertySetHeapView(key,offset,length, JSArrayBufferView.Uint8Array, copy);
 
-        public void PropertySetHeapView(double key, string viewType, long offset, long length) => SpawnJSRuntime._propertySetHeapView(Id, key, JS.DotnetInstance.Id, viewType, offset, length);
+        public void PropertySetHeapView(string key, long offset, long length, JSArrayBufferView viewType, bool copy = true) 
+            => SpawnJSRuntime._propertySetHeapView(Id, key, JS.DotnetInstance.Id, (double)viewType, offset, length, copy);
+
+        public void PropertySetHeapView(double key, long offset, long length, JSArrayBufferView viewType, bool copy = true)
+            => SpawnJSRuntime._propertySetHeapView(Id, key, JS.DotnetInstance.Id, (double)viewType, offset, length, copy);
 
         public void PropertySetWithReviver(string reviver, double key, string value)
         {

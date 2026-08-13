@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+
 try
 {
     var JS = SpawnJSRuntime.Instance;
@@ -24,7 +25,7 @@ try
         fixed (byte* ptr = data)
         {
             IntPtr address = (IntPtr)ptr;
-            var heapViewDescriptor = new HeapViewDescriptor(address.ToInt64(), data.Length);
+            var heapViewDescriptor = new HeapViewDescriptor(address, data.Length);
             // HeapViewDescriptor gets marshalled to JS as a Uint8Array (can be any ArrayBufferView)
             // It is pointed at this instances .Net heap ArrayBufffer
             JS.Set("_fromHeapViewDescriptor", heapViewDescriptor);
