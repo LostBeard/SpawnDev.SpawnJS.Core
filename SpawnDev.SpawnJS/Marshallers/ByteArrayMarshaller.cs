@@ -20,7 +20,7 @@ namespace SpawnDev.SpawnJS.Marshallers
             }
             return ret;
         }
-        public override void NetToJS(SpawnJSObjectReference jsParent, double jsKey, byte[]? value)
+        public override void NetToJS(SpawnJSObjectReference jsParent, int jsKey, byte[]? value)
         {
             if (value == null)
             {

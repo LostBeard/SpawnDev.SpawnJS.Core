@@ -6,7 +6,7 @@ namespace SpawnDev.SpawnJS.Marshallers
     public class BooleanNullableMarshaller : JSMarshallerFromBooleanNullable<bool?>
     {
         public override bool? JSToNet(bool? value) => value;
-        public override void NetToJS(SpawnJSObjectReference jsParent, double jsKey, bool? value) => jsParent.PropertySet(jsKey, value);
+        public override void NetToJS(SpawnJSObjectReference jsParent, int jsKey, bool? value) => jsParent.PropertySet(jsKey, value);
         public override void NetToJS(SpawnJSObjectReference jsParent, string jsKey, bool? value) => jsParent.PropertySet(jsKey, value);
     }
 }

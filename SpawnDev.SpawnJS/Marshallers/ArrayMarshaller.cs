@@ -44,7 +44,7 @@ namespace SpawnDev.SpawnJS.Marshallers
             return retArray;
         }
         /// <inheritdoc/>
-        public override void NetToJS(SpawnJSObjectReference jsParent, double jsKey, TElement[]? objects)
+        public override void NetToJS(SpawnJSObjectReference jsParent, int jsKey, TElement[]? objects)
         {
             // Build a fresh JS array, write each element into it, then assign it to the parent property.
             if (objects == null) { jsParent.PropertySetNull(jsKey); return; }

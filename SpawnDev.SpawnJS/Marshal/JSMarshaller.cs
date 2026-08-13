@@ -68,6 +68,16 @@
         /// Convert from ReturnType to .Net type<br/>
         /// Returns null when the JS value is null/undefined or the target type's default value is null.
         /// </summary>
+        public virtual TType JSToNet(int value) => throw new NotImplementedException(this.GetType().Name);
+        /// <summary>
+        /// Convert from ReturnType to .Net type<br/>
+        /// Returns null when the JS value is null/undefined or the target type's default value is null.
+        /// </summary>
+        public virtual TType JSToNet(int? value) => throw new NotImplementedException(this.GetType().Name);
+        /// <summary>
+        /// Convert from ReturnType to .Net type<br/>
+        /// Returns null when the JS value is null/undefined or the target type's default value is null.
+        /// </summary>
         public virtual TType JSToNet(string value) => throw new NotImplementedException(this.GetType().Name);
         /// <summary>
         /// Convert from ReturnType to .Net type<br/>
@@ -83,6 +93,6 @@
         /// Given a JS parent object, the JS property key, and the .Net value: write the value.<br/>
         /// <paramref name="type"/> and <paramref name="value"/> may be null when the .Net value being marshalled is null.
         /// </summary>
-        public abstract void NetToJS(SpawnJSObjectReference jsParent, double jsKey, TType value);
+        public abstract void NetToJS(SpawnJSObjectReference jsParent, int jsKey, TType value);
     }
 }

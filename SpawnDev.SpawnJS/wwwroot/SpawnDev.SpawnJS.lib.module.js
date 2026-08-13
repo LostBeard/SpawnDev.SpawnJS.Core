@@ -58,12 +58,12 @@
             // });
             SpawnJSInterop.refreshMethodMap();
         }
-        static _registerInstance(dotnet, onMethodAdded, resolveVoid, resolveDouble, resolveBoolean, resolveVoidString, resolveDoubleNullable, resolveBooleanNullable, handleCallback) {
+        static _registerInstance(dotnet, onMethodAdded, resolveVoid, resolveDouble, resolveBoolean, resolveVoidString, resolveDoubleNullable, resolveBooleanNullable, resolveInt32, resolveInt32Nullable, handleCallback) {
             if (!dotnet) throw new Error('dotnet not set');
             var instanceInfo = SpawnJSInterop._getInstaceFromDotNet(dotnet);
             if (instanceInfo) return instanceInfo.dotnetId;
             var dotnetId = SpawnJSInterop.spawnJSObjectHold(dotnet);
-            var instanceInfo = { dotnet, dotnetId, onMethodAdded, resolveVoid, resolveDouble, resolveBoolean, resolveVoidString, resolveDoubleNullable, resolveBooleanNullable, handleCallback };
+            var instanceInfo = { dotnet, dotnetId, onMethodAdded, resolveVoid, resolveDouble, resolveBoolean, resolveVoidString, resolveDoubleNullable, resolveBooleanNullable, resolveInt32, resolveInt32Nullable, handleCallback };
             SpawnJSInterop._instances[dotnetId] = instanceInfo;
             if (SpawnJSInterop.verbose) console.log('[SpawnJSInterop] Instance registered', instanceInfo);
             return dotnetId;
@@ -697,6 +697,12 @@
                 case 8: // Json
                     instance.resolveString(asyncCallId, ret, error);
                     break;
+                case 9: // Int32
+                    instance.resolveInt32(asyncCallId, ret, error);
+                    break;
+                case 10: // Int32Nullable
+                    instance.resolveInt32Nullable(asyncCallId, ret, error);
+                    break;
                 default:
                     throw new Error(`Unsupported returnType ${returnType}`);
                     break;
@@ -730,22 +736,24 @@
         // prepares the variable for .Net based on returnType
         static _serializeToNet(returnType, ret) {
             switch (returnType) {
-                case 0: // void
+                case 0:  // void
                     return;
-                case 1: // Double
-                case 2: // Boolean
-                case 3: // DoubleNullable
-                case 4: // BooleanNullable
-                case 5: // String
-                    return ret;
-                case 6: // SpawnJSObject - Number
-                case 7: // SpawnJSObjectNonNullable - Number
+                case 6:  // SpawnJSObject - Number
+                case 7:  // SpawnJSObjectNonNullable - Number
                     return SpawnJSInterop.spawnJSObjectHold(ret);
-                case 8: // Json
+                case 8:  // Json
                     return JSON.stringify(ret);
+                case 1:  // Double
+                case 2:  // Boolean
+                case 3:  // DoubleNullable
+                case 4:  // BooleanNullable
+                case 5:  // String
+                case 9:  // Int32
+                case 10: // Int32Nullable
+                    return ret;
             }
-            // the default is to wrap itand let .Net decide how to handle it
-            return SpawnJSInterop.spawnJSObjectHold(ret);
+            // the default is to return as is
+            return ret;
         }
         static wasmMemoryBuffer(dotnet) {
             var found = SpawnJSInterop.#findWasmMemory(dotnet);

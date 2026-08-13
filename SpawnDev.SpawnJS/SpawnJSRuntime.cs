@@ -82,13 +82,15 @@ namespace SpawnDev.SpawnJS
             // immediately reduce it to a numeric SpawnJSObjectReference id. Never touched as a JSObject again.
             DotnetInstance = new SpawnJSObjectReference(
                 _registerInstance(JSHost.DotnetInstance,
-                _JSToNetMappedMethodsChanged,
+                MappedMethodsChanged,
                 AsyncCallResolvedVoid,
-                AsyncCallResolvedDouble,
-                AsyncCallResolvedBoolean,
-                AsyncCallResolvedString,
-                AsyncCallResolvedDoubleNullable,
-                AsyncCallResolvedBooleanNullable,
+                ResolveDouble,
+                ResolveBoolean,
+                ResolveString,
+                ResolveDoubleNullable,
+                ResolveBooleanNullable,
+                ResolveInt32,
+                ResolveInt32Nullable,
                 Callback.HandleCallback));
             // load method names to enable indexed based interop calling (vs string)
             InteropMethods = _refreshMethodMap();
@@ -115,44 +117,11 @@ namespace SpawnDev.SpawnJS
                 tmp.Add(data);
             }
         }
-        private void _JSToNetMappedMethodsChanged()
-        {
-            Console.WriteLine($"_JSToNetMappedMethodsChanged");
-            InteropMethods = _refreshMethodMap();
-        }
-
         /// <summary>
         /// Returns value as type T
         /// </summary>
         /// <typeparam name="T">The type to return value as</typeparam>
         /// <returns>value as type T</returns>
         public T As<T1, T>(T1 value) => InteropCall<T1, T>("returnMe", value);
-
-        // Resolvers invoked by JS (_spawnJSInteropCallAsync) to complete a pending async call. error is
-        // non-null when the JS promise rejected.
-        void AsyncCallResolvedVoid(double asyncCallId, string? error)
-        {
-            if (_voidCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(error);
-        }
-        void AsyncCallResolvedDouble(double asyncCallId, double value, string? error)
-        {
-            if (_doubleCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
-        }
-        void AsyncCallResolvedBoolean(double asyncCallId, bool value, string? error)
-        {
-            if (_booleanCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
-        }
-        void AsyncCallResolvedString(double asyncCallId, string? value, string? error)
-        {
-            if (_stringCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
-        }
-        void AsyncCallResolvedDoubleNullable(double asyncCallId, object? value, string? error)
-        {
-            if (_doubleNullableCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask((double?)value, error);
-        }
-        void AsyncCallResolvedBooleanNullable(double asyncCallId, object? value, string? error)
-        {
-            if (_booleanNullableCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask((bool?)value, error);
-        }
     }
 }

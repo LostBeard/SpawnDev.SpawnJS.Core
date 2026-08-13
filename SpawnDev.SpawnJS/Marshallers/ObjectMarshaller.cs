@@ -6,7 +6,7 @@ namespace SpawnDev.SpawnJS.Marshallers
     public class ObjectMarshaller : JSMarshallerFromSpawnJSObjectReference<object>
     {
         public override object JSToNet(SpawnJSObjectReference value) => value;
-        public override void NetToJS(SpawnJSObjectReference jsParent, double jsKey, object value)
+        public override void NetToJS(SpawnJSObjectReference jsParent, int jsKey, object value)
         {
             if (value == null)
             {

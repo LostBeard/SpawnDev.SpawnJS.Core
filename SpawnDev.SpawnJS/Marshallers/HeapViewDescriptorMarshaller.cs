@@ -8,7 +8,7 @@ namespace SpawnDev.SpawnJS.Marshallers
         {
             throw new NotImplementedException();
         }
-        public override void NetToJS(SpawnJSObjectReference jsParent, double jsKey, HeapViewDescriptor value)
+        public override void NetToJS(SpawnJSObjectReference jsParent, int jsKey, HeapViewDescriptor value)
         {
             jsParent.PropertySetHeapView(jsKey, value.Offset, value.Length, value.Type, value.Copy);
         }

@@ -22,7 +22,7 @@ namespace SpawnDev.SpawnJS.Marshallers
         {
             throw new NotImplementedException();
         }
-        public override void NetToJS(SpawnJSObjectReference jsParent, double jsKey, TCallback? value)
+        public override void NetToJS(SpawnJSObjectReference jsParent, int jsKey, TCallback? value)
         {
             jsParent.PropertySet(jsKey, value);
         }

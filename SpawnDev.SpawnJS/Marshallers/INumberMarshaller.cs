@@ -24,7 +24,7 @@ namespace SpawnDev.SpawnJS.Marshallers
             return TNumber.CreateChecked(value);
         }
 
-        public override void NetToJS(SpawnJSObjectReference jsParent, double jsKey, TNumber value)
+        public override void NetToJS(SpawnJSObjectReference jsParent, int jsKey, TNumber value)
         {
             double doubleValue = double.CreateChecked(value);
             jsParent.PropertySet(jsKey, doubleValue);
