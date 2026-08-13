@@ -440,10 +440,10 @@ namespace SpawnDev.SpawnJS
         internal static partial void _releaseCallback(double callbackId);
 
         [JSImport("globalThis.SpawnJSInterop.propertySetCallback")]
-        internal static partial void _propertySetCallback(double sjsId, string key, double dotnetId, double callbackId);
+        internal static partial void _propertySetCallback(double sjsId, string key, double dotnetId, double callbackId, bool once);
 
         [JSImport("globalThis.SpawnJSInterop.propertySetCallback")]
-        internal static partial void _propertySetCallback(double sjsId, double key, double dotnetId, double callbackId);
+        internal static partial void _propertySetCallback(double sjsId, double key, double dotnetId, double callbackId, bool once);
 
         [JSImport("globalThis.SpawnJSInterop.propertySet")]
         internal static partial void _propertySet(double sjsId, string key, string value);

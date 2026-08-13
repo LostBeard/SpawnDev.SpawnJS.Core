@@ -345,7 +345,7 @@
         static releaseCallback(callbackId) {
             delete SpawnJSInterop._callbacks[callbackId];
         }
-        static propertySetCallback(sjsId, key, dotnetId, callbackId) {
+        static propertySetCallback(sjsId, key, dotnetId, callbackId, once) {
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
             if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
             var { parent, propertyName, shortCircuit } = SpawnJSInterop.pathObjectInfo(obj, key);
@@ -356,15 +356,24 @@
             var value = SpawnJSInterop._callbacks[callbackId];
             if (!value) {
                 value = function (...args) {
+                    // check if the callback has been removed
                     if (!SpawnJSInterop._callbacks[callbackId]) {
                         return;
                     }
+                    // get the SpawnJSRuntime instance's method that is used to report the callback 
                     var { handleCallback } = SpawnJSInterop.getInstace(dotnetId);
-                    // get argsCnt because after when we call handleCallback .Net will write the return value to at the end of the array after the last argument
+                    // get argsCnt because after when we call handleCallback .Net will write
+                    // the return value to at the end of the array after the last argument (index argsCnt)
                     // unless the return value should be undefined
                     var argsCnt = args.length;
+                    // get a temporary hold of the args (released after we notify SpawnJSRuntime)
                     var argsId = SpawnJSInterop.spawnJSObjectHold(args);
+                    // notify SpawnJSRuntime with the argsId and the cnt
                     handleCallback(callbackId, argsId, argsCnt);
+                    // release the args
+                    SpawnJSInterop.spawnJSObjectRelease(argsId);
+                    // if it was a 1 time use callback, release it
+                    if (once) delete SpawnJSInterop._callbacks[callbackId];
                     // return what is in index argsCnt (the designated place .Net will write to if there is a return value)
                     return args[argsCnt];
                 };

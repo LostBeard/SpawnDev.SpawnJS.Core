@@ -51,9 +51,17 @@ namespace SpawnDev.SpawnJS
 
         public void PropertySet(string key, SpawnJSObjectReference? value) => SpawnJSRuntime._propertySetSpawnJSObject(Id, key, value?.Id ?? NullId);
 
-        public void PropertySet(string key, Callback? value) => SpawnJSRuntime._propertySetCallback(Id, key, JS.DotnetInstance.Id, value?.Id ?? 0);
+        public void PropertySet(string key, Callback? value)
+        {
+            value?.Sent = true;
+            SpawnJSRuntime._propertySetCallback(Id, key, JS.DotnetInstance.Id, value?.Id ?? 0, value?.Once ?? false);
+        }
 
-        public void PropertySet(double key, Callback? value) => SpawnJSRuntime._propertySetCallback(Id, key, JS.DotnetInstance.Id, value?.Id ?? 0);
+        public void PropertySet(double key, Callback? value)
+        {
+            value?.Sent = true;
+            SpawnJSRuntime._propertySetCallback(Id, key, JS.DotnetInstance.Id, value?.Id ?? 0, value?.Once ?? false);
+        }
 
         public void PropertySetJson(string key, object? value, JsonSerializerOptions? serializerOptions = null)
             => SpawnJSRuntime._propertySetJson(Id, key, JsonSerializer.Serialize(value, serializerOptions));
