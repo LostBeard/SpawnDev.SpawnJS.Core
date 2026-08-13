@@ -15,7 +15,7 @@
     if (globalThis.SpawnJSInterop) return;
     class SpawnJSInterop {
         // enables verbose logging
-        static verbose = true;
+        static verbose = false;
         // ArrayBufferView constructors
         static HeapViewCtors = [
             globalThis.BigInt64Array,                     // 0: BigInt64Array

@@ -3,6 +3,7 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+		<CompressionEnabled>false</CompressionEnabled>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\SpawnDev.SpawnJS\SpawnDev.SpawnJS.csproj" />
