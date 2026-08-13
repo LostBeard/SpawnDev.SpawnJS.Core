@@ -409,7 +409,9 @@
             if (!callbackId || !dotnetId) {
                 return null;
             }
+            // get callback id that is globally unique
             var callbackIdPair = `${dotnetId}_${callbackId}`;
+            // check if it exists and createa new function if not
             var value = SpawnJSInterop._callbacks[callbackIdPair];
             if (!value) {
                 value = function (...args) {
@@ -801,7 +803,7 @@
                     return ret;
                 case 5:  // String
                     if (ret && typeof ret !== 'string') {
-                        ret = ret.toString();
+                        ret = Object(ret).toString();
                     }
                     return ret;
             }

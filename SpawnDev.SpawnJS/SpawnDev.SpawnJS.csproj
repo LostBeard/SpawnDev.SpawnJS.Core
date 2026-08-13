@@ -8,6 +8,10 @@
 		<CompressionEnabled>false</CompressionEnabled>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<StaticWebAssetBasePath Condition="$(StaticWebAssetBasePath) == ''">/</StaticWebAssetBasePath>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
 	</ItemGroup>

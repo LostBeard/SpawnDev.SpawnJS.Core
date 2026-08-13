@@ -139,7 +139,5 @@ namespace SpawnDev.SpawnJS
 
         [JSImport("globalThis.SpawnJSInterop.propertyTypeInfo")]
         internal static partial string _propertyTypeInfo(double sjsId, string key);
-
-
     }
 }

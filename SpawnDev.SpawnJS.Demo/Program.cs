@@ -13,6 +13,7 @@ try
     JS.Verbose = false;
 
     var js = (SpawnJSObjectReference)JS;
+    js.
 
     async Task MyMethod(string msg, SpawnJSObjectReference window)
     {

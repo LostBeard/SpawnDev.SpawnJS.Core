@@ -1,18 +1,12 @@
 ﻿using SpawnDev.SpawnJS.Marshal;
-using SpawnDev.SpawnJS.Marshallers;
-using System.Text.Json;
 
 namespace SpawnDev.SpawnJS
 {
     public partial class SpawnJSObjectReference
     {
-        public string PropertyTypeInfo(string key) => SpawnJSRuntime._propertyTypeInfo(Id, key);
-        public bool PropertyIn(string key) => SpawnJSRuntime._propertyIn(Id, key);
-        public bool PropertyDelete(string key) => SpawnJSRuntime._propertyDelete(Id, key);
         #region New
-        public T NewApply<T>(string key, object?[]? args = null) => JS.InteropCall<double, string, object?[]?, T>("propertyNewApply", Id, key, args);
-        public SpawnJSObjectReference NewApply(string key, object?[]? args = null) => JS.InteropCall<double, string, object?[]?, SpawnJSObjectReference>("propertyNewApply", Id, key, args);
-        public SpawnJSObjectReference New(string key) => JS.InteropCall<double, string, SpawnJSObjectReference>("propertyNew", Id, key);
+        public T NewApply<T>(string key, object?[]? args = null) 
+            => JS.InteropCall<double, string, object?[]?, T>("propertyNewApply", Id, key, args);
         public T New<T>(string key)
             => JS.InteropCall<double, string, T>("propertyNew", Id, key);
         public T New<T1, T>(string key, T1 arg1)
@@ -36,6 +30,10 @@ namespace SpawnDev.SpawnJS
         public T New<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
             => JS.InteropCall<double, string, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>("propertyNew", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
 
+        public SpawnJSObjectReference NewApply(string key, object?[]? args = null) 
+            => JS.InteropCall<double, string, object?[]?, SpawnJSObjectReference>("propertyNewApply", Id, key, args);
+        public SpawnJSObjectReference New(string key) 
+            => JS.InteropCall<double, string, SpawnJSObjectReference>("propertyNew", Id, key);
         public SpawnJSObjectReference New<T1>(string key, T1 arg1) 
             => JS.InteropCall<double, string, T1, SpawnJSObjectReference>("propertyNew", Id, key, arg1);
         public SpawnJSObjectReference New<T1, T2>(string key, T1 arg1, T2 arg2)
@@ -56,7 +54,6 @@ namespace SpawnDev.SpawnJS
             => JS.InteropCall<double, string, T1, T2, T3, T4, T5, T6, T7, T8, T9, SpawnJSObjectReference>("propertyNew", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
         public SpawnJSObjectReference New<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
             => JS.InteropCall<double, string, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, SpawnJSObjectReference>("propertyNew", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
-
         #endregion
         #region Call
         public void CallApplyVoid(string key, object?[]? args = null) => JS.InteropCall<double, string, object?[]?, VoidType>("propertyCallApply", Id, key, args);
@@ -168,185 +165,6 @@ namespace SpawnDev.SpawnJS
         #region GetAsync
         public Task<T> GetAsync<T>(string key) => JS.InteropCallAsync<double, string, T>("propertyGet", Id, key);
         public Task<SpawnJSObjectReference> GetAsync(string key) => JS.InteropCallAsync<double, string, SpawnJSObjectReference>("propertyGet", Id, key);
-        #endregion
-        #region PropertySet
-        public void PropertySetNull(string key) => SpawnJSRuntime._propertySetNull(Id, key);
-        public void PropertySetUndefined(string key) => SpawnJSRuntime._propertySetUndefined(Id, key);
-        public void PropertySet(string key, string value) => SpawnJSRuntime._propertySet(Id, key, value);
-        public void PropertySet(string key, bool value) => SpawnJSRuntime._propertySet(Id, key, value);
-        public void PropertySet(string key, double value) => SpawnJSRuntime._propertySet(Id, key, value);
-        public void PropertySet(string key, int value) => SpawnJSRuntime._propertySet(Id, key, value);
-        public void PropertySet(string key, bool? value) => SpawnJSRuntime._propertySet(Id, key, value);
-        public void PropertySet(string key, double? value) => SpawnJSRuntime._propertySet(Id, key, value);
-        public void PropertySet(string key, SpawnJSObjectReference? value) => SpawnJSRuntime._propertySetSpawnJSObject(Id, key, value?.Id ?? NullId);
-        public void PropertySet(string key, Callback? value)
-        {
-            value?.Sent = true;
-            SpawnJSRuntime._propertySetCallback(Id, key, JS.DotnetInstance.Id, value?.Id ?? 0, value?.Once ?? false);
-        }
-        public void PropertySetJson(string key, object? value, JsonSerializerOptions? serializerOptions = null)
-            => SpawnJSRuntime._propertySetJson(Id, key, JsonSerializer.Serialize(value, serializerOptions));
-        public void PropertySetWithReviver(string reviver, string key, string value)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(reviver);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {reviver}");
-            SpawnJSRuntime._propertySetWithReviver(Id, key, value, methodIndex);
-        }
-        public void PropertySetWithReviver(string reviver, string key, string value, string reviverConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(reviver);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {reviver}");
-            SpawnJSRuntime._propertySetWithReviver(Id, key, value, methodIndex, reviverConfig);
-        }
-        public void PropertySetWithReviver(string reviver, string key, string value, double reviverConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(reviver);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {reviver}");
-            SpawnJSRuntime._propertySetWithReviver(Id, key, value, methodIndex, reviverConfig);
-        }
-        public void PropertySetWithReviver(string reviver, string key, string value, bool reviverConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(reviver);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {reviver}");
-            SpawnJSRuntime._propertySetWithReviver(Id, key, value, methodIndex, reviverConfig);
-        }
-        public void PropertySetWithReviver(string reviver, string key, double value)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(reviver);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {reviver}");
-            SpawnJSRuntime._propertySetWithReviver(Id, key, value, methodIndex);
-        }
-        public void PropertySetWithReviver(string reviver, string key, double value, string reviverConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(reviver);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {reviver}");
-            SpawnJSRuntime._propertySetWithReviver(Id, key, value, methodIndex, reviverConfig);
-        }
-        public void PropertySetWithReviver(string reviver, string key, double value, double reviverConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(reviver);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {reviver}");
-            SpawnJSRuntime._propertySetWithReviver(Id, key, value, methodIndex, reviverConfig);
-        }
-        public void PropertySetWithReviver(string reviver, string key, double value, bool reviverConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(reviver);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {reviver}");
-            SpawnJSRuntime._propertySetWithReviver(Id, key, value, methodIndex, reviverConfig);
-        }
-        public void PropertySetHeapView(string key, long offset, long length, bool copy = true)
-            => PropertySetHeapView(key, offset, length, JSArrayBufferView.Uint8Array, copy);
-        public void PropertySetHeapView(string key, long offset, long length, JSArrayBufferView viewType, bool copy = true)
-            => SpawnJSRuntime._propertySetHeapView(Id, key, JS.DotnetInstance.Id, (double)viewType, offset, length, copy);
-        public void PropertySet(string key, HeapViewDescriptor value)
-            => SpawnJSRuntime._propertySetHeapView(Id, key, JS.DotnetInstance.Id, (double)value.Type, value.Offset, value.Length, value.Copy);
-        #endregion
-        #region PropertyGet
-        public string? PropertyGetWithReplacerString(string replacer, string key, double replacerConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerString(Id, methodIndex, key, replacerConfig);
-        }
-        public double PropertyGetWithReplacerDouble(string replacer, string key, double replacerConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerDouble(Id, methodIndex, key, replacerConfig);
-        }
-        public bool PropertyGetWithReplacerBoolean(string replacer, string key, double replacerConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerBoolean(Id, methodIndex, key, replacerConfig);
-        }
-        public double? PropertyGetWithReplacerDoubleNullable(string replacer, string key, double replacerConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerDoubleNullable(Id, methodIndex, key, replacerConfig);
-        }
-        public bool? PropertyGetWithReplacerBooleanNullable(string replacer, string key, double replacerConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerBooleanNullable(Id, methodIndex, key, replacerConfig);
-        }
-        public string? PropertyGetWithReplacerString(string replacer, string key, string replacerConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerString(Id, methodIndex, key, replacerConfig);
-        }
-        public double PropertyGetWithReplacerDouble(string replacer, string key, string replacerConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerDouble(Id, methodIndex, key, replacerConfig);
-        }
-        public bool PropertyGetWithReplacerBoolean(string replacer, string key, string replacerConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerBoolean(Id, methodIndex, key, replacerConfig);
-        }
-        public double? PropertyGetWithReplacerDoubleNullable(string replacer, string key, string replacerConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerDoubleNullable(Id, methodIndex, key, replacerConfig);
-        }
-        public bool? PropertyGetWithReplacerBooleanNullable(string replacer, string key, string replacerConfig)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerBooleanNullable(Id, methodIndex, key, replacerConfig);
-        }
-        public string? PropertyGetWithReplacerString(string replacer, string key)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerString(Id, methodIndex, key);
-        }
-        public double PropertyGetWithReplacerDouble(string replacer, string key)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerDouble(Id, methodIndex, key);
-        }
-        public bool PropertyGetWithReplacerBoolean(string replacer, string key)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerBoolean(Id, methodIndex, key);
-        }
-        public double? PropertyGetWithReplacerDoubleNullable(string replacer, string key)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerDoubleNullable(Id, methodIndex, key);
-        }
-        public bool? PropertyGetWithReplacerBooleanNullable(string replacer, string key)
-        {
-            var methodIndex = JS.InteropMethods.IndexOf(replacer);
-            if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerBooleanNullable(Id, methodIndex, key);
-        }
-        public string? PropertyGetString(string key) => SpawnJSRuntime._propertyGetString(Id, key);
-        public double PropertyGetDouble(string key) => SpawnJSRuntime._propertyGetDouble(Id, key);
-        public bool PropertyGetBoolean(string key) => SpawnJSRuntime._propertyGetBoolean(Id, key);
-        public double? PropertyGetDoubleNullable(string key) => SpawnJSRuntime._propertyGetDoubleNullable(Id, key);
-        public bool? PropertyGetBooleanNullable(string key) => SpawnJSRuntime._propertyGetBooleanNullable(Id, key);
-        public SpawnJSObjectReference? PropertyGetSpawnJSObjectReference(string key, bool force = false)
-        {
-            var id = SpawnJSRuntime._propertyGetSpawnJSObjectReference(Id, key, force);
-            return id == null ? null : new SpawnJSObjectReference(id.Value);
-        }
-        public T PropertyGetJson<T>(string key, JsonSerializerOptions? options = null)
-        {
-            var json = SpawnJSRuntime._propertyGetJson(Id, key);
-            return json == null ? default! : JsonSerializer.Deserialize<T>(json, options)!;
-        }
         #endregion
     }
 }
