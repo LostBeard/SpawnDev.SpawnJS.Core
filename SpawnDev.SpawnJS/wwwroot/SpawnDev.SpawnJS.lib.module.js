@@ -14,6 +14,9 @@
 (function () {
     if (globalThis.SpawnJSInterop) return;
     class SpawnJSInterop {
+        // enables verbose logging
+        static verbose = true;
+        // ArrayBufferView constructors
         static HeapViewCtors = [
             globalThis.BigInt64Array,                     // 0: BigInt64Array
             globalThis.BigUint64Array,                    // 1: BigUInt64Array
@@ -35,8 +38,6 @@
         static _methodMapNames = [];
         // methods mapped by index for index based calling as an alternative to string
         static _methodMap = [];
-        // enables verbose logging
-        static verbose = true;
         // The id -> JS value table. Holds every value .Net currently references.
         static spawnJSObjects = {};
         // Monotonic id source; never reused, so a stale .Net id can never collide with a live value.

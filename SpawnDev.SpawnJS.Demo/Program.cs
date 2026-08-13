@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 try
 {
     var JS = SpawnJSRuntime.Instance;
-    JS.Verbose = true;
+    JS.Verbose = false;
 
     using var document = JS.PropertyGetSpawnJSObjectReference("document");
     document.CallApplyVoid("write", new object?[] { $@"Starting...<br/>" });
