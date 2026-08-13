@@ -10,11 +10,26 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public abstract class Callback : IDisposable
     {
-        static double _callbackIdNext = 0;
+        /// <summary>
+        /// Callback id incrementer
+        /// </summary>
+        private static double _callbackIdNext = 0;
+        /// <summary>
+        /// Callback id
+        /// </summary>
         public double Id { get; private set; }
-        public double CalledCount { get; private set; }
+        /// <summary>
+        /// The number of times this Callback has been called
+        /// </summary>
+        public long CalledCount { get; private set; }
+        /// <summary>
+        /// Returns true if the Callback has been called at least once
+        /// </summary>
         public bool HasBeenCalled => CalledCount > 0;
-        static ConcurrentDictionary<double, Callback> _callbacks = new ConcurrentDictionary<double, Callback>();
+        /// <summary>
+        /// Holds all active Callbacks
+        /// </summary>
+        private static ConcurrentDictionary<double, Callback> _callbacks = new ConcurrentDictionary<double, Callback>();
         /// <summary>
         /// Returns true if the Callback should only fire at most once
         /// </summary>
@@ -24,15 +39,24 @@ namespace SpawnDev.SpawnJS
         /// A Callback that is not sent to Javascript does not have to and will not notify Javascript when it disposes.<br/>
         /// </summary>
         public bool Sent { get; internal set; }
+        /// <summary>
+        /// New Callback instance
+        /// </summary>
+        /// <param name="once"></param>
         public Callback(bool once)
         {
             Id = ++_callbackIdNext;
             Once = once;
             _callbacks.TryAdd(Id, this);
         }
-        protected abstract void HandleCallback(SpawnJSObjectReference? args, double argsCount);
         /// <summary>
-        /// 
+        /// The method inheriting classes must provide
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="argsCount"></param>
+        protected abstract void HandleCallback(SpawnJSObjectReference args, double argsCount);
+        /// <summary>
+        /// Recieved the notifications call from Javascript when a Callabck has been called
         /// </summary>
         /// <param name="argsId">The incoming AND outgoing buffer</param>
         internal static void HandleCallback(double callbackId, double argsId, double argsCount)
@@ -40,15 +64,24 @@ namespace SpawnDev.SpawnJS
             if (_callbacks.TryGetValue(callbackId, out var callback))
             {
                 // we use preventDispose = true on this SpawnJSObjectReference to save an unnecessary JS call in the dispose...
-                // this array will be released after the cann returns anyways so calling release on it again would be a waste
-                var args = SpawnJSObjectReference.FromID(argsId, preventDispose: true);
+                // this array will be automatically released after the call returns, so calling release on it again would be a waste
+                // args will never be null as JS is sending args from `function(...args)` which is always an array
+                var args = SpawnJSObjectReference.FromID(argsId, preventDispose: true)!;
                 // increment the CalledCount
                 callback.CalledCount++;
+                // Dispose now if Once (Javascript has already removed it on its end)
                 if (callback.Once) callback.Dispose();
+                // fire the strongly typed ActionCallback/FuncCallback handler
                 callback.HandleCallback(args, argsCount);
             }
         }
+        /// <summary>
+        /// Returns true if teh Callback has been disposed and can no long fire
+        /// </summary>
         public bool IsDisposed { get; private set; }
+        /// <summary>
+        /// Dispose the Callabck and release all resources
+        /// </summary>
         public void Dispose()
         {
             if (IsDisposed) return;

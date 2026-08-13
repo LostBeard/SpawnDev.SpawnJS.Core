@@ -15,9 +15,9 @@
         // args does not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
         /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
-        protected override void HandleCallback(SpawnJSObjectReference? args, double argsCount)
+        protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
-            var ret = args == null ? _callback() : _callback();
+            var ret = _callback();
             args?.Set(argsCount, ret);
         }
     }
@@ -36,9 +36,9 @@
         // args does not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
         /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
-        protected override void HandleCallback(SpawnJSObjectReference? args, double argsCount)
+        protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
-            var ret = args == null ? _callback(default!) : _callback(argsCount <= 0 ? default! : args.Get<T1>(0));
+            var ret = _callback(argsCount <= 0 ? default! : args.Get<T1>(0));
             args?.Set(argsCount, ret);
         }
     }
@@ -57,11 +57,9 @@
         // args does not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
         /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
-        protected override void HandleCallback(SpawnJSObjectReference? args, double argsCount)
+        protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
-            var ret = args == null ? _callback(default!, default!)
-            : _callback(
-                argsCount <= 0 ? default! : args.Get<T1>(0),
+            var ret = _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
                 argsCount <= 1 ? default! : args.Get<T2>(1));
             args?.Set(argsCount, ret);
         }
@@ -81,11 +79,9 @@
         // args does not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
         /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
-        protected override void HandleCallback(SpawnJSObjectReference? args, double argsCount)
+        protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
-            var ret = args == null ? _callback(default!, default!, default!)
-            : _callback(
-                argsCount <= 0 ? default! : args.Get<T1>(0),
+            var ret = _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
                 argsCount <= 1 ? default! : args.Get<T2>(1),
                 argsCount <= 2 ? default! : args.Get<T3>(2));
             args?.Set(argsCount, ret);
@@ -106,11 +102,9 @@
         // args does not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
         /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
-        protected override void HandleCallback(SpawnJSObjectReference? args, double argsCount)
+        protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
-            var ret = args == null ? _callback(default!, default!, default!, default!)
-            : _callback(
-                argsCount <= 0 ? default! : args.Get<T1>(0),
+            var ret = _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
                 argsCount <= 1 ? default! : args.Get<T2>(1),
                 argsCount <= 2 ? default! : args.Get<T3>(2),
                 argsCount <= 3 ? default! : args.Get<T4>(3));
@@ -132,11 +126,9 @@
         // args does not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
         /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
-        protected override void HandleCallback(SpawnJSObjectReference? args, double argsCount)
+        protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
-            var ret = args == null ? _callback(default!, default!, default!, default!, default!)
-            : _callback(
-                argsCount <= 0 ? default! : args.Get<T1>(0),
+            var ret = _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
                 argsCount <= 1 ? default! : args.Get<T2>(1),
                 argsCount <= 2 ? default! : args.Get<T3>(2),
                 argsCount <= 3 ? default! : args.Get<T4>(3),
@@ -159,11 +151,9 @@
         // args does not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
         /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
-        protected override void HandleCallback(SpawnJSObjectReference? args, double argsCount)
+        protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
-            var ret = args == null ? _callback(default!, default!, default!, default!, default!, default!)
-            : _callback(
-                argsCount <= 0 ? default! : args.Get<T1>(0),
+            var ret = _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
                 argsCount <= 1 ? default! : args.Get<T2>(1),
                 argsCount <= 2 ? default! : args.Get<T3>(2),
                 argsCount <= 3 ? default! : args.Get<T4>(3),
@@ -187,11 +177,9 @@
         // args does not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
         /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
-        protected override void HandleCallback(SpawnJSObjectReference? args, double argsCount)
+        protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
-            var ret = args == null ? _callback(default!, default!, default!, default!, default!, default!, default!)
-            : _callback(
-                argsCount <= 0 ? default! : args.Get<T1>(0),
+            var ret = _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
                 argsCount <= 1 ? default! : args.Get<T2>(1),
                 argsCount <= 2 ? default! : args.Get<T3>(2),
                 argsCount <= 3 ? default! : args.Get<T4>(3),
@@ -216,11 +204,9 @@
         // args does not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
         /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
-        protected override void HandleCallback(SpawnJSObjectReference? args, double argsCount)
+        protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
-            var ret = args == null ? _callback(default!, default!, default!, default!, default!, default!, default!, default!)
-            : _callback(
-                argsCount <= 0 ? default! : args.Get<T1>(0),
+            var ret = _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
                 argsCount <= 1 ? default! : args.Get<T2>(1),
                 argsCount <= 2 ? default! : args.Get<T3>(2),
                 argsCount <= 3 ? default! : args.Get<T4>(3),
@@ -246,11 +232,9 @@
         // args does not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
         /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
-        protected override void HandleCallback(SpawnJSObjectReference? args, double argsCount)
+        protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
-            var ret = args == null ? _callback(default!, default!, default!, default!, default!, default!, default!, default!, default!)
-            : _callback(
-                argsCount <= 0 ? default! : args.Get<T1>(0),
+            var ret = _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
                 argsCount <= 1 ? default! : args.Get<T2>(1),
                 argsCount <= 2 ? default! : args.Get<T3>(2),
                 argsCount <= 3 ? default! : args.Get<T4>(3),
@@ -277,11 +261,9 @@
         // args does not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
         /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
-        protected override void HandleCallback(SpawnJSObjectReference? args, double argsCount)
+        protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
-            var ret = args == null ? _callback(default!, default!, default!, default!, default!, default!, default!, default!, default!, default!)
-            : _callback(
-                argsCount <= 0 ? default! : args.Get<T1>(0),
+            var ret = _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
                 argsCount <= 1 ? default! : args.Get<T2>(1),
                 argsCount <= 2 ? default! : args.Get<T3>(2),
                 argsCount <= 3 ? default! : args.Get<T4>(3),
