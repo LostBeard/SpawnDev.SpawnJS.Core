@@ -44,6 +44,8 @@
         static _sjsObjectIdNext = 0;
         // .Net Wasm app instance infos
         static _instances = {};
+        // .Net callbacks
+        static _callbacks = {};
         // static constructor
         static {
             // SpawnJSInterop.registerReviver('__reviverTest', (key, value) => {
@@ -78,9 +80,6 @@
                     }
                 }
             }
-        }
-        static callCallback() {
-
         }
         static __replacerJson(key, value, directCall) {
             if (directCall) value = JSON.stringify(value);
@@ -341,6 +340,36 @@
             var { parent, propertyName, shortCircuit } = SpawnJSInterop.pathObjectInfo(obj, key);
             if (shortCircuit) return;
             var value = JSON.parse(json);
+            parent[propertyName] = value;
+        }
+        static releaseCallback(callbackId) {
+            delete SpawnJSInterop._callbacks[callbackId];
+        }
+        static propertySetCallback(sjsId, key, dotnetId, callbackId) {
+            var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
+            if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
+            var { parent, propertyName, shortCircuit } = SpawnJSInterop.pathObjectInfo(obj, key);
+            if (shortCircuit) return;
+            if (!callbackId || !dotnetId) {
+                return null;
+            }
+            var value = SpawnJSInterop._callbacks[callbackId];
+            if (!value) {
+                value = function (...args) {
+                    if (!SpawnJSInterop._callbacks[callbackId]) {
+                        return;
+                    }
+                    var { handleCallback } = SpawnJSInterop.getInstace(dotnetId);
+                    // get argsCnt because after when we call handleCallback .Net will write the return value to at the end of the array after the last argument
+                    // unless the return value should be undefined
+                    var argsCnt = args.length;
+                    var argsId = SpawnJSInterop.spawnJSObjectHold(args);
+                    handleCallback(callbackId, argsId, argsCnt);
+                    // return what is in index argsCnt (the designated place .Net will write to if there is a return value)
+                    return args[argsCnt];
+                };
+                SpawnJSInterop._callbacks[callbackId] = value;
+            }
             parent[propertyName] = value;
         }
         // set property to a HeapView

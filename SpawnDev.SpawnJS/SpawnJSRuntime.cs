@@ -75,7 +75,7 @@ namespace SpawnDev.SpawnJS
             Marshallers.Add(new ArrayMarshaller<object>());
             Marshallers.Add(new ListMarshaller<object>());
             Marshallers.Add(new HeapViewDescriptorMarshaller());
-            Marshallers.Add(new CallbackMarshaller());
+            Marshallers.Add(new CallbackMarshaller<Callback>());
             // The one and only permitted JSObject use: hand this app's DotnetInstance to the JS side and
             // immediately reduce it to a numeric SpawnJSObjectReference id. Never touched as a JSObject again.
             DotnetInstance = new SpawnJSObjectReference(

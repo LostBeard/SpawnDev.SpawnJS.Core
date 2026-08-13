@@ -16,7 +16,7 @@
         {
             if (Once) Dispose();
             var ret = args == null ? _callback() : _callback();
-            args?.Set(0, ret);
+            args?.Set(argsCount, ret);
         }
     }
     public class FuncCallback<T1, TResult> : Callback
@@ -35,7 +35,7 @@
         {
             if (Once) Dispose();
             var ret = args == null ? _callback(default!) : _callback(argsCount <= 0 ? default! : args.Get<T1>(0));
-            args?.Set(0, ret);
+            args?.Set(argsCount, ret);
         }
     }
     public class FuncCallback<T1, T2, TResult> : Callback
@@ -57,7 +57,7 @@
             : _callback(
                 argsCount <= 0 ? default! : args.Get<T1>(0),
                 argsCount <= 1 ? default! : args.Get<T2>(1));
-            args?.Set(0, ret);
+            args?.Set(argsCount, ret);
         }
     }
     public class FuncCallback<T1, T2, T3, TResult> : Callback
@@ -80,7 +80,7 @@
                 argsCount <= 0 ? default! : args.Get<T1>(0),
                 argsCount <= 1 ? default! : args.Get<T2>(1),
                 argsCount <= 2 ? default! : args.Get<T3>(2));
-            args?.Set(0, ret);
+            args?.Set(argsCount, ret);
         }
     }
     public class FuncCallback<T1, T2, T3, T4, TResult> : Callback
@@ -104,7 +104,7 @@
                 argsCount <= 1 ? default! : args.Get<T2>(1),
                 argsCount <= 2 ? default! : args.Get<T3>(2),
                 argsCount <= 3 ? default! : args.Get<T4>(3));
-            args?.Set(0, ret);
+            args?.Set(argsCount, ret);
         }
     }
     public class FuncCallback<T1, T2, T3, T4, T5, TResult> : Callback
@@ -129,7 +129,7 @@
                 argsCount <= 2 ? default! : args.Get<T3>(2),
                 argsCount <= 3 ? default! : args.Get<T4>(3),
                 argsCount <= 4 ? default! : args.Get<T5>(4));
-            args?.Set(0, ret);
+            args?.Set(argsCount, ret);
         }
     }
     public class FuncCallback<T1, T2, T3, T4, T5, T6, TResult> : Callback
@@ -155,7 +155,7 @@
                 argsCount <= 3 ? default! : args.Get<T4>(3),
                 argsCount <= 4 ? default! : args.Get<T5>(4),
                 argsCount <= 5 ? default! : args.Get<T6>(5));
-            args?.Set(0, ret);
+            args?.Set(argsCount, ret);
         }
     }
     public class FuncCallback<T1, T2, T3, T4, T5, T6, T7, TResult> : Callback
@@ -182,7 +182,7 @@
                 argsCount <= 4 ? default! : args.Get<T5>(4),
                 argsCount <= 5 ? default! : args.Get<T6>(5),
                 argsCount <= 6 ? default! : args.Get<T7>(6));
-            args?.Set(0, ret);
+            args?.Set(argsCount, ret);
         }
     }
     public class FuncCallback<T1, T2, T3, T4, T5, T6, T7, T8, TResult> : Callback
@@ -210,7 +210,7 @@
                 argsCount <= 5 ? default! : args.Get<T6>(5),
                 argsCount <= 6 ? default! : args.Get<T7>(6),
                 argsCount <= 7 ? default! : args.Get<T8>(7));
-            args?.Set(0, ret);
+            args?.Set(argsCount, ret);
         }
     }
     public class FuncCallback<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> : Callback
@@ -239,7 +239,7 @@
                 argsCount <= 6 ? default! : args.Get<T7>(6),
                 argsCount <= 7 ? default! : args.Get<T8>(7),
                 argsCount <= 8 ? default! : args.Get<T9>(8));
-            args?.Set(0, ret);
+            args?.Set(argsCount, ret);
         }
     }
 }

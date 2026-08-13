@@ -234,7 +234,7 @@ namespace SpawnDev.SpawnJS
             [JSMarshalAs<JSType.Function<JSType.Number, JSType.String, JSType.String>>] Action<double, string, string> onAsyncResolvedString,
             [JSMarshalAs<JSType.Function<JSType.Number, JSType.Any, JSType.String>>] Action<double, object, string> onAsyncResolvedDoubleNullable,
             [JSMarshalAs<JSType.Function<JSType.Number, JSType.Any, JSType.String>>] Action<double, object, string> onAsyncResolvedBooleanNullable,
-            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Number, JSType.Number>>] Action<double, double, double> onCallback));
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Number, JSType.Number>>] Action<double, double, double> onCallback);
 
         [JSImport("globalThis.SpawnJSInterop.spawnJSObjectHoldExists")]
         internal static partial bool SpawnJSObjectHoldExists(double sjsId);
@@ -436,6 +436,15 @@ namespace SpawnDev.SpawnJS
         // reference (propertySetSpawnJSObject, passed by id), or JSON (propertySetJson). Anything richer is
         // decomposed by a marshaller into these primitives before it reaches here.
         #region Set
+        [JSImport("globalThis.SpawnJSInterop.releaseCallback")]
+        internal static partial void _releaseCallback(double callbackId);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetCallback")]
+        internal static partial void _propertySetCallback(double sjsId, string key, double dotnetId, double callbackId);
+
+        [JSImport("globalThis.SpawnJSInterop.propertySetCallback")]
+        internal static partial void _propertySetCallback(double sjsId, double key, double dotnetId, double callbackId);
+
         [JSImport("globalThis.SpawnJSInterop.propertySet")]
         internal static partial void _propertySet(double sjsId, string key, string value);
 

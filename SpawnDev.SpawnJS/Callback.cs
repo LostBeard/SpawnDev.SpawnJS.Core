@@ -14,6 +14,7 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public abstract class Callback : IDisposable
     {
+        static SpawnJSRuntime JS => SpawnJSRuntime.Instance;
         static double _callbackIdNext = 0;
         public double Id;
         static ConcurrentDictionary<double, Callback> _callbacks = new ConcurrentDictionary<double, Callback>();
@@ -45,6 +46,7 @@ namespace SpawnDev.SpawnJS
             if (IsDisposed) return;
             IsDisposed = true;
             _callbacks.TryRemove(Id, out _);
+            if (Id != 0) SpawnJSRuntime._releaseCallback(Id);
         }
     }
 }

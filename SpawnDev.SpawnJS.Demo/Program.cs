@@ -20,7 +20,7 @@ try
         Console.WriteLine($"MyMethod: {msg}");
         return msg;
     }
-    var callback = new Callback(MyMethod);
+    var callback = new FuncCallback<string, string>(MyMethod);
 
     JS.Set("_myMethod", callback);
 
