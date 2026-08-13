@@ -20,7 +20,7 @@ try
         Console.WriteLine($"MyMethod: {msg} {window?.Id}");
         return msg;
     }
-    var callback = new FuncCallback<string, SpawnJSObjectReference, string>(MyMethod);
+    var callback = Callback.CreateOne<string, SpawnJSObjectReference, string>(MyMethod);
 
     JS.Set("_myMethod", callback);
 
@@ -29,7 +29,14 @@ try
     await Task.Delay(1);
 
 
-    //byte[] data = new byte[] { 10, 20, 30, 40 };
+    var data = new int[] { 10, 20, 30, 40 };
+
+
+    JS.Set("_bytes", data);
+
+    
+    var nmt = true;
+
     //unsafe
     //{
     //    fixed (byte* ptr = data)

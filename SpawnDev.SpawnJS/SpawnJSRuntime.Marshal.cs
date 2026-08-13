@@ -1,6 +1,5 @@
 ﻿using SpawnDev.SpawnJS.Marshal;
 using System.Collections.Concurrent;
-using System.Reflection;
 using System.Runtime.InteropServices.JavaScript;
 
 namespace SpawnDev.SpawnJS
@@ -49,6 +48,39 @@ namespace SpawnDev.SpawnJS
         #region NewArray
         internal SpawnJSObjectReference NewJSArray() => new SpawnJSObjectReference(_spawnJSObjectNewArray());
 
+        internal SpawnJSObjectReference NewJSArray<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(jsArgs!, 5, arg6!);
+            GetMarshaller<T7>().NetToJS(jsArgs!, 6, arg7!);
+            GetMarshaller<T8>().NetToJS(jsArgs!, 7, arg8!);
+            GetMarshaller<T9>().NetToJS(jsArgs!, 8, arg9!);
+            GetMarshaller<T10>().NetToJS(jsArgs!, 9, arg10!);
+            GetMarshaller<T11>().NetToJS(jsArgs!, 10, arg11!);
+            GetMarshaller<T12>().NetToJS(jsArgs!, 11, arg12!);
+            return jsArgs;
+        }
+        internal SpawnJSObjectReference NewJSArray<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
+        {
+            if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
+            GetMarshaller<T1>().NetToJS(jsArgs!, 0, arg1!);
+            GetMarshaller<T2>().NetToJS(jsArgs!, 1, arg2!);
+            GetMarshaller<T3>().NetToJS(jsArgs!, 2, arg3!);
+            GetMarshaller<T4>().NetToJS(jsArgs!, 3, arg4!);
+            GetMarshaller<T5>().NetToJS(jsArgs!, 4, arg5!);
+            GetMarshaller<T6>().NetToJS(jsArgs!, 5, arg6!);
+            GetMarshaller<T7>().NetToJS(jsArgs!, 6, arg7!);
+            GetMarshaller<T8>().NetToJS(jsArgs!, 7, arg8!);
+            GetMarshaller<T9>().NetToJS(jsArgs!, 8, arg9!);
+            GetMarshaller<T10>().NetToJS(jsArgs!, 9, arg10!);
+            GetMarshaller<T11>().NetToJS(jsArgs!, 10, arg11!);
+            return jsArgs;
+        }
         internal SpawnJSObjectReference NewJSArray<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
         {
             if (!_callArrays.TryDequeue(out var jsArgs)) jsArgs = NewJSArray();
@@ -627,6 +659,10 @@ namespace SpawnDev.SpawnJS
             => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9));
         internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
             => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10));
+        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
+            => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11));
+        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
+            => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12));
         /// <summary>
         /// Calls a SpawnJSInterop static method synchronously, marshalling <paramref name="args"/> into a JS
         /// array and reading the result back as <typeparamref name="T"/>.
@@ -777,6 +813,10 @@ namespace SpawnDev.SpawnJS
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9));
         internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10));
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
+            => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11));
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
+            => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12));
         async Task<T> _InteropCallApplyAsync<T>(string methodName, SpawnJSObjectReference? jsArgs = null)
         {
             var typeOfT = typeof(T);
@@ -955,23 +995,8 @@ namespace SpawnDev.SpawnJS
             }
             return await _InteropCallApplyAsync<T>(methodName, jsArgs);
         }
-        //// NOTE: Callback (.Net method passed to JS and invoked directly) is not wired up yet. These two
-        //// exports are placeholders for that path and currently only log.
-        //[JSExport]
-        //static void FireCallback(double callbackId, double argsId)
-        //{
-        //    Console.WriteLine($"FireCallback: {callbackId} {argsId}");
-        //}
-        //[JSExport]
-        //static async Task FireCallbackAsync(double callbackId, double argsId)
-        //{
-        //    Console.WriteLine($"FireCallbackAsync: {callbackId} {argsId}");
-        //    await Task.Delay(5000);
-        //}
-
         // Monotonic id handed to JS with each async call and echoed back to match the completion to its task.
         double _asyncCallbackId = 0;
-
         // Pending async completions, keyed by asyncCallbackId, one dictionary per JS result shape. The
         // matching resolver [JSExport] below removes and invokes the entry when JS reports the result.
         static ConcurrentDictionary<double, Action<string?>> _voidCallbacks = new ConcurrentDictionary<double, Action<string?>>();

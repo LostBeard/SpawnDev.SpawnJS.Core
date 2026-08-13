@@ -43,11 +43,11 @@ namespace SpawnDev.SpawnJS
         /// <summary>
         /// A reference pointing at the JS-side object table (the <see cref="SpawnJSObjects"/> sentinel id).
         /// </summary>
-        private SpawnJSObjectReference spawnJSObjects = new SpawnJSObjectReference(SpawnJSObjectsId);
+        internal SpawnJSObjectReference spawnJSObjects = new SpawnJSObjectReference(SpawnJSObjectsId);
         /// <summary>
         /// A reference pointing at the JS-side object table (the <see cref="SpawnJSInterop"/> sentinel id).
         /// </summary>
-        private SpawnJSObjectReference spawnJSInterop = new SpawnJSObjectReference(SpawnJSInteropId);
+        internal SpawnJSObjectReference spawnJSInterop = new SpawnJSObjectReference(SpawnJSInteropId);
         /// <summary>
         /// When true, marshaller selection is logged to the console. Off by default so libraries stay quiet.
         /// </summary>
@@ -60,7 +60,7 @@ namespace SpawnDev.SpawnJS
         private SpawnJSRuntime() : base(GlobalThisId)
         {
             _instance = this;
-            AppJsonContext.Init();
+            //AppJsonContext.Init();
             // Registration order matters: GetMarshaller scans this list in REVERSE, so a marshaller added
             // later takes precedence when more than one reports it can marshal a type. The more specific /
             // higher-priority handlers (arrays, object references) are therefore added last.
@@ -76,6 +76,8 @@ namespace SpawnDev.SpawnJS
             Marshallers.Add(new ListMarshaller<object>());
             Marshallers.Add(new HeapViewDescriptorMarshaller());
             Marshallers.Add(new CallbackMarshaller<Callback>());
+            Marshallers.Add(new ByteArrayMarshaller());
+            Marshallers.Add(new INumberMarshaller<float>());
             // The one and only permitted JSObject use: hand this app's DotnetInstance to the JS side and
             // immediately reduce it to a numeric SpawnJSObjectReference id. Never touched as a JSObject again.
             DotnetInstance = new SpawnJSObjectReference(

@@ -346,6 +346,24 @@
             var callbackIdPair = `${dotnetId}_${callbackId}`;
             delete SpawnJSInterop._callbacks[callbackIdPair];
         }
+        static writeArrayBufferViewToHeap(dotnetId, arrayBufferView, srcOffset, destOffset, byteLength) {
+            if (!arrayBufferView) throw new Error('writeArrayBufferViewToHeap arrayBufferView is required');
+            if (byteLength === 0) return 0;
+            var srcLength = arrayBufferView.byteLength;
+            if (byteLength == -1) byteLength = srcLength;
+            if (byteLength < -1) throw new Error('Invalid byteLength');
+            // get the .Net heap
+            var instance = SpawnJSInterop.getInstace(dotnetId);
+            var buffer = SpawnJSInterop.wasmMemoryBuffer(instance.dotnet);
+            var bufferView = new Uint8Array(buffer, destOffset, byteLength);
+            // get a view of the exact source we want
+            var offset = arrayBufferView.byteOffset + srcOffset;
+            var sourceView = new Uint8Array(arrayBufferView.buffer, offset, byteLength);
+            // copy to the .Net heap
+            bufferView.set(sourceView);
+            // return the bytes copied
+            return byteLength;
+        }
         static propertySetCallback(sjsId, key, dotnetId, callbackId, once) {
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
             if (obj === void 0 || obj === null) throw new Error('obj null or undefined');

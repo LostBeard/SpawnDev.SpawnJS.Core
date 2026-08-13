@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using SpawnDev.SpawnJS.Marshallers;
+using System.Reflection;
 using System.Text.Json;
 
 namespace SpawnDev.SpawnJS
@@ -180,7 +181,12 @@ namespace SpawnDev.SpawnJS
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {reviver}");
             SpawnJSRuntime._propertySetWithReviver(Id, key, value, methodIndex, reviverConfig);
         }
+        
+        public void PropertySet(double key, HeapViewDescriptor value) 
+            => SpawnJSRuntime._propertySetHeapView(Id, key, JS.DotnetInstance.Id, (double)value.Type, value.Offset, value.Length, value.Copy);
 
+        public void PropertySet(string key, HeapViewDescriptor value)
+            => SpawnJSRuntime._propertySetHeapView(Id, key, JS.DotnetInstance.Id, (double)value.Type, value.Offset, value.Length, value.Copy);
 
         public void PropertySet(double key, string value) => SpawnJSRuntime._propertySet(Id, key, value);
 
