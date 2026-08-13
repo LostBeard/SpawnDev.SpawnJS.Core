@@ -8,7 +8,7 @@ namespace SpawnDev.SpawnJS
     /// in SpawnJSRuntime) is currently a logging placeholder. See the commented ActionCallback sketch below
     /// for the intended shape.
     /// </summary>
-    public abstract class Callback : IDisposable
+    public abstract partial class Callback : IDisposable
     {
         /// <summary>
         /// Callback id incrementer
