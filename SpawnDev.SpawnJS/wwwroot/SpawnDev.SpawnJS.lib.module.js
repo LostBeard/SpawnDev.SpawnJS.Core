@@ -362,7 +362,9 @@
             parent[propertyName] = copy ? value.slice() : value;
         }
         static getArrayBufferViewConstructor(viewType) {
-            return SpawnJSInterop.HeapViewCtors[viewType];
+            var ctor = SpawnJSInterop.HeapViewCtors[viewType];
+            if (!ctor) throw new Error(`Unsupported or missing ArrayBufferView constructor for enum index: ${viewType}`);
+            return ctor;
         }
         static getHeapSize(dotnetId) {
             var dotnet = SpawnJSInterop.spawnJSObjectGet(dotnetId);

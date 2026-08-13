@@ -144,20 +144,11 @@ namespace SpawnDev.SpawnJS
         }
         void AsyncCallResolvedDoubleNullable(double asyncCallId, object? value, string? error)
         {
-            //if (_doubleNullableCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
+            if (_doubleNullableCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask((double?)value, error);
         }
         void AsyncCallResolvedBooleanNullable(double asyncCallId, object? value, string? error)
         {
-            //if (_doubleNullableCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
+            if (_booleanNullableCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask((bool?)value, error);
         }
-
-        //void AsyncCallResolvedDoubleNullable(double asyncCallId, double? value, string? error)
-        //{
-        //    if (_doubleNullableCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
-        //}
-        //void AsyncCallResolvedBooleanNullable(double asyncCallId, bool? value, string? error)
-        //{
-        //    if (_booleanNullableCallbacks.TryRemove(asyncCallId, out var waitingTask)) waitingTask(value, error);
-        //}
     }
 }

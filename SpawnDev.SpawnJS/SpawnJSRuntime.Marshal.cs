@@ -9,9 +9,6 @@ namespace SpawnDev.SpawnJS
     {
         // Per-type marshaller cache. Populated by GetMarshaller so a resolved marshaller can be reused.
         ConcurrentDictionary<Type, JSMarshaller> _typeMarshallerCache = new ConcurrentDictionary<Type, JSMarshaller>();
-        // One-shot task that loads this assembly's [JSExport] table on the JS side. Awaited before the
-        // first async call so the JS side can resolve completions back into managed code.
-        Task? _loadAssemblyExportsTask = null;
         /// <summary>
         /// Selects the marshaller for <typeparamref name="TType"/>. Marshallers are scanned in REVERSE
         /// registration order so later (more specific) registrations win. A marshaller may hand back a
@@ -768,8 +765,6 @@ namespace SpawnDev.SpawnJS
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10));
         async Task<T> _InteropCallApplyAsync<T>(string methodName, SpawnJSObjectReference? jsArgs = null)
         {
-            _loadAssemblyExportsTask ??= _spawnJSInteropLoadExportsAsync(DotnetInstance.Id, Assembly.GetExecutingAssembly().GetName().Name!);
-            if (!_loadAssemblyExportsTask.IsCompleted) await _loadAssemblyExportsTask;
             var typeOfT = typeof(T);
             var returnMarshaller = GetMarshaller<T>();
             var returnTypeIndex = returnMarshaller.ReturnType;
