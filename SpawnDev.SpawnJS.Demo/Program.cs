@@ -29,13 +29,14 @@ try
     await Task.Delay(1);
 
 
-    var data = new int[] { 10, 20, 30, 40 };
+    var data = new byte[] { 10, 20, 30, 40 };
 
-    var kk = JS.New<int>("Uint8Array", 8);
+    var kk = JS.New("Uint8Array", 8);
 
     JS.Set("_bytes", data);
 
-    
+    var btyesRB = JS.Get<byte[]>("_bytes");
+
     var nmt = true;
 
     //unsafe
@@ -91,7 +92,7 @@ try
     JS.Set("_number", number);
     {
         var sw = Stopwatch.StartNew();
-        var array = JS.NewApply("Array");
+        var array = JS.New("Array");
         JS.Set("_marray", array);
         var cnt = 20000;
         var callsPerIteration = 1;
@@ -112,7 +113,7 @@ try
 
     {
         var sw = Stopwatch.StartNew();
-        var array = JS.NewApply("Array");
+        var array = JS.New("Array");
         JS.Set("_marray", array);
         var cnt = 20000;
         var callsPerIteration = 1;

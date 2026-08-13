@@ -25,9 +25,9 @@
         SpawnJSObjectReferenceNonNullable,
         /// <summary>The value is JSON-stringified on the JS side (JSON.stringify) and returned as a string to deserialize.</summary>
         Json,
-        // <summary>The JS number is returned as a <c>int</c>.</summary>
+        /// <summary>The JS number is returned as a <c>int</c>.</summary>
         Int32,
-        // <summary>The JS number is returned as a <c>int</c>.</summary>
+        /// <summary>The JS number (or null/undefined) is returned as a <c>int?</c>.</summary>
         Int32Nullable,
     }
 }
