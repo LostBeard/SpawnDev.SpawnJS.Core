@@ -112,6 +112,7 @@ namespace SpawnDev.SpawnJS
             if (IsDisposed) return;
             IsDisposed = true;
             _callbacks.TryRemove(Id, out _);
+            OnDisposed?.Invoke();
             // notify JS to release the Calback to prevent additional calls.
             // only need to notify JS if the Callabck was actually sent
             // and Javascript has not already released it (it auto-releases Callbacks with Once == true)
