@@ -56,12 +56,12 @@
             // });
             SpawnJSInterop.refreshMethodMap();
         }
-        static _registerInstance(dotnet, onMethodAdded, resolveVoid, resolveDouble, resolveBoolean, resolveVoidString, resolveDoubleNullable, resolveBooleanNullable) {
+        static _registerInstance(dotnet, onMethodAdded, resolveVoid, resolveDouble, resolveBoolean, resolveVoidString, resolveDoubleNullable, resolveBooleanNullable, handleCallback) {
             if (!dotnet) throw new Error('dotnet not set');
             var instanceInfo = SpawnJSInterop._getInstaceFromDotNet(dotnet);
             if (instanceInfo) return instanceInfo.dotnetId;
             var dotnetId = SpawnJSInterop.spawnJSObjectHold(dotnet);
-            var instanceInfo = { dotnet, dotnetId, onMethodAdded, resolveVoid, resolveDouble, resolveBoolean, resolveVoidString, resolveDoubleNullable, resolveBooleanNullable };
+            var instanceInfo = { dotnet, dotnetId, onMethodAdded, resolveVoid, resolveDouble, resolveBoolean, resolveVoidString, resolveDoubleNullable, resolveBooleanNullable, handleCallback };
             SpawnJSInterop._instances[dotnetId] = instanceInfo;
             if (SpawnJSInterop.verbose) console.log('[SpawnJSInterop] Instance registered', instanceInfo);
             return dotnetId;
@@ -78,6 +78,9 @@
                     }
                 }
             }
+        }
+        static callCallback() {
+
         }
         static __replacerJson(key, value, directCall) {
             if (directCall) value = JSON.stringify(value);

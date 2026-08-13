@@ -15,6 +15,15 @@ try
     var JS = SpawnJSRuntime.Instance;
     JS.Verbose = false;
 
+    string MyMethod(string msg)
+    {
+        Console.WriteLine($"MyMethod: {msg}");
+        return msg;
+    }
+    var callback = new Callback(MyMethod);
+
+    JS.Set("_myMethod", callback);
+
     using var document = JS.PropertyGetSpawnJSObjectReference("document");
     document.CallApplyVoid("write", new object?[] { $@"Starting...<br/>" });
     await Task.Delay(1);

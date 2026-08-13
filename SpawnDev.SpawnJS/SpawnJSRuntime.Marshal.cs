@@ -9,6 +9,10 @@ namespace SpawnDev.SpawnJS
     {
         // Per-type marshaller cache. Populated by GetMarshaller so a resolved marshaller can be reused.
         ConcurrentDictionary<Type, JSMarshaller> _typeMarshallerCache = new ConcurrentDictionary<Type, JSMarshaller>();
+        public JSMarshaller GetMarshaller(Type type)
+        {
+            return (JSMarshaller)((Delegate)GetMarshaller<object>).InvokeGeneric(type)!;
+        }
         /// <summary>
         /// Selects the marshaller for <typeparamref name="TType"/>. Marshallers are scanned in REVERSE
         /// registration order so later (more specific) registrations win. A marshaller may hand back a
@@ -43,7 +47,7 @@ namespace SpawnDev.SpawnJS
             return marshaller;
         }
         #region NewArray
-        internal SpawnJSObjectReference NewJSArray() => new SpawnJSObjectReference((long)_spawnJSObjectNewArray());
+        internal SpawnJSObjectReference NewJSArray() => new SpawnJSObjectReference(_spawnJSObjectNewArray());
 
         internal SpawnJSObjectReference NewJSArray<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
         {
@@ -152,7 +156,7 @@ namespace SpawnDev.SpawnJS
         }
         #endregion
 
-        internal SpawnJSObjectReference NewJSObject() => new SpawnJSObjectReference((long)_spawnJSObjectNewObject());
+        internal SpawnJSObjectReference NewJSObject() => new SpawnJSObjectReference(_spawnJSObjectNewObject());
 
         /// <summary>
         /// Creates a new JS Array, holds it, and returns the sjsId
@@ -229,7 +233,8 @@ namespace SpawnDev.SpawnJS
             [JSMarshalAs<JSType.Function<JSType.Number, JSType.Boolean, JSType.String>>] Action<double, bool, string> onAsyncResolvedBool,
             [JSMarshalAs<JSType.Function<JSType.Number, JSType.String, JSType.String>>] Action<double, string, string> onAsyncResolvedString,
             [JSMarshalAs<JSType.Function<JSType.Number, JSType.Any, JSType.String>>] Action<double, object, string> onAsyncResolvedDoubleNullable,
-            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Any, JSType.String>>] Action<double, object, string> onAsyncResolvedBooleanNullable);
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Any, JSType.String>>] Action<double, object, string> onAsyncResolvedBooleanNullable,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Number, JSType.Number>>] Action<double, double, double> onCallback));
 
         [JSImport("globalThis.SpawnJSInterop.spawnJSObjectHoldExists")]
         internal static partial bool SpawnJSObjectHoldExists(double sjsId);

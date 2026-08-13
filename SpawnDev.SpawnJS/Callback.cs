@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SpawnDev.SpawnJS.Marshal;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,42 +12,39 @@ namespace SpawnDev.SpawnJS
     /// in SpawnJSRuntime) is currently a logging placeholder. See the commented ActionCallback sketch below
     /// for the intended shape.
     /// </summary>
-    public class Callback : IDisposable
+    public abstract class Callback : IDisposable
     {
-        Dictionary<long, Callback> _callbacks = new Dictionary<long, Callback>();
-        public Callback()
+        static double _callbackIdNext = 0;
+        public double Id;
+        static ConcurrentDictionary<double, Callback> _callbacks = new ConcurrentDictionary<double, Callback>();
+        public bool Once { get; private set; }
+        public Callback(Delegate target, bool once = false)
         {
-
+            Id = ++_callbackIdNext;
+            Once = once;
+            _callbacks.TryAdd(Id, this);
+        }
+        protected abstract void HandleCallback(SpawnJSObjectReference? args, double argsCount);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="argsId">The incoming AND outgoing buffer</param>
+        internal static void HandleCallback(double callbackId, double argsId, double argsCount)
+        {
+            if (_callbacks.TryGetValue(callbackId, out var callback))
+            {
+                // we use preventDispose = true on this SpawnJSObjectReference to save an unnecessary JS call in the dispose...
+                // this array will be released after the cann returns anyways so calling release on it again would be a waste
+                var args = SpawnJSObjectReference.FromID(argsId, preventDispose: true);
+                callback.HandleCallback(args, argsCount);
+            }
         }
         public bool IsDisposed { get; private set; }
         public void Dispose()
         {
             if (IsDisposed) return;
             IsDisposed = true;
-
+            _callbacks.TryRemove(Id, out _);
         }
     }
-    ///// <summary>
-    ///// A Callback object wraps a .Net method and can be passed to Javascript and called directly.
-    ///// </summary>
-    //public class ActionCallback : Callback
-    //{
-    //    /// <summary>
-    //    /// Implicitly converts a .Net method into a Callback
-    //    /// </summary>
-    //    /// <param name="callback">.Net target method</param>
-    //    public static implicit operator ActionCallback?(Action? callback) => callback == null ? null : callback.CallbackGet(true);
-    //    /// <summary>
-    //    /// Creates a new instance
-    //    /// </summary>
-    //    /// <param name="callback"></param>
-    //    /// <param name="once">If true, the Callback will be disposed after the first call</param>
-    //    public ActionCallback(Action callback, bool once = false) : base(callback, once) { }
-    //    /// <inheritdoc/>
-    //    internal override object? InvokeHandler(object?[] args)
-    //    {
-    //        ((Action)Func)();
-    //        return null;
-    //    }
-    //}
 }

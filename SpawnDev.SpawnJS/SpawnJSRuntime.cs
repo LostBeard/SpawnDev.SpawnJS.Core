@@ -43,11 +43,11 @@ namespace SpawnDev.SpawnJS
         /// <summary>
         /// A reference pointing at the JS-side object table (the <see cref="SpawnJSObjects"/> sentinel id).
         /// </summary>
-        private SpawnJSObjectReference spawnJSObjects = new SpawnJSObjectReference(SpawnJSObjects);
+        private SpawnJSObjectReference spawnJSObjects = new SpawnJSObjectReference(SpawnJSObjectsId);
         /// <summary>
         /// A reference pointing at the JS-side object table (the <see cref="SpawnJSInterop"/> sentinel id).
         /// </summary>
-        private SpawnJSObjectReference spawnJSInterop = new SpawnJSObjectReference(SpawnJSInterop);
+        private SpawnJSObjectReference spawnJSInterop = new SpawnJSObjectReference(SpawnJSInteropId);
         /// <summary>
         /// When true, marshaller selection is logged to the console. Off by default so libraries stay quiet.
         /// </summary>
@@ -57,7 +57,7 @@ namespace SpawnDev.SpawnJS
         /// Creates the runtime. The base id is <see cref="GlobalThis"/> so the instance addresses JS
         /// <c>globalThis</c> directly. Registers the built-in marshallers in priority order (last wins).
         /// </summary>
-        private SpawnJSRuntime() : base(GlobalThis)
+        private SpawnJSRuntime() : base(GlobalThisId)
         {
             _instance = this;
             AppJsonContext.Init();
@@ -75,17 +75,19 @@ namespace SpawnDev.SpawnJS
             Marshallers.Add(new ArrayMarshaller<object>());
             Marshallers.Add(new ListMarshaller<object>());
             Marshallers.Add(new HeapViewDescriptorMarshaller());
+            Marshallers.Add(new CallbackMarshaller());
             // The one and only permitted JSObject use: hand this app's DotnetInstance to the JS side and
             // immediately reduce it to a numeric SpawnJSObjectReference id. Never touched as a JSObject again.
             DotnetInstance = new SpawnJSObjectReference(
-                (long)_registerInstance(JSHost.DotnetInstance,
+                _registerInstance(JSHost.DotnetInstance,
                 _JSToNetMappedMethodsChanged,
                 AsyncCallResolvedVoid,
                 AsyncCallResolvedDouble,
                 AsyncCallResolvedBoolean,
                 AsyncCallResolvedString,
                 AsyncCallResolvedDoubleNullable,
-                AsyncCallResolvedBooleanNullable));
+                AsyncCallResolvedBooleanNullable,
+                Callback.HandleCallback));
             // load method names to enable indexed based interop calling (vs string)
             InteropMethods = _refreshMethodMap();
         }

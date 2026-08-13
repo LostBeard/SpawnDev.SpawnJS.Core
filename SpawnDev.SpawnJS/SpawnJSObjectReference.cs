@@ -14,16 +14,20 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public partial class SpawnJSObjectReference : IDisposable
     {
+        /// <summary>
+        /// If true, this item will not dispose when dispsoe is called
+        /// </summary>
+        public bool PreventDispose { get; set; }
         /// <summary>Sentinel id for JS <c>globalThis</c>.</summary>
-        public const long GlobalThis = -1;
+        public const double GlobalThisId = -1;
         /// <summary>Sentinel id for JS <c>undefined</c> (also the id a handle is set to once released).</summary>
-        public const long UndefinedId = -2;
+        public const double UndefinedId = -2;
         /// <summary>Sentinel id for JS <c>null</c>.</summary>
-        public const long Null = -3;
+        public const double NullId = -3;
         /// <summary>Sentinel id for the JS object table itself.</summary>
-        public const long SpawnJSObjects = -4;
+        public const double SpawnJSObjectsId = -4;
         /// <summary>Sentinel id for SpawnJSInterop.</summary>
-        public const long SpawnJSInterop = -5;
+        public const double SpawnJSInteropId = -5;
         /// <summary>True once this handle has been disposed (its JS table entry released).</summary>
         public bool IsDisposed { get; private set; }
         /// <summary>Shortcut to the runtime singleton.</summary>
@@ -33,11 +37,11 @@ namespace SpawnDev.SpawnJS
         /// <summary>True if this handle references JS <c>undefined</c> (or has been released).</summary>
         public bool IsUndefined => Id == UndefinedId;
         /// <summary>True if this handle references JS <c>null</c>.</summary>
-        public bool IsNull => Id == Null;
+        public bool IsNull => Id == NullId;
         /// <summary>True if this handle references JS <c>globalThis</c>.</summary>
-        public bool IsGlobalThis => Id == GlobalThis;
+        public bool IsGlobalThis => Id == GlobalThisId;
         /// <summary>Wraps an existing JS object table id.</summary>
-        public SpawnJSObjectReference(long sjsId)
+        public SpawnJSObjectReference(double sjsId)
         {
             Id = sjsId;
         }
@@ -231,7 +235,7 @@ namespace SpawnDev.SpawnJS
         /// </summary>
         protected virtual void Dispose(bool disposing)
         {
-            if (IsDisposed) return;
+            if (IsDisposed || PreventDispose) return;
             IsDisposed = true;
             var id = Id;
             Id = UndefinedId;
@@ -239,6 +243,12 @@ namespace SpawnDev.SpawnJS
             {
                 SpawnJSRuntime.SpawnJSObjectRelease(id);
             }
+        }
+        public double MoveId()
+        {
+            var id = Id;
+            Id = UndefinedId;
+            return id;
         }
         /// <inheritdoc/>
         public void Dispose()

@@ -13,9 +13,9 @@ namespace SpawnDev.SpawnJS
     //    paths cleanly separated is what makes this base flexible and reliable.
     public partial class SpawnJSObjectReference
     {
-        internal static SpawnJSObjectReference? FromID(double fromJS, bool nonNullable = false)
+        internal static SpawnJSObjectReference? FromID(double fromJS, bool nonNullable = false, bool preventDispose = false)
         {
-            return !nonNullable && (fromJS == SpawnJSObjectReference.Null || fromJS == SpawnJSObjectReference.UndefinedId) ? null : new SpawnJSObjectReference((long)fromJS);
+            return !nonNullable && (fromJS == SpawnJSObjectReference.NullId || fromJS == SpawnJSObjectReference.UndefinedId) ? null : new SpawnJSObjectReference(fromJS) { PreventDispose = preventDispose };
         }
 
         /// <summary>Returns "&lt;typeof&gt; &lt;toStringTag&gt;" for the property, or null if it is absent.</summary>
@@ -49,7 +49,7 @@ namespace SpawnDev.SpawnJS
 
         public void PropertySet(string key, double? value) => SpawnJSRuntime._propertySet(Id, key, value);
 
-        public void PropertySet(string key, SpawnJSObjectReference? value) => SpawnJSRuntime._propertySetSpawnJSObject(Id, key, value?.Id ?? Null);
+        public void PropertySet(string key, SpawnJSObjectReference? value) => SpawnJSRuntime._propertySetSpawnJSObject(Id, key, value?.Id ?? NullId);
 
         public void PropertySetJson(string key, object? value, JsonSerializerOptions? serializerOptions = null)
             => SpawnJSRuntime._propertySetJson(Id, key, JsonSerializer.Serialize(value, serializerOptions));
@@ -178,7 +178,7 @@ namespace SpawnDev.SpawnJS
 
         public void PropertySet(double key, double? value) => SpawnJSRuntime._propertySet(Id, key, value);
 
-        public void PropertySet(double key, SpawnJSObjectReference? value) => SpawnJSRuntime._propertySetSpawnJSObject(Id, key, value?.Id ?? Null);
+        public void PropertySet(double key, SpawnJSObjectReference? value) => SpawnJSRuntime._propertySetSpawnJSObject(Id, key, value?.Id ?? NullId);
 
         public void PropertySetJson(double key, object? value, JsonSerializerOptions? serializerOptions = null) => SpawnJSRuntime._propertySetJson(Id, key, JsonSerializer.Serialize(value, serializerOptions));
 #endregion
@@ -417,7 +417,7 @@ namespace SpawnDev.SpawnJS
         public SpawnJSObjectReference? PropertyGetSpawnJSObjectReference(string key, bool force = false)
         {
             var id = SpawnJSRuntime._propertyGetSpawnJSObjectReference(Id, key, force);
-            return id == null ? null : new SpawnJSObjectReference((long)id.Value);
+            return id == null ? null : new SpawnJSObjectReference(id.Value);
         }
 
         public T PropertyGetJson<T>(string key, JsonSerializerOptions? options = null)
@@ -439,7 +439,7 @@ namespace SpawnDev.SpawnJS
         public SpawnJSObjectReference? PropertyGetSpawnJSObjectReference(double key, bool force = false)
         {
             var id = SpawnJSRuntime._propertyGetSpawnJSObjectReference(Id, key, force);
-            return id == null ? null : new SpawnJSObjectReference((long)id.Value);
+            return id == null ? null : new SpawnJSObjectReference(id.Value);
         }
 
         public T PropertyGetJson<T>(double key, JsonSerializerOptions? options = null)
