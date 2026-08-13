@@ -3,12 +3,9 @@
 // readback, an async readback, and an async DOM method call (document.write). The `var nmt = true;` /
 // `var nmt1 = true;` lines are intentional debugger breakpoint anchors - leave them in place.
 using SpawnDev.SpawnJS;
-using SpawnDev.SpawnJS.Marshallers;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-
 
 try
 {
@@ -16,14 +13,14 @@ try
     JS.Verbose = false;
 
     var js = (SpawnJSObjectReference)JS;
-js.As
 
-    string MyMethod(string msg, SpawnJSObjectReference window)
+    async Task MyMethod(string msg, SpawnJSObjectReference window)
     {
+        await Task.Delay(2000);
         Console.WriteLine($"MyMethod: {msg} {window?.Id}");
-        return msg;
+        //return msg;
     }
-    var callback = Callback.CreateOne<string, SpawnJSObjectReference, string>(MyMethod);
+    var callback = Callback.Create<string, SpawnJSObjectReference, Task>(MyMethod);
 
     JS.Set("_myMethod", callback);
 

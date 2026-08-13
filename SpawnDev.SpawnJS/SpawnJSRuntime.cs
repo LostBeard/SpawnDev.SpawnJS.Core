@@ -40,14 +40,14 @@ namespace SpawnDev.SpawnJS
         /// assembly's [JSExport] methods (e.g. to resolve async calls) - see <see cref="InteropCallApplyAsync{T}"/>.
         /// </summary>
         public SpawnJSObjectReference DotnetInstance { get; private set; }
-        /// <summary>
-        /// A reference pointing at the JS-side object table (the <see cref="SpawnJSObjects"/> sentinel id).
-        /// </summary>
-        internal SpawnJSObjectReference spawnJSObjects = new SpawnJSObjectReference(SpawnJSObjectsId);
-        /// <summary>
-        /// A reference pointing at the JS-side object table (the <see cref="SpawnJSInterop"/> sentinel id).
-        /// </summary>
-        internal SpawnJSObjectReference spawnJSInterop = new SpawnJSObjectReference(SpawnJSInteropId);
+        ///// <summary>
+        ///// A reference pointing at the JS-side object table (the <see cref="SpawnJSObjects"/> sentinel id).
+        ///// </summary>
+        //internal SpawnJSObjectReference spawnJSObjects = new SpawnJSObjectReference(SpawnJSObjectsId);
+        ///// <summary>
+        ///// A reference pointing at the JS-side object table (the <see cref="SpawnJSInterop"/> sentinel id).
+        ///// </summary>
+        //internal SpawnJSObjectReference SpawnJSInterop = new SpawnJSObjectReference(SpawnJSInteropId);
         /// <summary>
         /// When true, marshaller selection is logged to the console. Off by default so libraries stay quiet.
         /// </summary>
@@ -78,6 +78,7 @@ namespace SpawnDev.SpawnJS
             Marshallers.Add(new CallbackMarshaller<Callback>());
             Marshallers.Add(new ByteArrayMarshaller());
             Marshallers.Add(new INumberMarshaller<float>());
+            Marshallers.Add(new TaskMarshaller());
             // The one and only permitted JSObject use: hand this app's DotnetInstance to the JS side and
             // immediately reduce it to a numeric SpawnJSObjectReference id. Never touched as a JSObject again.
             DotnetInstance = new SpawnJSObjectReference(
@@ -99,7 +100,7 @@ namespace SpawnDev.SpawnJS
         /// Get the current heap size
         /// </summary>
         /// <returns></returns>
-        public long GetHeapSize() => (long)spawnJSInterop.Call<double, double>("getHeapSize", DotnetInstance.Id);
+        public long GetHeapSize() => InteropCall<double, long>("getHeapSize", DotnetInstance.Id);
         /// <summary>
         /// Force the heap to grow. Useful for debugging heap growth issues.
         /// </summary>

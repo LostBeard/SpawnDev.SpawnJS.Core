@@ -385,6 +385,9 @@ namespace SpawnDev.SpawnJS
             }
             return await _InteropCallApplyAsync<T>(methodName, jsArgs);
         }
+        /// <summary>
+        /// InteropCall methods are efficient callers into SpawnJSInterop because instead of passing the methodName to JS for teh call, they pass the method index
+        /// </summary>
         internal T InteropCall<T>(string methodName)
             => _InteropCallApply<T>(methodName);
         internal T InteropCall<T1, T>(string methodName, T1 arg1)

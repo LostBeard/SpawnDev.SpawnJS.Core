@@ -13,9 +13,7 @@ namespace SpawnDev.SpawnJS.Marshallers
         public override JSMarshaller<T> GetMarshaller<T>()
         {
             if (this is JSMarshaller<T> _this) return _this;
-            var typeT = typeof(T);
-            var typeName = typeT.Name;
-            var marshallerTyped = typeof(CallbackMarshaller<>).MakeGenericType(typeT);
+            var marshallerTyped = typeof(CallbackMarshaller<>).MakeGenericType(typeof(T));
             return (JSMarshaller<T>)Activator.CreateInstance(marshallerTyped)!;
         }
         public override TCallback? JSToNet(string value)

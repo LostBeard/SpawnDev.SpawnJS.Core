@@ -364,6 +364,43 @@
             // return the bytes copied
             return byteLength;
         }
+        // called using Call<>
+        static propertySetNewPromise(sjsId, key) {
+            var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
+            if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
+            var { parent, propertyName, shortCircuit } = SpawnJSInterop.pathObjectInfo(obj, key);
+            if (shortCircuit) return;
+            var promise = SpawnJSInterop.newEasyPromise();
+            parent[propertyName] = promise;
+            return promise;
+        }
+        // called using Call<>
+        static propertySetResolvedPromise(sjsId, key, value) {
+            var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
+            if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
+            var { parent, propertyName, shortCircuit } = SpawnJSInterop.pathObjectInfo(obj, key);
+            if (shortCircuit) return;
+            parent[propertyName] = Promise.resolve(value);
+        }
+        // called using Call<>
+        static propertySetRejectedPromise(sjsId, key, value) {
+            var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
+            if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
+            var { parent, propertyName, shortCircuit } = SpawnJSInterop.pathObjectInfo(obj, key);
+            if (shortCircuit) return;
+            parent[propertyName] = Promise.reject(value);
+        }
+        // // called using Call<>
+        // static propertySetPromiseThenCatch(sjsId, key, thenCallback, catchCallback) {
+        //     var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
+        //     if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
+        //     var { parent, propertyName, shortCircuit } = SpawnJSInterop.pathObjectInfo(obj, key);
+        //     if (shortCircuit) return;
+        //     var promise = parent[propertyName];
+
+        //     var promise = SpawnJSInterop.newEasyPromise();
+        //     parent[propertyName] = promise;
+        // }
         static propertySetCallback(sjsId, key, dotnetId, callbackId, once) {
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
             if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
@@ -476,6 +513,18 @@
                 }
             }
             return value;
+        }
+        // create a new Promsie with the resolve and reject methods attached to the promise for easy calling from .Net
+        static newEasyPromise() {
+            var _resolve = null;
+            var _reject = null;
+            var promise = new Promise((resolve, reject) => {
+                _resolve = resolve;
+                _reject = reject;
+            });
+            promise.resolve = _resolve;
+            promise.reject = _reject;
+            return promise
         }
         // creates a new Object, adds it to the hold and returns it
         static spawnJSObjectNewHeapView(dotnetId, offset, length, type) {
