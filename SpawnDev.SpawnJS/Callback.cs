@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using SpawnDev.SpawnJS.Events;
+using System.Collections.Concurrent;
 
 namespace SpawnDev.SpawnJS
 {
@@ -10,6 +11,26 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public abstract partial class Callback : IDisposable
     {
+        /// <summary>
+        /// Fired when this Callback is disposed. CallbackRef uses this to stop tracking it.
+        /// </summary>
+        public event Action? OnDisposed;
+        /// <summary>
+        /// How many event subscriptions are holding this Callback.<br/>
+        /// Managed by <see cref="CallbackRef"/>: every += takes a reference and every -= releases one,
+        /// so the same .Net method subscribed to several events shares one JS function and is only
+        /// disposed when the last subscription goes away. Setting it to 0 or less disposes.
+        /// </summary>
+        public int RefCount
+        {
+            get => _refCount;
+            set
+            {
+                _refCount = value;
+                if (_refCount <= 0) Dispose();
+            }
+        }
+        int _refCount = 1;
         /// <summary>
         /// Callback id incrementer
         /// </summary>
