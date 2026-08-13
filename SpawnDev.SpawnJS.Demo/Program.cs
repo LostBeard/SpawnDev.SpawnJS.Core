@@ -15,12 +15,12 @@ try
     var JS = SpawnJSRuntime.Instance;
     JS.Verbose = false;
 
-    string MyMethod(string msg)
+    string MyMethod(string msg, SpawnJSObjectReference window)
     {
-        Console.WriteLine($"MyMethod: {msg}");
+        Console.WriteLine($"MyMethod: {msg} {window?.Id}");
         return msg;
     }
-    var callback = new FuncCallback<string, string>(MyMethod);
+    var callback = new FuncCallback<string, SpawnJSObjectReference, string>(MyMethod);
 
     JS.Set("_myMethod", callback);
 
