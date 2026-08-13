@@ -437,7 +437,7 @@ namespace SpawnDev.SpawnJS
         // decomposed by a marshaller into these primitives before it reaches here.
         #region Set
         [JSImport("globalThis.SpawnJSInterop.releaseCallback")]
-        internal static partial void _releaseCallback(double callbackId);
+        internal static partial void _releaseCallback(double dotnetId, double callbackId);
 
         [JSImport("globalThis.SpawnJSInterop.propertySetCallback")]
         internal static partial void _propertySetCallback(double sjsId, string key, double dotnetId, double callbackId, bool once);

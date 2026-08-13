@@ -342,8 +342,9 @@
             var value = JSON.parse(json);
             parent[propertyName] = value;
         }
-        static releaseCallback(callbackId) {
-            delete SpawnJSInterop._callbacks[callbackId];
+        static releaseCallback(dotnetId, callbackId) {
+            var callbackIdPair = `${dotnetId}_${callbackId}`;
+            delete SpawnJSInterop._callbacks[callbackIdPair];
         }
         static propertySetCallback(sjsId, key, dotnetId, callbackId, once) {
             var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
@@ -353,11 +354,12 @@
             if (!callbackId || !dotnetId) {
                 return null;
             }
-            var value = SpawnJSInterop._callbacks[callbackId];
+            var callbackIdPair = `${dotnetId}_${callbackId}`;
+            var value = SpawnJSInterop._callbacks[callbackIdPair];
             if (!value) {
                 value = function (...args) {
                     // check if the callback has been removed
-                    if (!SpawnJSInterop._callbacks[callbackId]) {
+                    if (!SpawnJSInterop._callbacks[callbackIdPair]) {
                         return;
                     }
                     // get the SpawnJSRuntime instance's method that is used to report the callback 
@@ -373,11 +375,11 @@
                     // release the args
                     SpawnJSInterop.spawnJSObjectRelease(argsId);
                     // if it was a 1 time use callback, release it
-                    if (once) delete SpawnJSInterop._callbacks[callbackId];
+                    if (once) delete SpawnJSInterop._callbacks[callbackIdPair];
                     // return what is in index argsCnt (the designated place .Net will write to if there is a return value)
                     return args[argsCnt];
                 };
-                SpawnJSInterop._callbacks[callbackId] = value;
+                SpawnJSInterop._callbacks[callbackIdPair] = value;
             }
             parent[propertyName] = value;
         }

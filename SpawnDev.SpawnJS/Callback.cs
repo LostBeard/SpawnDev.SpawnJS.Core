@@ -31,6 +31,10 @@ namespace SpawnDev.SpawnJS
         /// </summary>
         private static ConcurrentDictionary<double, Callback> _callbacks = new ConcurrentDictionary<double, Callback>();
         /// <summary>
+        /// The number of active Callbacks
+        /// </summary>
+        public static int CallbackCount => _callbacks.Count;
+        /// <summary>
         /// Returns true if the Callback should only fire at most once
         /// </summary>
         public bool Once { get; private set; }
@@ -91,7 +95,7 @@ namespace SpawnDev.SpawnJS
             // only need to notify JS if the Callabck was actually sent
             // and Javascript has not already released it (it auto-releases Callbacks with Once == true)
             var jsSideReleasedIt = Once && HasBeenCalled;
-            if (Sent && !jsSideReleasedIt) SpawnJSRuntime._releaseCallback(Id);
+            if (Sent && !jsSideReleasedIt) SpawnJSRuntime._releaseCallback(SpawnJSRuntime.Instance.Id, Id);
             Id = 0;
         }
     }
