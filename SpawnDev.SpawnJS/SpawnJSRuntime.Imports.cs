@@ -38,6 +38,20 @@ namespace SpawnDev.SpawnJS
         internal static partial double SpawnJSObjectReleaseDouble(double sjsId);
 
         /// <summary>
+        /// Release a SPawnJSObject reference in Javascript and return the value as a int
+        /// </summary>
+        /// <param name="sjsId"></param>
+        [JSImport("globalThis.SpawnJSInterop.spawnJSObjectRelease")]
+        internal static partial int SpawnJSObjectReleaseInt32(double sjsId);
+
+        /// <summary>
+        /// Release a SPawnJSObject reference in Javascript and return the value as a int?
+        /// </summary>
+        /// <param name="sjsId"></param>
+        [JSImport("globalThis.SpawnJSInterop.spawnJSObjectRelease")]
+        internal static partial int? SpawnJSObjectReleaseInt32Nullable(double sjsId);
+
+        /// <summary>
         /// Release a SPawnJSObject reference in Javascript and return the value as a bool
         /// </summary>
         /// <param name="sjsId"></param>

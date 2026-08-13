@@ -1,7 +1,3 @@
-// Manual browser smoke test for SpawnJS. Exercises the core paths end to end: creating the runtime,
-// getting/setting globalThis properties (string + double), the Type -> <T> InvokeGeneric trick, a sync
-// readback, an async readback, and an async DOM method call (document.write). The `var nmt = true;` /
-// `var nmt1 = true;` lines are intentional debugger breakpoint anchors - leave them in place.
 using SpawnDev.SpawnJS;
 using System;
 using System.Diagnostics;
@@ -13,8 +9,7 @@ try
     JS.Verbose = false;
 
     var js = (SpawnJSObjectReference)JS;
-    js.
-
+    
     async Task MyMethod(string msg, SpawnJSObjectReference window)
     {
         await Task.Delay(2000);
@@ -25,7 +20,7 @@ try
 
     JS.Set("_myMethod", callback);
 
-    using var document = JS.PropertyGetSpawnJSObjectReference("document");
+    using var document = JS.Get("document");
     document.CallApplyVoid("write", new object?[] { $@"Starting...<br/>" });
     await Task.Delay(1);
 

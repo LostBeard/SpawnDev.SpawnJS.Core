@@ -48,15 +48,6 @@ namespace SpawnDev.SpawnJS
         {
             Id = sjsId;
         }
-        /// <summary>
-        /// Returns the referenced Javascript value as type T
-        /// </summary>
-        public T As<T>(bool dispose = false)
-        {
-            var ret = JS.As<SpawnJSObjectReference, T>(this);
-            if (dispose) Dispose();
-            return ret;
-        }
         #region ReleaseAs
         /// <summary>
         /// releases the SpawnJSObject reference and returns underlying value
@@ -74,6 +65,26 @@ namespace SpawnDev.SpawnJS
         public bool? ReleaseAsBooleanNullable()
         {
             var ret = SpawnJSRuntime.SpawnJSObjectReleaseBooleanNullable(Id);
+            Id = UndefinedId;
+            Dispose();
+            return ret;
+        }
+        /// <summary>
+        /// releases the SpawnJSObject reference and returns underlying value
+        /// </summary>
+        public int ReleaseAsInt32()
+        {
+            var ret = SpawnJSRuntime.SpawnJSObjectReleaseInt32(Id);
+            Id = UndefinedId;
+            Dispose();
+            return ret;
+        }
+        /// <summary>
+        /// releases the SpawnJSObject reference and returns underlying value
+        /// </summary>
+        public int? ReleaseAsInt32Nullable()
+        {
+            var ret = SpawnJSRuntime.SpawnJSObjectReleaseInt32Nullable(Id);
             Id = UndefinedId;
             Dispose();
             return ret;

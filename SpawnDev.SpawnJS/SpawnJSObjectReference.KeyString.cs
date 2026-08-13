@@ -4,6 +4,17 @@ namespace SpawnDev.SpawnJS
 {
     public partial class SpawnJSObjectReference
     {
+        #region Set
+        public void Set<T>(string key, T value) => JS.InteropCall<double, string, T, VoidType>("propertySet", Id, key, value);
+        #endregion
+        #region Get
+        public SpawnJSObjectReference? Get(string key) => JS.InteropCall<double, string, SpawnJSObjectReference>("propertyGet", Id, key);
+        public T Get<T>(string key) => JS.InteropCall<double, string, T>("propertyGet", Id, key);
+        #endregion
+        #region GetAsync
+        public Task<T> GetAsync<T>(string key) => JS.InteropCallAsync<double, string, T>("propertyGet", Id, key);
+        public Task<SpawnJSObjectReference> GetAsync(string key) => JS.InteropCallAsync<double, string, SpawnJSObjectReference>("propertyGet", Id, key);
+        #endregion
         #region New
         public T NewApply<T>(string key, object?[]? args = null) 
             => JS.InteropCall<double, string, object?[]?, T>("propertyNewApply", Id, key, args);
@@ -154,17 +165,6 @@ namespace SpawnDev.SpawnJS
             => JS.InteropCallAsync<double, string, T1, T2, T3, T4, T5, T6, T7, T8, T9, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
         public Task<T> CallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
             => JS.InteropCallAsync<double, string, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
-        #endregion
-        #region Set
-        public void Set<T>(string key, T value) => JS.InteropCall<double, string, T, VoidType>("propertySet", Id, key, value);
-        #endregion
-        #region Get
-        public SpawnJSObjectReference? Get(string key) => JS.InteropCall<double, string, SpawnJSObjectReference>("propertyGet", Id, key);
-        public T Get<T>(string key) => JS.InteropCall<double, string, T>("propertyGet", Id, key);
-        #endregion
-        #region GetAsync
-        public Task<T> GetAsync<T>(string key) => JS.InteropCallAsync<double, string, T>("propertyGet", Id, key);
-        public Task<SpawnJSObjectReference> GetAsync(string key) => JS.InteropCallAsync<double, string, SpawnJSObjectReference>("propertyGet", Id, key);
         #endregion
     }
 }
