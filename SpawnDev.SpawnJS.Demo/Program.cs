@@ -15,6 +15,9 @@ try
     var JS = SpawnJSRuntime.Instance;
     JS.Verbose = false;
 
+    var js = (SpawnJSObjectReference)JS;
+js.As
+
     string MyMethod(string msg, SpawnJSObjectReference window)
     {
         Console.WriteLine($"MyMethod: {msg} {window?.Id}");

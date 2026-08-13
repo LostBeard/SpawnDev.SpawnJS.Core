@@ -52,9 +52,12 @@ namespace SpawnDev.SpawnJS
         /// <summary>
         /// Returns the referenced Javascript value as type T
         /// </summary>
-        /// <typeparam name="T">The type to return the referenced Javascript value as</typeparam>
-        /// <returns>The referenced Javascript value as type T</returns>
-        public T As<T>() => JS.As<SpawnJSObjectReference, T>(this);
+        public T As<T>(bool dispose = false)
+        {
+            var ret = JS.As<SpawnJSObjectReference, T>(this);
+            if (dispose) Dispose();
+            return ret;
+        }
         #region ReleaseAs
         /// <summary>
         /// releases the SpawnJSObject reference and returns underlying value
