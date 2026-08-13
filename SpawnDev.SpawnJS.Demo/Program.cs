@@ -25,7 +25,7 @@ try
         fixed (byte* ptr = data)
         {
             IntPtr address = (IntPtr)ptr;
-            var heapViewDescriptor = new HeapViewDescriptor(address, data.Length);
+            var heapViewDescriptor = new HeapViewDescriptor(address, data.Length, false);
             // HeapViewDescriptor gets marshalled to JS as a Uint8Array (can be any ArrayBufferView)
             // It is pointed at this instances .Net heap ArrayBufffer
             JS.Set("_fromHeapViewDescriptor", heapViewDescriptor);

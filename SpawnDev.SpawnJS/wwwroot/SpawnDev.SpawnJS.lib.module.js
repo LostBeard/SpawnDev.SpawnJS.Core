@@ -335,12 +335,11 @@
             if (!heapViewInfo.viewType) heapViewInfo.viewType = 'Uint8Array';
             heapViewInfo.instance = SpawnJSInterop.getInstace(heapViewInfo.dotnetId);
             heapViewInfo.dotnet = SpawnJSInterop.spawnJSObjectGet(heapViewInfo.dotnetId);
+            heapViewInfo.ctor = SpawnJSInterop.getArrayBufferViewConstructor(heapViewInfo.viewType);
             heapViewInfo.sizeHistory = [];
-            // 
-            var ctor = SpawnJSInterop.getArrayBufferViewConstructor(viewType);
             //
             heapViewInfo.buffer = SpawnJSInterop.wasmMemoryBuffer(heapViewInfo.dotnet);
-            var value = new ctor(heapViewInfo.buffer, heapViewInfo.offset, heapViewInfo.length);
+            var value = new heapViewInfo.ctor(heapViewInfo.buffer, heapViewInfo.offset, heapViewInfo.length);
             value._heapViewInfo = heapViewInfo;
             heapViewInfo.bufferLength = heapViewInfo.buffer.byteLength;
             heapViewInfo.sizeHistory.push(heapViewInfo.bufferLength);
@@ -367,31 +366,9 @@
                 case 10: ctor = Uint8Array; break;
                 case 11: ctor = Uint8ClampedArray; break;
                 // data view
-                case 12: ctor = DataView; break;
-                default: throw new Error(`Unsupported viewType: ${viewType}`);
+                case 12: ctor = DataView; break
             }
             return ctor;
-        }
-        // set property to a HeapView
-        static propertySetHeapViewCopy(sjsId, key, dotnetId, viewType, offset, length) {
-            var obj = SpawnJSInterop.spawnJSObjectGet(sjsId);
-            if (obj === void 0 || obj === null) throw new Error('obj null or undefined');
-            var { parent, propertyName, shortCircuit } = SpawnJSInterop.pathObjectInfo(obj, key);
-            if (shortCircuit) return;
-            //
-            var heapViewInfo = { dotnetId, viewType, offset, length };
-            if (!heapViewInfo.viewType) heapViewInfo.viewType = 'Uint8Array';
-            heapViewInfo.instance = SpawnJSInterop.getInstace(heapViewInfo.dotnetId);
-            heapViewInfo.dotnet = SpawnJSInterop.spawnJSObjectGet(heapViewInfo.dotnetId);
-            heapViewInfo.sizeHistory = [];
-            // 
-            heapViewInfo.buffer = SpawnJSInterop.wasmMemoryBuffer(heapViewInfo.dotnet);
-            var value = null;
-            var ctor = globalThis[heapViewInfo.viewType];
-            value = new ctor(heapViewInfo.buffer, heapViewInfo.offset, heapViewInfo.length);
-            value = value.slice();
-            //
-            parent[propertyName] = value;
         }
         static getHeapSize(dotnetId) {
             var dotnet = SpawnJSInterop.spawnJSObjectGet(dotnetId);
@@ -413,10 +390,11 @@
                 if (!heapViewInfo.viewType) heapViewInfo.viewType = 'Uint8Array';
                 heapViewInfo.instance = SpawnJSInterop.getInstace(heapViewInfo.dotnetId);
                 heapViewInfo.dotnet = SpawnJSInterop.spawnJSObjectGet(heapViewInfo.dotnetId);
+                heapViewInfo.ctor = SpawnJSInterop.getArrayBufferViewConstructor(heapViewInfo.viewType);
                 heapViewInfo.sizeHistory = [];
                 // 
                 heapViewInfo.buffer = SpawnJSInterop.wasmMemoryBuffer(heapViewInfo.dotnet);
-                value = new globalThis[heapViewInfo.viewType](heapViewInfo.buffer, heapViewInfo.offset, heapViewInfo.length);
+                var value = new heapViewInfo.ctor(heapViewInfo.buffer, heapViewInfo.offset, heapViewInfo.length);
                 value._heapViewInfo = heapViewInfo;
                 heapViewInfo.bufferLength = heapViewInfo.buffer.byteLength;
                 heapViewInfo.sizeHistory.push(heapViewInfo.bufferLength);
@@ -427,8 +405,9 @@
                 // this allows creating a fresh HeapView if needed on `set` and `call` (with the exception of call reattach only working if the view is in teh root args list. no object walking is done)
                 var heapViewInfo = value._heapViewInfo;
                 if (heapViewInfo.buffer && heapViewInfo.buffer.detached) {
+                    // update
                     heapViewInfo.buffer = SpawnJSInterop.wasmMemoryBuffer(heapViewInfo.dotnet);
-                    value = new globalThis[heapViewInfo.viewType](heapViewInfo.buffer, heapViewInfo.offset, heapViewInfo.length);
+                    var value = new heapViewInfo.ctor(heapViewInfo.buffer, heapViewInfo.offset, heapViewInfo.length);
                     value._heapViewInfo = heapViewInfo;
                     heapViewInfo.bufferLength = heapViewInfo.buffer.byteLength;
                     heapViewInfo.sizeHistory.push(heapViewInfo.bufferLength);
