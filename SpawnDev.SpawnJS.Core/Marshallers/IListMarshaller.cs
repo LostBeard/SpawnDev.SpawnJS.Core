@@ -22,6 +22,9 @@ namespace SpawnDev.SpawnJS.Marshallers
         /// Builds an <see cref="ArrayMarshaller{T}"/> bound to the concrete element type of
         /// <typeparamref name="T"/> (e.g. selecting for <c>int[]</c> yields an <c>ArrayMarshaller&lt;int&gt;</c>).
         /// </summary>
+        [UnconditionalSuppressMessage("Trimming", "IL2076", Justification = "See IL2055.")]
+        [UnconditionalSuppressMessage("Trimming", "IL2055",
+            Justification = "GetMarshaller specializes to the element type obtained by reflection (GetGenericArguments), which cannot carry DynamicallyAccessedMembers. Built-in wrapper element ctors are preserved by the embedded ILLink.Descriptors.xml; a consumer using a custom SpawnJSObject wrapper as a list element in a trimmed app must preserve that type's ctor itself (reflection boundary).")]
         public override JSMarshaller<T> GetMarshaller<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
         {
             if (this is JSMarshaller<T> _this) return _this;

@@ -24,6 +24,7 @@ namespace SpawnDev.SpawnJS
             value?.Sent = true;
             SpawnJSRuntime._propertySetCallback(Id, key, JS.DotnetInstance.Id, value?.Id ?? 0, value?.Once ?? false);
         }
+        [RequiresUnreferencedCode("Uses reflection-based System.Text.Json; the (de)serialized types and their members must be preserved under trimming. Use a JsonTypeInfo/JsonSerializerContext source generator, or preserve the types yourself.")]
         internal void PropertySetJson(int key, object? value, JsonSerializerOptions? serializerOptions = null)
             => SpawnJSRuntime._propertySetJson(Id, key, JsonSerializer.Serialize(value, serializerOptions));
         internal void PropertySetWithReviver(string reviver, int key, string value)
@@ -182,6 +183,7 @@ namespace SpawnDev.SpawnJS
             var id = SpawnJSRuntime._propertyGetSpawnJSObjectReference(Id, key, force);
             return FromID(id);
         }
+        [RequiresUnreferencedCode("Uses reflection-based System.Text.Json; the (de)serialized types and their members must be preserved under trimming. Use a JsonTypeInfo/JsonSerializerContext source generator, or preserve the types yourself.")]
         internal T PropertyGetJson<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(int key, JsonSerializerOptions? options = null)
         {
             var json = SpawnJSRuntime._propertyGetJson(Id, key);

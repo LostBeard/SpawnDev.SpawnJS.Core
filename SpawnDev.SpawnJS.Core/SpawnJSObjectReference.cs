@@ -137,6 +137,7 @@ namespace SpawnDev.SpawnJS
         /// <summary>
         /// releases the SpawnJSObject reference and returns underlying value
         /// </summary>
+        [RequiresUnreferencedCode("Uses reflection-based System.Text.Json; the (de)serialized types and their members must be preserved under trimming. Use a JsonTypeInfo/JsonSerializerContext source generator, or preserve the types yourself.")]
         public T ReleaseAsJson<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(JsonSerializerOptions? serializerOptions = null)
         {
             var json = SpawnJSRuntime.SpawnJSObjectReleaseJson(Id);

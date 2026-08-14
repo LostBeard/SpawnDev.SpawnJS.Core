@@ -36,6 +36,7 @@ namespace SpawnDev.SpawnJS.Marshaller
         /// <summary>
         /// Invoke a generic method using Type[]
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2060", Justification = "Reflection over SpawnJS's own runtime-Type dispatch machinery: the closed generic methods are SpawnJS marshalling dispatch (writeTyped = write path, never constructs; As/GetMarshaller runtime-Type resolution is backed by the embedded ILLink.Descriptors.xml for built-in wrappers or consumer preservation for custom types). MakeGenericMethod / GetAwaiter reflection over these SpawnJS-controlled targets is safe within that contract.")]
         public static async Task<object?> InvokeGenericAsync(this Delegate methodGroup, Type[] targetTypes, params object?[]? args)
         {
             var key = new CacheKey(methodGroup.Method, targetTypes);
@@ -67,7 +68,7 @@ namespace SpawnDev.SpawnJS.Marshaller
         /// Invoke a generic method using Type
         /// </summary>
         [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2060",
-            Justification = "Closes marshalling-dispatch method groups (GetMarshaller<T>, writeTyped<T>, As<T>) whose type parameters declare no DynamicallyAccessedMembers requirements, so the MakeGenericMethod instantiation introduces no members that must be preserved.")]
+            Justification = "Closes SpawnJS's own runtime-Type dispatch targets: writeTyped (write path, never constructs) and the As/GetMarshaller runtime-Type escape hatch, whose PublicConstructors requirement is backed by the embedded ILLink.Descriptors.xml for built-in wrappers or consumer preservation for custom types.")]
         public static object? InvokeGeneric(this Delegate methodGroup, Type targetType, params object?[]? args)
         {
             var key = new CacheKeySingle(methodGroup.Method, targetType);
@@ -88,7 +89,7 @@ namespace SpawnDev.SpawnJS.Marshaller
         /// Invoke a generic method using Type[]
         /// </summary>
         [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2060",
-            Justification = "Closes marshalling-dispatch method groups whose type parameters declare no DynamicallyAccessedMembers requirements, so the MakeGenericMethod instantiation introduces no members that must be preserved.")]
+            Justification = "Closes SpawnJS's own runtime-Type dispatch targets: writeTyped (write path, never constructs) and the As/GetMarshaller runtime-Type escape hatch, whose PublicConstructors requirement is backed by the embedded ILLink.Descriptors.xml for built-in wrappers or consumer preservation for custom types.")]
         public static object? InvokeGeneric(this Delegate methodGroup, Type[] targetTypes, params object?[]? args)
         {
             var key = new CacheKey(methodGroup.Method, targetTypes);
@@ -182,6 +183,8 @@ namespace SpawnDev.SpawnJS.Marshaller
         /// <summary>
         /// Generates a strongly-typed compiled expression tree tailored to unwrap the given type.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2070", Justification = "Reflection over SpawnJS's own runtime-Type dispatch machinery: the closed generic methods are SpawnJS marshalling dispatch (writeTyped = write path, never constructs; As/GetMarshaller runtime-Type resolution is backed by the embedded ILLink.Descriptors.xml for built-in wrappers or consumer preservation for custom types). MakeGenericMethod / GetAwaiter reflection over these SpawnJS-controlled targets is safe within that contract.")]
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Reflection over SpawnJS's own runtime-Type dispatch machinery: the closed generic methods are SpawnJS marshalling dispatch (writeTyped = write path, never constructs; As/GetMarshaller runtime-Type resolution is backed by the embedded ILLink.Descriptors.xml for built-in wrappers or consumer preservation for custom types). MakeGenericMethod / GetAwaiter reflection over these SpawnJS-controlled targets is safe within that contract.")]
         private static Func<object, Task<object?>> CreateUnwrapperDelegate(Type type)
         {
             // --- Standard void Task ---
@@ -296,6 +299,7 @@ namespace SpawnDev.SpawnJS.Marshaller
         {
             private readonly Func<object?, object?[], Task<object?>> _compiledExecutor;
 
+            [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2060", Justification = "Reflection over SpawnJS's own runtime-Type dispatch machinery: the closed generic methods are SpawnJS marshalling dispatch (writeTyped = write path, never constructs; As/GetMarshaller runtime-Type resolution is backed by the embedded ILLink.Descriptors.xml for built-in wrappers or consumer preservation for custom types). MakeGenericMethod / GetAwaiter reflection over these SpawnJS-controlled targets is safe within that contract.")]
             public GenericExecutorBridge(MethodInfo openMethod)
             {
                 // 1. Resolve the exact closed generic method blueprint for this target type <T>

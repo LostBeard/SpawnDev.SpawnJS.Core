@@ -117,6 +117,9 @@ namespace SpawnDev.SpawnJS.Marshallers
             if (genericType == typeof(Task<>)) return true;
             return false;
         }
+        [UnconditionalSuppressMessage("Trimming", "IL2076", Justification = "See IL2055.")]
+        [UnconditionalSuppressMessage("Trimming", "IL2055",
+            Justification = "GetMarshaller specializes to the Task result type obtained by reflection (GetGenericArguments), which cannot carry DynamicallyAccessedMembers. Built-in wrapper result ctors are preserved by the embedded ILLink.Descriptors.xml; a consumer awaiting a Task of a custom SpawnJSObject wrapper in a trimmed app must preserve that type's ctor itself (reflection boundary).")]
         public override JSMarshaller<T> GetMarshaller<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
         {
             if (this is JSMarshaller<T> _this) return _this;

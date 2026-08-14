@@ -61,6 +61,7 @@ namespace SpawnDev.SpawnJS.Marshaller
         public static List<ClassMemberJsonInfo> GetTypeJsonProperties(this Type t)
             => JsonPropertiesCache.GetOrAdd(t, BuildTypeJsonProperties);
 
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2070", Justification = "Reflection over a caller-supplied type used by the object/JSON marshalling paths; a consumer marshalling a POCO or using the opt-in JSON path is responsible for preserving that type's members under trimming.")]
         static List<ClassMemberJsonInfo> BuildTypeJsonProperties(Type t)
         {
             // check
@@ -101,6 +102,7 @@ namespace SpawnDev.SpawnJS.Marshaller
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2067", Justification = "Reflection over a caller-supplied type used by the object/JSON marshalling paths; a consumer marshalling a POCO or using the opt-in JSON path is responsible for preserving that type's members under trimming.")]
         public static object? GetDefaultValue(this Type t)
         {
             return t.IsValueType ? Activator.CreateInstance(t) : null;
@@ -236,6 +238,8 @@ namespace SpawnDev.SpawnJS.Marshaller
         /// <param name="typeName">The QualifiedTypeName or FullName of the Type</param>
         /// <param name="useCache">Return the cached result if found</param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2057", Justification = "Dynamic type lookup by name - the target type cannot be statically known; callers resolving types by name are responsible for preserving them under trimming.")]
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Dynamic type lookup by name - the target type cannot be statically known; callers resolving types by name are responsible for preserving them under trimming.")]
         public static Type? GetType(string? typeName, bool useCache = true)
         {
             if (string.IsNullOrEmpty(typeName)) return null;
@@ -291,6 +295,7 @@ namespace SpawnDev.SpawnJS.Marshaller
         /// <param name="bindingFlags"></param>
         /// <param name="allowGeneric"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2070", Justification = "Reflection over a caller-supplied type used by the object/JSON marshalling paths; a consumer marshalling a POCO or using the opt-in JSON path is responsible for preserving that type's members under trimming.")]
         public static List<MethodInfo> FindAllMethods(this Type classType, string methodName, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static, bool allowGeneric = false)
         {
             return classType
@@ -304,6 +309,7 @@ namespace SpawnDev.SpawnJS.Marshaller
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <returns>The element type of the IEnumerable, or null if it's not an IEnumerable of T (excluding string).</returns>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2070", Justification = "Reflection over a caller-supplied type used by the object/JSON marshalling paths; a consumer marshalling a POCO or using the opt-in JSON path is responsible for preserving that type's members under trimming.")]
         public static Type? GetEnumerableElementType(this Type type)
         {
             // Ignore strings as they are also IEnumerable<char> but usually treated as a scalar type
