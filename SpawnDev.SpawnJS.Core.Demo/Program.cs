@@ -8,11 +8,8 @@ JS.Marshallers.Add(new SpawnJSObjectMarshaller<SpawnJSObject>());
 JS.Verbose = true;
 
 using var document = JS.Get("document");
-document.CallApplyVoid("write", new object?[] { $@"Starting...<br/>" });
-await Task.Delay(1);
-
-var width = 500;
-var height = 500;
+double width = 500;
+double height = 500;
 using var fpsDisplay = JS.Call<string, SpawnJSObjectReference>("document.createElement", "div");
 document.CallVoid("body.append", fpsDisplay);
 using var canvas = JS.Call<string, SpawnJSObjectReference>("document.createElement", "canvas");
@@ -22,21 +19,21 @@ canvas.Set("height", height);
 using var ctx = canvas.Call<string, SpawnJSObjectReference>("getContext", "2d");
 using var performance = JS.Get("performance");
 
-var maxIter = 80; // Balanced for real-time frame rates
-var lastTime = performance.Call<double>("now");
+double maxIter = 80; // Balanced for real-time frame rates
+double lastTime = performance.Call<double>("now");
 double frameCount = 0;
 double fps = 0;
 double scale = 1.0;
 
 Callback? cb = null;
 // image data
-var data = new byte[width * height * 4];
+var data = new byte[(int)(width * height * 4)];
 // direct heap view of image data
 using var heapView = HeapView.Create(data);
 // heap view as Uint8ArrayClamped
 using var uint8ArrayClamped = heapView.As<Uint8ClampedArray>();
 // get an ImageData view of our data to give to the canvas 2d context
-using var imgData = JS.New<Uint8ClampedArray, int, int, SpawnJSObjectReference>("ImageData", uint8ArrayClamped, width, height);
+using var imgData = JS.New<Uint8ClampedArray, double, double, SpawnJSObjectReference>("ImageData", uint8ArrayClamped, width, height);
 // create the animationFrame callback
 cb = Callback.Create((double currentTime) =>
 {
@@ -44,13 +41,13 @@ cb = Callback.Create((double currentTime) =>
     // Smoothly scale the view boundary over time
     scale = 1.0 + Math.Sin(currentTime * 0.0005) * 0.4;
 
-    var p = 0;
-    for (var y = 0; y < height; y++)
+    double p = 0;
+    for (double y = 0; y < height; y++)
     {
         // Map y to complex imaginary plane, scaled dynamically
-        var ci = ((y / height) * 2.5 - 1.25) * scale - 0.1;
+        double ci = ((y / height) * 2.5 - 1.25) * scale - 0.1;
 
-        for (var x = 0; x < width; x++)
+        for (double x = 0; x < width; x++)
         {
             // Map x to complex real plane, scaled dynamically
             double cr = ((x / width) * 3.5 - 2.5) * scale - 0.7;
@@ -76,10 +73,10 @@ cb = Callback.Create((double currentTime) =>
                 b = Math.Floor((n / maxIter) * 255);
             }
 
-            data[p] = (byte)r;
-            data[p + 1] = (byte)g;
-            data[p + 2] = (byte)b;
-            data[p + 3] = 255;
+            data[(int)p] = (byte)r;
+            data[(int)p + 1] = (byte)g;
+            data[(int)p + 2] = (byte)b;
+            data[(int)p + 3] = 255;
             p += 4;
         }
     }

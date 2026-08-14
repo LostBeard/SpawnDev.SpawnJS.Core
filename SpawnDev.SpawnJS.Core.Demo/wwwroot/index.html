@@ -17,6 +17,107 @@
         }
         globalThis._error = new Error('some error');
     </script>
+    <script>
+        const documentReady = () => {
+            return new Promise((resolve) => {
+                // Check if the DOM is already fully parsed and ready
+                if (document.readyState === "interactive" || document.readyState === "complete") {
+                    resolve();
+                } else {
+                    // Otherwise, wait for the DOMContentLoaded event
+                    document.addEventListener("DOMContentLoaded", () => resolve(), { once: true });
+                }
+            });
+        };
+        (async function () {
+            return;
+            await documentReady();
+            const width = 500;
+            const height = 500;
+            const fpsDisplay = document.createElement('div');
+            document.body.append(fpsDisplay);
+            const canvas = document.createElement('canvas');
+            document.body.append(canvas);
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+
+            const imgData = ctx.createImageData(width, height);
+            const data = imgData.data;
+
+            const maxIter = 80; // Balanced for real-time frame rates
+            let lastTime = performance.now();
+            let frameCount = 0;
+            let fps = 0;
+            let scale = 1.0;
+
+            function animate(currentTime) {
+                const frameStart = performance.now();
+
+                // Smoothly scale the view boundary over time
+                scale = 1.0 + Math.sin(currentTime * 0.0005) * 0.4;
+
+                let p = 0;
+                for (let y = 0; y < height; y++) {
+                    // Map y to complex imaginary plane, scaled dynamically
+                    let ci = ((y / height) * 2.5 - 1.25) * scale - 0.1;
+
+                    for (let x = 0; x < width; x++) {
+                        // Map x to complex real plane, scaled dynamically
+                        let cr = ((x / width) * 3.5 - 2.5) * scale - 0.7;
+
+                        let zr = 0, zi = 0, n = 0;
+                        // Escape time algorithm loop
+                        while (n < maxIter && (zr * zr + zi * zi) <= 4) {
+                            let temp = zr * zr - zi * zi + cr;
+                            zi = 2 * zr * zi + ci;
+                            zr = temp;
+                            n++;
+                        }
+
+                        // Color mapping based on escape iteration
+                        let r = 0, g = 0, b = 0;
+                        if (n < maxIter) {
+                            // Dynamic color shifting using the current time
+                            const wave = Math.sin(n * 0.1 + currentTime * 0.002);
+                            r = Math.floor((wave + 1) * 127.5);
+                            g = Math.floor((Math.cos(n * 0.05) + 1) * 127.5);
+                            b = Math.floor((n / maxIter) * 255);
+                        }
+
+                        data[p] = r;
+                        data[p + 1] = g;
+                        data[p + 2] = b;
+                        data[p + 3] = 255;
+                        p += 4;
+                    }
+                }
+
+                ctx.putImageData(imgData, 0, 0);
+
+                // Performance Tracking
+                const frameEnd = performance.now();
+                const duration = frameEnd - frameStart;
+                frameCount++;
+
+                if (currentTime > lastTime + 1000) {
+                    fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+                    frameCount = 0;
+                    lastTime = currentTime;
+                }
+
+                fpsDisplay.textContent = `FPS: ${fps} | Frame Time: ${duration.toFixed(1)} ms`;
+
+                // Request next frame
+                requestAnimationFrame(animate);
+            }
+
+            // Start the animation loop
+            requestAnimationFrame(animate);
+        }) ()
+    </script>
+
 </head>
 <body>
 </body>
