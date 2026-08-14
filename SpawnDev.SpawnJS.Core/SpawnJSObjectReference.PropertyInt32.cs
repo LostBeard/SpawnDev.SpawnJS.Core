@@ -14,6 +14,7 @@ namespace SpawnDev.SpawnJS
         internal void PropertySet(int key, bool value) => SpawnJSRuntime._propertySet(Id, key, value);
         internal void PropertySet(int key, double value) => SpawnJSRuntime._propertySet(Id, key, value);
         internal void PropertySet(int key, int value) => SpawnJSRuntime._propertySet(Id, key, value);
+        internal void PropertySet(int key, int? value) => SpawnJSRuntime._propertySet(Id, key, value);
         internal void PropertySet(int key, bool? value) => SpawnJSRuntime._propertySet(Id, key, value);
         internal void PropertySet(int key, double? value) => SpawnJSRuntime._propertySet(Id, key, value);
         internal void PropertySet(int key, SpawnJSObjectReference? value) => SpawnJSRuntime._propertySetSpawnJSObject(Id, key, value?.Id ?? NullId);

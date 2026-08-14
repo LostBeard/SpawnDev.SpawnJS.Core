@@ -34,7 +34,26 @@ try
     await Task.Delay(1);
 
     var data1 = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
-    using var heapView = (ArrayBuffer)(HeapView)(data1);
+    JS.Set("_data1", data1);
+
+    {
+        var data2 = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+        JS.Set("_data2", data2);
+    }
+    {
+        var data2 = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+        JS.Set("_data3", data2);
+    }
+    {
+        var data2 = new float[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+        JS.Set("_data4", data2);
+    }
+    {
+        var data2 = new long[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+        JS.Set("_data5", data2);
+    }
+
+    using var heapView = (Uint8Array)(HeapView)(data1);
 
     JS.Set("_heapView1", heapView);
     var diff = JS.GrowHeap();

@@ -1,4 +1,6 @@
-﻿// SpawnJSInterop - the Javascript half of SpawnJS.
+﻿'strict';
+
+// SpawnJSInterop - the Javascript half of SpawnJS.
 //
 // Architecture: every JS value that .Net needs to reference is kept in an id-keyed table
 // (spawnJSObjects) and addressed from .Net by that numeric id. .Net never receives a live JS object
@@ -482,7 +484,7 @@
                     if (heapViewInfo.copy) {
                         // create a copy
                         var uint8ArrayHeap = new Uint8Array(heapViewInfo.buffer, heapViewInfo.offset, length);
-                        value = new SharedArrayBuffer(length);
+                        value = new globalThis.SharedArrayBuffer(length);
                         var uint8ArrayDest = new Uint8Array(value);
                         value.set(uint8ArrayHeap);
                     } else {
@@ -494,7 +496,7 @@
                     var liveView = new heapViewInfo.ctor(heapViewInfo.buffer, heapViewInfo.offset, length);
                     value = heapViewInfo.copy ? liveView.slice() : liveView;
                 }
-                // copies do not get their data refreshed
+                // copies do not get (or need) their view refreshed as it will not detach
                 if (!heapViewInfo.copy) value._heapViewInfo = heapViewInfo;
                 heapViewInfo.bufferLength = heapViewInfo.buffer.byteLength;
                 heapViewInfo.sizeHistory.push(heapViewInfo.bufferLength);

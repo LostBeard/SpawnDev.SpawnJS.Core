@@ -62,10 +62,16 @@ namespace SpawnDev.SpawnJS
             Marshallers.Add(new ObjectMarshaller());
             // .Net: string <-> JS: string
             Marshallers.Add(new StringMarshaller());
+            // .Net: INumber<> <-> JS: Number
+            Marshallers.Add(new INumberMarshaller<float>());
             // .Net: double <-> JS: Number
             Marshallers.Add(new DoubleMarshaller());
             // .Net: double? <-> JS: Number?
             Marshallers.Add(new DoubleNullableMarshaller());
+            // .Net: double <-> JS: Number
+            Marshallers.Add(new Int32Marshaller());
+            // .Net: double? <-> JS: Number?
+            Marshallers.Add(new Int32NullableMarshaller());
             // .Net: bool <-> JS: bool
             Marshallers.Add(new BooleanMarshaller());
             // .Net: bool? <-> JS: bool?
@@ -82,8 +88,6 @@ namespace SpawnDev.SpawnJS
             Marshallers.Add(new CallbackMarshaller<Callback>());
             // .Net: byte[] <-> JS: Uint8Array
             Marshallers.Add(new ByteArrayMarshaller());
-            // .Net: INumber<> <-> JS: Number
-            Marshallers.Add(new INumberMarshaller<float>());
             // .Net: Task, Task<> <-> JS: Promise, Promise<T>
             Marshallers.Add(new TaskMarshaller());
             // .Net: BingInteger <-> JS: BigInt

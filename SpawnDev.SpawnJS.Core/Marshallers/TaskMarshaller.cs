@@ -50,7 +50,7 @@ namespace SpawnDev.SpawnJS.Marshallers
             var promise = JS.InteropCall<double, int, SpawnJSObjectReference>("propertySetNewPromise", jsParent.Id, jsKey);
             value.ContinueWith((t) =>
             {
-                try
+                using (promise)
                 {
                     if (t.IsCompletedSuccessfully)
                     {
@@ -62,10 +62,6 @@ namespace SpawnDev.SpawnJS.Marshallers
                         var error = t.Exception?.ToString() ?? "Unknown error";
                         promise.CallVoid("reject", error);
                     }
-                }
-                finally
-                {
-                    promise.Dispose();
                 }
             });
         }
@@ -81,7 +77,6 @@ namespace SpawnDev.SpawnJS.Marshallers
                 if (value.IsCompletedSuccessfully)
                 {
                     JS.InteropCall<double, string, VoidType>("propertySetResolvedPromise", jsParent.Id, jsKey);
-
                 }
                 else
                 {
@@ -93,21 +88,18 @@ namespace SpawnDev.SpawnJS.Marshallers
             var promise = JS.InteropCall<double, string, SpawnJSObjectReference>("propertySetNewPromise", jsParent.Id, jsKey);
             value.ContinueWith((t) =>
             {
-                try
+                using (promise)
                 {
                     if (t.IsCompletedSuccessfully)
                     {
-                        promise.CallVoid("resolve");
+                        var returnValue = value.Result;
+                        promise.CallVoid("resolve", returnValue);
                     }
                     else
                     {
                         var error = t.Exception?.ToString() ?? "Unknown error";
                         promise.CallVoid("reject", error);
                     }
-                }
-                finally
-                {
-                    promise.Dispose();
                 }
             });
         }
@@ -163,7 +155,6 @@ namespace SpawnDev.SpawnJS.Marshallers
                 if (value.IsCompletedSuccessfully)
                 {
                     JS.InteropCall<double, int, VoidType>("propertySetResolvedPromise", jsParent.Id, jsKey);
-
                 }
                 else
                 {
@@ -175,7 +166,7 @@ namespace SpawnDev.SpawnJS.Marshallers
             var promise = JS.InteropCall<double, int, SpawnJSObjectReference>("propertySetNewPromise", jsParent.Id, jsKey);
             value.ContinueWith((t) =>
             {
-                try
+                using (promise)
                 {
                     if (t.IsCompletedSuccessfully)
                     {
@@ -186,10 +177,6 @@ namespace SpawnDev.SpawnJS.Marshallers
                         var error = t.Exception?.ToString() ?? "Unknown error";
                         promise.CallVoid("reject", error);
                     }
-                }
-                finally
-                {
-                    promise.Dispose();
                 }
             });
         }
@@ -205,7 +192,6 @@ namespace SpawnDev.SpawnJS.Marshallers
                 if (value.IsCompletedSuccessfully)
                 {
                     JS.InteropCall<double, string, VoidType>("propertySetResolvedPromise", jsParent.Id, jsKey);
-
                 }
                 else
                 {
@@ -217,7 +203,7 @@ namespace SpawnDev.SpawnJS.Marshallers
             var promise = JS.InteropCall<double, string, SpawnJSObjectReference>("propertySetNewPromise", jsParent.Id, jsKey);
             value.ContinueWith((t) =>
             {
-                try
+                using (promise)
                 {
                     if (t.IsCompletedSuccessfully)
                     {
@@ -228,10 +214,6 @@ namespace SpawnDev.SpawnJS.Marshallers
                         var error = t.Exception?.ToString() ?? "Unknown error";
                         promise.CallVoid("reject", error);
                     }
-                }
-                finally
-                {
-                    promise.Dispose();
                 }
             });
         }
