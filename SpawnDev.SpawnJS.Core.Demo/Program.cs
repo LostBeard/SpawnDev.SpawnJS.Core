@@ -1,6 +1,7 @@
 using SpawnDev.SpawnJS;
 using SpawnDev.SpawnJS.JSObjects;
 using System;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
@@ -8,10 +9,28 @@ var JS = SpawnJSRuntime.Instance;
 JS.Marshallers.Add(new SpawnJSObjectMarshaller<SpawnJSObject>());
 JS.Verbose = true;
 
-var gggg = JS.TypeInfo();
-var ggfg = JS.ConstructorNames();
-var gssg = JS.Keys();
+var typeInfo = JS.TypeInfo();
+if (typeInfo.TypeOf != "object" || typeInfo.ConstructorName != "Window") throw new Exception("Incorrect type info");
+var constructorNames = JS.ConstructorNames();
+if (!constructorNames.SequenceEqual(["Window", "EventTarget", "Object"])) throw new Exception("Incorrect constructor names.");
+if (JS.Keys().Count == 0) throw new Exception("Expected more than 0 keys");
+
+
+
+
 var nmt = true;
+
+var valueTuple = ("Hello", "world!");
+JS.Set("_valueTuple", valueTuple);
+var valueTupleRead = JS.Get<(string, string)>("_valueTuple");
+
+var tuple = new Tuple<string, string>("Hello", "world!");
+JS.Set("_tuple", tuple);
+var tupleRead = JS.Get<Tuple<string, string>>("_tuple");
+var art = true;
+
+
+
 
 // ===== PocoMarshaller round-trip test (property-walk clone, honours Json attributes; no JSON serialization) =====
 {
@@ -43,7 +62,7 @@ var nmt = true;
     Console.WriteLine($"POCO TEST {(ok ? "PASS" : "FAIL")}");
 }
 
-using var document = JS.Get("document")!;
+using var document = JS.Get<Document>("document")!;
 
 using var performance = JS.Get("performance");
 
@@ -52,7 +71,8 @@ double frameCount = 0;
 double fps = 0;
 double scale = 1.0;
 
-JS.Set("_growHeap", Callback.Create(() => {
+JS.Set("_growHeap", Callback.Create(() =>
+{
     JS.GrowHeap();
 }));
 
@@ -62,13 +82,13 @@ double width = 500;
 double height = 500;
 double maxIter = 80; // Balanced for real-time frame rates
 
-var fpsDisplay = document.Call<string, SpawnJSObjectReference>("createElement", "div");
-var canvas = document.Call<string, SpawnJSObjectReference>("createElement", "canvas");
-canvas.Set("width", width);
-canvas.Set("height", height);
-using var ctx = canvas.Call<string, SpawnJSObjectReference>("getContext", "2d");
-ctx.Set("fillStyle", "#000000");
-ctx.CallVoid("fillRect", 0, 0, width, height);
+var fpsDisplay = document.CreateElement<HTMLDivElement>("div");
+var canvas = document.CreateElement<HTMLCanvasElement>("canvas");
+canvas.Width = (int)width;
+canvas.Height = (int)height;
+using var ctx = canvas.Get2DContext();
+ctx.FillStyle = "#000000";
+ctx.FillRect(0, 0, width, height);
 
 Callback? cb = null;
 // image data
@@ -77,47 +97,47 @@ var data = new byte[(int)(width * height * 4)];
 using var heapView = HeapView.Create(data);
 // heap view as Uint8ClampedArray
 using var uint8ArrayClamped = heapView.As<Uint8ClampedArray>();
-SpawnJSObjectReference? imgData = null;
+ImageData? imgData = null;
 JS.OnHeapGrow += (_, _) =>
 {
     Console.WriteLine($"Rebuilding imgData");
-    imgData = JS.New<Uint8ClampedArray, double, double, SpawnJSObjectReference>("ImageData", uint8ArrayClamped, width, height);
+    imgData = new ImageData(uint8ArrayClamped, width, height);
 };
-imgData = JS.New<Uint8ClampedArray, double, double, SpawnJSObjectReference>("ImageData", uint8ArrayClamped, width, height);
+imgData = new ImageData(uint8ArrayClamped, width, height);
 
-using var stopButton = document.Call<string, SpawnJSObjectReference>("createElement", "button");
-stopButton.Set("textContent", "Stop");
-stopButton.CallVoid("addEventListener", "click", Callback.Create(() =>
+using var stopButton = document.CreateElement<HTMLButtonElement>("button");
+stopButton.TextContent = "Stop";
+stopButton.OnClick += () =>
 {
     runIt = false;
     JS.CallVoid("stopJSAnimation");
-}));
-document!.CallVoid("body.append", stopButton);
+};
+document.Body!.Append(stopButton);
 
-using var startJSButton = document.Call<string, SpawnJSObjectReference>("createElement", "button");
-startJSButton.Set("textContent", "Start JS");
-startJSButton.CallVoid("addEventListener", "click", Callback.Create(() =>
+using var startJSButton = document.CreateElement<HTMLButtonElement>("button");
+stopButton.TextContent = "Start JS";
+startJSButton.OnClick += () =>
 {
     runIt = false;
     JS.CallVoid("startJSAnimation");
-}));
-document!.CallVoid("body.append", startJSButton);
+};
+document.Body!.Append(startJSButton);
 
-using var startCSButton = document.Call<string, SpawnJSObjectReference>("createElement", "button");
-startCSButton.Set("textContent", "Start CS");
-startCSButton.CallVoid("addEventListener", "click", Callback.Create(() =>
+using var startCSButton = document.CreateElement<HTMLButtonElement>("button");
+stopButton.TextContent = "Start CS";
+startCSButton.OnClick += () =>
 {
     if (runIt) return;
     JS.CallVoid("stopJSAnimation");
     startAnimation();
-}));
-document!.CallVoid("body.append", startCSButton);
+};
+document.Body!.Append(startCSButton);
 
-document!.CallVoid("body.append", fpsDisplay);
-document.CallVoid("body.append", canvas);
+document.Body!.Append(fpsDisplay);
+document.Body!.Append(canvas);
 
 // update fps display
-fpsDisplay.Set("textContent", $"C#");
+fpsDisplay.TextContent = $"C#";
 
 JS.CallVoid("initJS");
 
@@ -178,7 +198,7 @@ cb = Callback.Create((double currentTime) =>
     }
 
     // get an ImageData view of our data to give to the canvas 2d context
-    ctx.CallVoid("putImageData", imgData, 0, 0);
+    ctx.PutImageData(imgData, 0, 0);
 
     // Performance Tracking
     double frameEnd = performance.Call<double>("now");
@@ -192,7 +212,7 @@ cb = Callback.Create((double currentTime) =>
         lastTime = currentTime;
     }
     // update fps display
-    fpsDisplay.Set("textContent", $"C# FPS: {fps} | Frame Time: {Math.Round(duration, 1)}ms");
+    fpsDisplay.TextContent = $"C# FPS: {fps} | Frame Time: {Math.Round(duration, 1)}ms";
     /// request next frame
     if (runIt) JS.CallVoid("requestAnimationFrame", cb);
 });
