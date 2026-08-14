@@ -270,63 +270,63 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="heapView">HeapView</param>
         public static implicit operator SharedArrayBuffer(HeapView heapView) => heapView.ToSharedArrayBuffer();
 
-        /// <summary>
-        /// Returns a TypedArray based on the ElementType
-        /// </summary>
-        /// <returns></returns>
-        public TypedArray AsTypedArray()
-        {
-            var typedArrayType = TypedArray.GetTypeDefaultTypedArrayType(ElementType) ?? typeof(Uint8Array);
-            return As(typedArrayType);
-        }
-        /// <summary>
-        /// Returns a TypedArray copy based on the ElementType
-        /// </summary>
-        /// <returns></returns>
-        public TypedArray ToTypedArray()
-        {
-            var typedArrayType = TypedArray.GetTypeDefaultTypedArrayType(ElementType) ?? typeof(Uint8Array);
-            return To(typedArrayType);
-        }
-        /// <summary>
-        /// Returns a JSObject based on the ElementType<br/>
-        /// Text data returns a StringPrimitive<br/>
-        /// Binary data types return a TypedArray based on ElementType
-        /// </summary>
-        /// <returns></returns>
-        public SpawnJSObject AsNativeView()
-        {
-            if (DataType == typeof(string))
-            {
-                // ArrayBuffer does not have a string viewer so it must be copied using TextDecoder
-                using var textDecoder = new TextDecoder("utf-16");
-                var jsString = textDecoder.DecodeToPrimitive((Uint8Array)this);
-                return jsString;
-            }
-            else
-            {
-                var typedArrayType = TypedArray.GetTypeDefaultTypedArrayType(ElementType) ?? typeof(Uint8Array);
-                return As(typedArrayType);
-            }
-        }
-        /// <summary>
-        /// Returns a TypedArray copy based on the ElementType
-        /// </summary>
-        /// <returns></returns>
-        public SpawnJSObject ToNativeView()
-        {
-            if (DataType == typeof(string))
-            {
-                using var textDecoder = new TextDecoder("utf-16");
-                var jsString = textDecoder.JSRef!.Call<Uint8Array, StringPrimitive>("decode", (Uint8Array)this);
-                return jsString;
-            }
-            else
-            {
-                var typedArrayType = TypedArray.GetTypeDefaultTypedArrayType(ElementType) ?? typeof(Uint8Array);
-                return To(typedArrayType);
-            }
-        }
+        ///// <summary>
+        ///// Returns a TypedArray based on the ElementType
+        ///// </summary>
+        ///// <returns></returns>
+        //public TypedArray AsTypedArray()
+        //{
+        //    var typedArrayType = TypedArray.GetTypeDefaultTypedArrayType(ElementType) ?? typeof(Uint8Array);
+        //    return As(typedArrayType);
+        //}
+        ///// <summary>
+        ///// Returns a TypedArray copy based on the ElementType
+        ///// </summary>
+        ///// <returns></returns>
+        //public TypedArray ToTypedArray()
+        //{
+        //    var typedArrayType = TypedArray.GetTypeDefaultTypedArrayType(ElementType) ?? typeof(Uint8Array);
+        //    return To(typedArrayType);
+        //}
+        ///// <summary>
+        ///// Returns a JSObject based on the ElementType<br/>
+        ///// Text data returns a StringPrimitive<br/>
+        ///// Binary data types return a TypedArray based on ElementType
+        ///// </summary>
+        ///// <returns></returns>
+        //public SpawnJSObject AsNativeView()
+        //{
+        //    if (DataType == typeof(string))
+        //    {
+        //        // ArrayBuffer does not have a string viewer so it must be copied using TextDecoder
+        //        using var textDecoder = new TextDecoder("utf-16");
+        //        var jsString = textDecoder.DecodeToPrimitive((Uint8Array)this);
+        //        return jsString;
+        //    }
+        //    else
+        //    {
+        //        var typedArrayType = TypedArray.GetTypeDefaultTypedArrayType(ElementType) ?? typeof(Uint8Array);
+        //        return As(typedArrayType);
+        //    }
+        //}
+        ///// <summary>
+        ///// Returns a TypedArray copy based on the ElementType
+        ///// </summary>
+        ///// <returns></returns>
+        //public SpawnJSObject ToNativeView()
+        //{
+        //    if (DataType == typeof(string))
+        //    {
+        //        using var textDecoder = new TextDecoder("utf-16");
+        //        var jsString = textDecoder.JSRef!.Call<Uint8Array, StringPrimitive>("decode", (Uint8Array)this);
+        //        return jsString;
+        //    }
+        //    else
+        //    {
+        //        var typedArrayType = TypedArray.GetTypeDefaultTypedArrayType(ElementType) ?? typeof(Uint8Array);
+        //        return To(typedArrayType);
+        //    }
+        //}
         /// <summary>
         /// The number of elements in Data
         /// </summary>
@@ -471,13 +471,6 @@ namespace SpawnDev.SpawnJS.JSObjects
             Dispose(false);
         }
         /// <summary>
-        /// Returns the current Uint8Array the Heap is using.<br/>
-        /// The underlying Uint8Array ArrayBuffer will become detached when it is resized.<br/>
-        /// This happens VERY frequently, therefore this Uint8Array must be used immediately.
-        /// </summary>
-        /// <returns></returns>
-        public static Uint8Array GetHeap() => JS.As<HeapViewDescriptor, Uint8Array>(new HeapViewDescriptor(0, -1));
-        /// <summary>
         /// BlazorJSRuntime
         /// </summary>
         protected static SpawnJSRuntime JS => SpawnJSRuntime.Instance;
@@ -495,9 +488,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <returns></returns>
         public ArrayBuffer ToArrayBuffer(long byteOffset, long byteLength)
         {
-            using var heap = GetHeap();
-            using var heapChunk = heap.Slice(Address + byteOffset, Address + byteOffset + byteLength);
-            return heapChunk.Buffer;
+            return JS.As<HeapViewDescriptor, ArrayBuffer>(new HeapViewDescriptor(Address + byteOffset, byteLength, JSArrayBufferView.ArrayBuffer, true));
         }
         /// <summary>
         /// Creates a copy of the data and returns it as an ArrayBuffer
@@ -513,12 +504,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <returns></returns>
         public SharedArrayBuffer ToSharedArrayBuffer(long byteOffset, long byteLength)
         {
-            using var heap = GetHeap();
-            using var heapChunk = heap.SubArray(Address + byteOffset, Address + byteOffset + byteLength);
-            var sharedArrayBuffer = new SharedArrayBuffer(byteLength);
-            using var uint8Array = new Uint8Array(sharedArrayBuffer);
-            uint8Array.Set(heapChunk);
-            return sharedArrayBuffer;
+            return JS.As<HeapViewDescriptor, SharedArrayBuffer>(new HeapViewDescriptor(Address + byteOffset, byteLength, JSArrayBufferView.SharedArrayBuffer, true));
         }
         /// <summary>
         /// Creates a copy of the data and returns it as a TypedArray
@@ -591,24 +577,22 @@ namespace SpawnDev.SpawnJS.JSObjects
             if (arrayBufferViewType == typeof(ArrayBuffer)) return JSArrayBufferView.ArrayBuffer;
             throw new NotSupportedException();
         }
-
-
-        /// <summary>
-        /// Returns a TypedArray that points at the pinned data.
-        /// </summary>
-        public TypedArray As(Type typedArrayType, long byteOffset = 0)
-            => As(typedArrayType, byteOffset, (long)Math.Floor((float)(ByteLength - byteOffset) / (float)TypedArray.GetTypedArrayElementSize(typedArrayType)));
-        /// <summary>
-        /// Returns a TypedArray that points at the pinned data.
-        /// </summary>
-        public TypedArray As(Type typedArrayType, long byteOffset, long elementCount)
-        {
-            var viewType = typedArrayType.Name;
-            // byteLength sized by the TARGET view's element size, not the HeapView's source ElementSize (see As<TTypedArray> above).
-            var typedArray = (TypedArray)JS.As(typedArrayType, new HeapViewDescriptor(Address + byteOffset, elementCount * TypedArray.GetTypedArrayElementSize(typedArrayType)))!;
-            ToDispose(typedArray);
-            return typedArray;
-        }
+        ///// <summary>
+        ///// Returns a TypedArray that points at the pinned data.
+        ///// </summary>
+        //public TypedArray As(Type typedArrayType, long byteOffset = 0)
+        //    => As(typedArrayType, byteOffset, (long)Math.Floor((float)(ByteLength - byteOffset) / (float)TypedArray.GetTypedArrayElementSize(typedArrayType)));
+        ///// <summary>
+        ///// Returns a TypedArray that points at the pinned data.
+        ///// </summary>
+        //public TypedArray As(Type typedArrayType, long byteOffset, long elementCount)
+        //{
+        //    var viewType = typedArrayType.Name;
+        //    // byteLength sized by the TARGET view's element size, not the HeapView's source ElementSize (see As<TTypedArray> above).
+        //    var typedArray = (TypedArray)JS.As(typedArrayType, new HeapViewDescriptor(Address + byteOffset, elementCount * TypedArray.GetTypedArrayElementSize(typedArrayType)))!;
+        //    ToDispose(typedArray);
+        //    return typedArray;
+        //}
         /// <summary>
         /// Returns a DataView that points at the pinned data.
         /// </summary>

@@ -33,11 +33,15 @@ try
     document.CallApplyVoid("write", new object?[] { $@"Starting...<br/>" });
     await Task.Delay(1);
 
-    using var heapView = (ArrayBuffer)(HeapView)(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 });
+    var data1 = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+    using var heapView = (ArrayBuffer)(HeapView)(data1);
 
     JS.Set("_heapView1", heapView);
     var diff = JS.GrowHeap();
+    data1[0] = 255;
     JS.Set("_heapView2", heapView);
+
+    data1[1] = 255;
 
     var errorS = JS.Get<string>("_error");
 

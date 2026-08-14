@@ -19,7 +19,7 @@
         /// </summary>
         public JSArrayBufferView Type { get; } = JSArrayBufferView.Uint8Array;
         /// <summary>
-        /// If true this descriptor will be marshalled as a copy and not a live heap view.<br/>
+        /// If true the heap view wil be a copy of the heap and not a live view.<br/>
         /// </summary>
         public bool Copy { get; }
         /// <summary>
@@ -28,7 +28,8 @@
         /// <param name="offset">byte offset</param>
         /// <param name="length">Number of JSArrayBufferView elements</param>
         /// <param name="copy">Copy if true and a live heap view if false</param>
-        public HeapViewDescriptor(long offset, long length, bool copy = true)
+        /// <param name="keepFresh">If true a new view will be created whenever a detached view is detected</param>
+        public HeapViewDescriptor(long offset, long length, bool copy = false)
         {
             Offset = offset;
             Length = length;
@@ -41,7 +42,8 @@
         /// <param name="length">Number of JSArrayBufferView elements</param>
         /// <param name="type">ArrayBufferView type</param>
         /// <param name="copy">Copy if true and a live heap view if false</param>
-        public HeapViewDescriptor(long offset, long length, JSArrayBufferView type, bool copy = true)
+        /// <param name="keepFresh">If true a new view will be created whenever a detached view is detected</param>
+        public HeapViewDescriptor(long offset, long length, JSArrayBufferView type, bool copy = false)
         {
             Offset = offset;
             Length = length;

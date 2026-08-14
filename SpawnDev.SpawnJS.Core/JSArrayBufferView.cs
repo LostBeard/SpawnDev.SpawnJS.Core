@@ -22,5 +22,6 @@
         DataView,
         // non-view
         ArrayBuffer,
+        SharedArrayBuffer,
     }
 }

@@ -473,26 +473,39 @@
                         // create a copy
                         value = heapViewInfo.buffer.slice(heapViewInfo.offset, heapViewInfo.offset + length);
                     } else {
-                        // can't use offet and length when now copying
+                        // can't use offet and length when not copying the heap asn ArrayBuffer view
                         if (heapViewInfo.offset != 0) throw new Error('Offset and length not supported creating an ArrayBuffer heap view without a copy');
                         value = heapViewInfo.buffer;
                     }
-                    parent[propertyName] = value;
+                } else if (heapViewInfo.viewType === 14) {
+                    // SharedArrayBuffer requested
+                    if (heapViewInfo.copy) {
+                        // create a copy
+                        var uint8ArrayHeap = new Uint8Array(heapViewInfo.buffer, heapViewInfo.offset, length);
+                        value = new SharedArrayBuffer(length);
+                        var uint8ArrayDest = new Uint8Array(value);
+                        value.set(uint8ArrayHeap);
+                    } else {
+                        // can't get a live SharedArrayBuffer view of the heap
+                        throw new Error('Cannot get a live SharedArrayBuffer view of the heap');
+                    }
                 } else {
-                    // ArrayBufferView reqeusted
-                    value = new heapViewInfo.ctor(heapViewInfo.buffer, heapViewInfo.offset, length);
-                    value = heapViewInfo.copy ? value.slice() : value;
+                    // ArrayBufferView (TypedArray or DataView)
+                    var liveView = new heapViewInfo.ctor(heapViewInfo.buffer, heapViewInfo.offset, length);
+                    value = heapViewInfo.copy ? liveView.slice() : liveView;
                 }
-                value._heapViewInfo = heapViewInfo;
+                // copies do not get their data refreshed
+                if (!heapViewInfo.copy) value._heapViewInfo = heapViewInfo;
                 heapViewInfo.bufferLength = heapViewInfo.buffer.byteLength;
                 heapViewInfo.sizeHistory.push(heapViewInfo.bufferLength);
                 heapViewInfo.value = value;
-                console.log('Heapview refreshd:', heapViewInfo);
+                if (SpawnJSInterop.verbose) console.log('Heapview refreshed:', heapViewInfo);
             }
             return heapViewInfo.value;
         }
         static getArrayBufferViewConstructor(viewType) {
             var ctor = SpawnJSInterop.HeapViewCtors[viewType];
+            if (viewType === 13 || viewType === 14) return null;   // ArrayBuffer
             if (!ctor) throw new Error(`Unsupported or missing ArrayBufferView constructor for enum index: ${viewType}`);
             return ctor;
         }
