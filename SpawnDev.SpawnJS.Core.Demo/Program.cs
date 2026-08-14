@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 try
 {
     var JS = SpawnJSRuntime.Instance;
+    JS.Marshallers.Add(new SpawnJSObjectMarshaller<SpawnJSObject>());
     JS.Verbose = true;
 
     var js = (SpawnJSObjectReference)JS;
-    
+
     async Task MyMethod(string msg, SpawnJSObjectReference window)
     {
         await Task.Delay(2000);
@@ -32,6 +33,11 @@ try
     document.CallApplyVoid("write", new object?[] { $@"Starting...<br/>" });
     await Task.Delay(1);
 
+    using var heapView = (ArrayBuffer)(HeapView)(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 });
+
+    JS.Set("_heapView1", heapView);
+    var diff = JS.GrowHeap();
+    JS.Set("_heapView2", heapView);
 
     var errorS = JS.Get<string>("_error");
 

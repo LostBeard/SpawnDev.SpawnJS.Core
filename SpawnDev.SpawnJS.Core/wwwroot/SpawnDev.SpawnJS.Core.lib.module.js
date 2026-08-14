@@ -466,15 +466,15 @@
             if (needsRefresh) {
                 heapViewInfo.buffer = SpawnJSInterop.wasmMemoryBuffer(heapViewInfo.dotnet);
                 var value = null;
-                var length = heapViewInfo.length === -1 ? /* entire buffer */ heapViewInfo.buffer.byteLength - offset : heapViewInfo.length;
+                var length = heapViewInfo.length === -1 ? /* entire buffer */ heapViewInfo.buffer.byteLength - heapViewInfo.offset : heapViewInfo.length;
                 if (heapViewInfo.viewType === 13) {
                     // ArrayBuffer requested
                     if (heapViewInfo.copy) {
                         // create a copy
-                        value = heapViewInfo.buffer.slice(offset, offset + length);
+                        value = heapViewInfo.buffer.slice(heapViewInfo.offset, heapViewInfo.offset + length);
                     } else {
                         // can't use offet and length when now copying
-                        if (offset != 0) throw new Error('Offset and length not supported creating an ArrayBuffer heap view without a copy');
+                        if (heapViewInfo.offset != 0) throw new Error('Offset and length not supported creating an ArrayBuffer heap view without a copy');
                         value = heapViewInfo.buffer;
                     }
                     parent[propertyName] = value;
