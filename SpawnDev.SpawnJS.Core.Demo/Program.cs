@@ -1,11 +1,42 @@
 using SpawnDev.SpawnJS;
 using SpawnDev.SpawnJS.JSObjects;
 using System;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 var JS = SpawnJSRuntime.Instance;
 JS.Marshallers.Add(new SpawnJSObjectMarshaller<SpawnJSObject>());
 JS.Verbose = true;
+
+// ===== PocoMarshaller round-trip test (property-walk clone, honours Json attributes; no JSON serialization) =====
+{
+    var person = new TestPerson
+    {
+        FirstName = "Ada",      // [JsonPropertyName("given_name")]
+        LastName = "Lovelace",
+        Age = 36,
+        Secret = "hidden",      // [JsonIgnore] - must NOT be written to JS
+        Nickname = null,        // [JsonIgnore(WhenWritingNull)] + null - must NOT be written
+        City = null,            // no ignore - written as null
+    };
+    JS.Set("__pocoTest", person);                       // NetToJS: property-walk into a new JS object
+    using var raw = JS.Get("__pocoTest")!;              // the raw JS object, to inspect member names
+    bool hasGiven = raw.Exists("given_name");           // JsonPropertyName rename
+    bool hasFirstName = raw.Exists("firstName");        // original name should be gone
+    bool hasSecret = raw.Exists("secret");              // JsonIgnore -> absent
+    bool hasNickname = raw.Exists("nickname");          // WhenWritingNull + null -> absent
+    bool hasCity = raw.Exists("city");                  // null but written -> present
+    int rawAge = raw.Get<int>("age");                   // camelCase default naming
+
+    var back = JS.Get<TestPerson>("__pocoTest")!;       // JSToNet: property-walk back into a new POCO
+
+    Console.WriteLine($"POCO names: given_name={hasGiven} firstName={hasFirstName} secret={hasSecret} nickname={hasNickname} city={hasCity} age={rawAge}");
+    Console.WriteLine($"POCO back: FirstName={back.FirstName} LastName={back.LastName} Age={back.Age} Secret={back.Secret ?? "null"} Nickname={back.Nickname ?? "null"} City={back.City ?? "null"}");
+    bool ok = hasGiven && !hasFirstName && !hasSecret && !hasNickname && hasCity && rawAge == 36
+              && back.FirstName == "Ada" && back.LastName == "Lovelace" && back.Age == 36
+              && back.Secret == null && back.Nickname == null && back.City == null;
+    Console.WriteLine($"POCO TEST {(ok ? "PASS" : "FAIL")}");
+}
 
 using var document = JS.Get("document")!;
 
@@ -171,3 +202,18 @@ void startAnimation()
 
 // keep the using app alive
 await new TaskCompletionSource().Task;
+
+// POCO used to exercise PocoMarshaller. Accessors are referenced above (initializer + reads) so they
+// survive trimming; the Json attributes drive naming / ignore behavior.
+public class TestPerson
+{
+    [JsonPropertyName("given_name")]
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public int Age { get; set; }
+    [JsonIgnore]
+    public string? Secret { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Nickname { get; set; }
+    public string? City { get; set; }
+}

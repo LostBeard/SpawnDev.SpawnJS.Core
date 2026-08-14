@@ -67,6 +67,9 @@ namespace SpawnDev.SpawnJS
             // Registration order matters: GetMarshaller scans this list in REVERSE, so a marshaller added
             // later takes precedence when more than one reports it can marshal a type. The more specific /
             // higher-priority handlers (arrays, object references) are therefore added last.
+            // .Net POCO <-> plain JS object (property-walk clone, honours Json attributes). Most generic, so
+            // registered FIRST = lowest priority; any more specific marshaller below wins the reverse scan.
+            Marshallers.Add(new PocoMarshaller<object>());
             // VoidType - nothing is marshalled
             Marshallers.Add(new VoidTypeMarshaller());
             // .Net: object <-> JS: Object
