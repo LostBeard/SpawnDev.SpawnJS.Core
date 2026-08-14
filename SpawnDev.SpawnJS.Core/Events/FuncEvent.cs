@@ -1,4 +1,5 @@
-﻿namespace SpawnDev.SpawnJS
+using System.Diagnostics.CodeAnalysis;
+namespace SpawnDev.SpawnJS
 {
     /// <summary>
     /// With FuncEvent the operands += and -= can be used to attach and detach .Net callbacks to Javascript events.<br/>
@@ -83,7 +84,7 @@
     /// leading to memory leaks and potential calls into disposed .NET objects which can<br/>
     /// trigger unhandled exceptions (e.g., Blazor error UI in WASM).
     /// </summary>
-    public class FuncEvent<T1, TResult> : FuncEvent<TResult>
+    public class FuncEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, TResult> : FuncEvent<TResult>
     {
         /// <summary>
         /// Adds an event handler
@@ -174,7 +175,7 @@
     /// leading to memory leaks and potential calls into disposed .NET objects which can<br/>
     /// trigger unhandled exceptions (e.g., Blazor error UI in WASM).
     /// </summary>
-    public class FuncEvent<T1, T2, TResult> : FuncEvent<T1, TResult>
+    public class FuncEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, TResult> : FuncEvent<T1, TResult>
     {
         /// <summary>
         /// Adds an event handler
@@ -284,7 +285,7 @@
     /// leading to memory leaks and potential calls into disposed .NET objects which can<br/>
     /// trigger unhandled exceptions (e.g., Blazor error UI in WASM).
     /// </summary>
-    public class FuncEvent<T1, T2, T3, TResult> : FuncEvent<T1, T2, TResult>
+    public class FuncEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, TResult> : FuncEvent<T1, T2, TResult>
     {
         /// <summary>
         /// Adds an event handler
@@ -413,7 +414,7 @@
     /// leading to memory leaks and potential calls into disposed .NET objects which can<br/>
     /// trigger unhandled exceptions (e.g., Blazor error UI in WASM).
     /// </summary>
-    public class FuncEvent<T1, T2, T3, T4, TResult> : FuncEvent<T1, T2, T3, TResult>
+    public class FuncEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, TResult> : FuncEvent<T1, T2, T3, TResult>
     {
         /// <summary>
         /// Adds an event handler
@@ -561,7 +562,7 @@
     /// leading to memory leaks and potential calls into disposed .NET objects which can<br/>
     /// trigger unhandled exceptions (e.g., Blazor error UI in WASM).
     /// </summary>
-    public class FuncEvent<T1, T2, T3, T4, T5, TResult> : FuncEvent<T1, T2, T3, T4, TResult>
+    public class FuncEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, TResult> : FuncEvent<T1, T2, T3, T4, TResult>
     {
         /// <summary>
         /// Adds an event handler
@@ -728,7 +729,7 @@
     /// leading to memory leaks and potential calls into disposed .NET objects which can<br/>
     /// trigger unhandled exceptions (e.g., Blazor error UI in WASM).
     /// </summary>
-    public class FuncEvent<T1, T2, T3, T4, T5, T6, TResult> : FuncEvent<T1, T2, T3, T4, T5, TResult>
+    public class FuncEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, TResult> : FuncEvent<T1, T2, T3, T4, T5, TResult>
     {
         /// <summary>
         /// Adds an event handler
@@ -914,7 +915,7 @@
     /// leading to memory leaks and potential calls into disposed .NET objects which can<br/>
     /// trigger unhandled exceptions (e.g., Blazor error UI in WASM).
     /// </summary>
-    public class FuncEvent<T1, T2, T3, T4, T5, T6, T7, TResult> : FuncEvent<T1, T2, T3, T4, T5, T6, TResult>
+    public class FuncEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T7, TResult> : FuncEvent<T1, T2, T3, T4, T5, T6, TResult>
     {
         /// <summary>
         /// Adds an event handler

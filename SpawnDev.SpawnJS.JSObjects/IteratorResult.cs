@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 namespace SpawnDev.SpawnJS.JSObjects
 {
     /// <summary>
@@ -20,12 +21,12 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T GetValue<T>() => JSRef!.Get<T>("value");
+        public T GetValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>() => JSRef!.Get<T>("value");
     }
     /// <summary>
     /// Returned from an Iterator or AsyncIterator Next call
     /// </summary>
-    public class IteratorResult<TValue> : SpawnJSObject
+    public class IteratorResult<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TValue> : SpawnJSObject
     {
         /// <summary>
         /// Deserialization constructor

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace SpawnDev.SpawnJS.JSObjects
@@ -7,7 +8,7 @@ namespace SpawnDev.SpawnJS.JSObjects
     /// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
     /// </summary>
     /// <typeparam name="TElement">The TypedArray element .Net type</typeparam>
-    public abstract class TypedArray<TElement> : TypedArray where TElement : struct
+    public abstract class TypedArray<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TElement> : TypedArray where TElement : struct
     {
         /// <summary>
         /// Deserialization constructor
@@ -102,12 +103,16 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="byteOffset"></param>
         /// <param name="length"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2067",
+            Justification = "typedArray is a TypedArray subclass; those live in SpawnDev.SpawnJS.JSObjects and their view .ctor(ArrayBuffer, long, long) is preserved by the embedded ILLink.Descriptors.xml (preserve=methods).")]
         public TypedArray ReCast(Type typedArray, long byteOffset, long length) => Buffer.Using(o => (TypedArray)Activator.CreateInstance(typedArray, o, ByteOffset + byteOffset, length)!);
         /// <summary>
         /// Create a new typed array starting at this typed array's ByteOffset + byteOffset
         /// </summary>
         /// <param name="typedArray"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2067",
+            Justification = "typedArray is a TypedArray subclass; those live in SpawnDev.SpawnJS.JSObjects and their view .ctor(ArrayBuffer, long, long) is preserved by the embedded ILLink.Descriptors.xml (preserve=methods).")]
         public TypedArray ReCast(Type typedArray) => Buffer.Using(o => (TypedArray)Activator.CreateInstance(typedArray, o, ByteOffset, ByteLength)!);
         /// <summary>
         /// Create a new typed array starting at this typed array's ByteOffset + byteOffset, returning length number of items in the resulting typed array
@@ -116,12 +121,16 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="byteOffset"></param>
         /// <param name="length"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2087",
+            Justification = "TTypedArray is constrained to TypedArray; those live in SpawnDev.SpawnJS.JSObjects and their view .ctor(ArrayBuffer, long, long) is preserved by the embedded ILLink.Descriptors.xml (preserve=methods).")]
         public TTypedArray ReCast<TTypedArray>(long byteOffset, long length) where TTypedArray : TypedArray => Buffer.Using(o => (TTypedArray)Activator.CreateInstance(typeof(TTypedArray), o, ByteOffset + byteOffset, length)!);
         /// <summary>
         /// Create a new typed array starting at this typed array's ByteOffset + byteOffset
         /// </summary>
         /// <typeparam name="TTypedArray"></typeparam>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2087",
+            Justification = "TTypedArray is constrained to TypedArray; those live in SpawnDev.SpawnJS.JSObjects and their view .ctor(ArrayBuffer, long, long) is preserved by the embedded ILLink.Descriptors.xml (preserve=methods).")]
         public TTypedArray ReCast<TTypedArray>() where TTypedArray : TypedArray => Buffer.Using(o => (TTypedArray)Activator.CreateInstance(typeof(TTypedArray), o, ByteOffset, ByteLength)!);
         /// <summary>
         /// Deserialization constructor
@@ -410,7 +419,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="T"></typeparam>
         /// <param name="start">Element Index to start</param>
         /// <returns>Array of type T</returns>
-        public T[] ToArray<T>(long start = 0) where T : struct => Read<T>(start * Marshal.SizeOf<T>());
+        public T[] ToArray<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(long start = 0) where T : struct => Read<T>(start * Marshal.SizeOf<T>());
         /// <summary>        
         /// Read an array of type T starting at this TypedArray's ByteOffset + byteOffset
         /// </summary>
@@ -418,7 +427,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="start">Element Index to start</param>
         /// <param name="count">Number of type T to read</param>
         /// <returns>Array of type T</returns>
-        public T[] ToArray<T>(long start, long count) where T : struct => Read<T>(start * Marshal.SizeOf<T>(), count);
+        public T[] ToArray<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(long start, long count) where T : struct => Read<T>(start * Marshal.SizeOf<T>(), count);
         /// <summary>
         /// Copies elements of type T from this TypedArray tp the destination
         /// </summary>
@@ -428,7 +437,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="destOffset">Destination offset</param>
         /// <param name="count">Count</param>
         /// <returns></returns>
-        public long ToArray<T>(long srcOffset, T[] dest, long destOffset, long count) where T : struct => Read<T>(srcOffset * Marshal.SizeOf<T>(), dest, destOffset, count);
+        public long ToArray<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(long srcOffset, T[] dest, long destOffset, long count) where T : struct => Read<T>(srcOffset * Marshal.SizeOf<T>(), dest, destOffset, count);
         /// <summary>
         /// Writes an array of struct to this TypedArray
         /// </summary>

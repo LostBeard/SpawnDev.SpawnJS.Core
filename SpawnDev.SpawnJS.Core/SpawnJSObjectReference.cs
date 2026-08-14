@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace SpawnDev.SpawnJS
 {
@@ -15,7 +16,8 @@ namespace SpawnDev.SpawnJS
     {
         internal static SpawnJSObjectReference? FromID(double fromJS, bool nonNullable = false, bool preventDispose = false)
         {
-            return !nonNullable && (fromJS == SpawnJSObjectReference.NullId || fromJS == SpawnJSObjectReference.UndefinedId) ? null : new SpawnJSObjectReference(fromJS) { PreventDispose = preventDispose };
+            var isValid = fromJS != NullId && fromJS != UndefinedId && fromJS != double.NaN && fromJS != 0;
+            return !nonNullable && !isValid ? null : new SpawnJSObjectReference(fromJS) { PreventDispose = preventDispose };
         }
         /// <summary>
         /// If true, this item will not dispose when dispsoe is called
@@ -55,7 +57,7 @@ namespace SpawnDev.SpawnJS
         /// <summary>
         /// Returns the referenced Javascript value as type T
         /// </summary>
-        public T As<T>(bool dispose = false)
+        public T As<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(bool dispose = false)
         {
             var ret = JS.As<SpawnJSObjectReference, T>(this);
             if (dispose) Dispose();
@@ -135,7 +137,7 @@ namespace SpawnDev.SpawnJS
         /// <summary>
         /// releases the SpawnJSObject reference and returns underlying value
         /// </summary>
-        public T ReleaseAsJson<T>(JsonSerializerOptions? serializerOptions = null)
+        public T ReleaseAsJson<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(JsonSerializerOptions? serializerOptions = null)
         {
             var json = SpawnJSRuntime.SpawnJSObjectReleaseJson(Id);
             var ret = json == null ? default : JsonSerializer.Deserialize<T>(json, serializerOptions);

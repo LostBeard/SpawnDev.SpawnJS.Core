@@ -1,4 +1,5 @@
-﻿namespace SpawnDev.SpawnJS
+using System.Diagnostics.CodeAnalysis;
+namespace SpawnDev.SpawnJS
 {
     /// <summary>
     /// An Func Callback
@@ -24,7 +25,7 @@
     /// <summary>
     /// An Func Callback
     /// </summary>
-    public class FuncCallback<T1, TResult> : Callback
+    public class FuncCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, TResult> : Callback
     {
         Func<T1, TResult> _callback;
         public FuncCallback(Func<T1, TResult> func, bool once = false) : base(once)
@@ -45,7 +46,7 @@
     /// <summary>
     /// An Func Callback
     /// </summary>
-    public class FuncCallback<T1, T2, TResult> : Callback
+    public class FuncCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, TResult> : Callback
     {
         Func<T1, T2, TResult> _callback;
         public FuncCallback(Func<T1, T2, TResult> func, bool once = false) : base(once)
@@ -67,7 +68,7 @@
     /// <summary>
     /// An Func Callback
     /// </summary>
-    public class FuncCallback<T1, T2, T3, TResult> : Callback
+    public class FuncCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, TResult> : Callback
     {
         Func<T1, T2, T3, TResult> _callback;
         public FuncCallback(Func<T1, T2, T3, TResult> func, bool once = false) : base(once)
@@ -90,7 +91,7 @@
     /// <summary>
     /// An Func Callback
     /// </summary>
-    public class FuncCallback<T1, T2, T3, T4, TResult> : Callback
+    public class FuncCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, TResult> : Callback
     {
         Func<T1, T2, T3, T4, TResult> _callback;
         public FuncCallback(Func<T1, T2, T3, T4, TResult> func, bool once = false) : base(once)
@@ -114,7 +115,7 @@
     /// <summary>
     /// An Func Callback
     /// </summary>
-    public class FuncCallback<T1, T2, T3, T4, T5, TResult> : Callback
+    public class FuncCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, TResult> : Callback
     {
         Func<T1, T2, T3, T4, T5, TResult> _callback;
         public FuncCallback(Func<T1, T2, T3, T4, T5, TResult> func, bool once = false) : base(once)
@@ -139,7 +140,7 @@
     /// <summary>
     /// An Func Callback
     /// </summary>
-    public class FuncCallback<T1, T2, T3, T4, T5, T6, TResult> : Callback
+    public class FuncCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, TResult> : Callback
     {
         Func<T1, T2, T3, T4, T5, T6, TResult> _callback;
         public FuncCallback(Func<T1, T2, T3, T4, T5, T6, TResult> func, bool once = false) : base(once)
@@ -165,7 +166,7 @@
     /// <summary>
     /// An Func Callback
     /// </summary>
-    public class FuncCallback<T1, T2, T3, T4, T5, T6, T7, TResult> : Callback
+    public class FuncCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T7, TResult> : Callback
     {
         Func<T1, T2, T3, T4, T5, T6, T7, TResult> _callback;
         public FuncCallback(Func<T1, T2, T3, T4, T5, T6, T7, TResult> func, bool once = false) : base(once)
@@ -192,7 +193,7 @@
     /// <summary>
     /// An Func Callback
     /// </summary>
-    public class FuncCallback<T1, T2, T3, T4, T5, T6, T7, T8, TResult> : Callback
+    public class FuncCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T7, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T8, TResult> : Callback
     {
         Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> _callback;
         public FuncCallback(Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> func, bool once = false) : base(once)
@@ -220,7 +221,7 @@
     /// <summary>
     /// An Func Callback
     /// </summary>
-    public class FuncCallback<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> : Callback
+    public class FuncCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T7, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T8, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T9, TResult> : Callback
     {
         Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> _callback;
         public FuncCallback(Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> func, bool once = false) : base(once)
@@ -249,7 +250,7 @@
     /// <summary>
     /// An Func Callback
     /// </summary>
-    public class FuncCallback<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> : Callback
+    public class FuncCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T7, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T8, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T9, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T10, TResult> : Callback
     {
         Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> _callback;
         public FuncCallback(Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> func, bool once = false) : base(once)

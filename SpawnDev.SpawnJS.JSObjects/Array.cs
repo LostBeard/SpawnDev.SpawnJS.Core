@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using SpawnDev.SpawnJS.Marshaller;
 using System.Collections;
 
@@ -14,36 +15,36 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// Returns first or default
         /// </summary>
         /// <returns></returns>
-        public T FirstOrDefault<T>() => Length > 0 ? GetItem<T>(0) : default(T)!;
+        public T FirstOrDefault<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>() => Length > 0 ? GetItem<T>(0) : default(T)!;
         /// <summary>
         /// Returns last or default
         /// </summary>
         /// <returns></returns>
-        public T LastOrDefault<T>() => Length > 0 ? GetItem<T>(Length - 1) : default(T)!;
+        public T LastOrDefault<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>() => Length > 0 ? GetItem<T>(Length - 1) : default(T)!;
         /// <summary>
         /// Returns the array as a .Net List
         /// </summary>
         /// <returns></returns>
-        public List<T> ToList<T>() => ToArray<T>().ToList();
+        public List<T> ToList<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>() => ToArray<T>().ToList();
         /// <summary>
         /// Returns the array as a .Net Array
         /// </summary>
         /// <returns></returns>
-        public T[] ToArray<T>() => JSRef!.As<T[]>();
+        public T[] ToArray<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>() => JSRef!.As<T[]>();
         /// <summary>
         /// Returns the array as a .Net Array
         /// </summary>
         /// <param name="start"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public T[] ToArray<T>(int start, int count) => Enumerable.Range(start, count).Select(i => At<T>(i)).ToArray();
+        public T[] ToArray<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(int start, int count) => Enumerable.Range(start, count).Select(i => At<T>(i)).ToArray();
         /// <summary>
         /// Returns the array as a .Net List
         /// </summary>
         /// <param name="start"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public List<T> ToList<T>(int start, int count) => Enumerable.Range(start, count).Select(i => At<T>(i)).ToList();
+        public List<T> ToList<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(int start, int count) => Enumerable.Range(start, count).Select(i => At<T>(i)).ToList();
         #endregion
         /// <summary>
         /// Returns true if the argument is an array, or false otherwise.
@@ -96,7 +97,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="T"></typeparam>
         /// <param name="index"></param>
         /// <returns></returns>
-        public T At<T>(int index) => JSRef!.Call<int, T>("at", index);
+        public T At<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(int index) => JSRef!.Call<int, T>("at", index);
         /// <summary>
         /// Returns the array item at the given index. Accepts negative integers, which count back from the last item.
         /// </summary>
@@ -109,7 +110,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T Pop<T>() => JSRef!.Call<T>("pop");
+        public T Pop<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>() => JSRef!.Call<T>("pop");
         /// <summary>
         /// Removes the last element from an array and returns that element.
         /// </summary>
@@ -121,7 +122,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T Shift<T>() => JSRef!.Call<T>("shift");
+        public T Shift<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>() => JSRef!.Call<T>("shift");
         /// <summary>
         /// Removes the first element from an array and returns that element.
         /// </summary>
@@ -140,7 +141,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="T"></typeparam>
         /// <param name="index"></param>
         /// <returns></returns>
-        public T GetItem<T>(int index) => JSRef!.Get<T>(index);
+        public T GetItem<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(int index) => JSRef!.Get<T>(index);
         /// <summary>
         /// Returns the array item at the given index. Returns default TArrayItem for negative numbers (unlike at())
         /// </summary>
@@ -160,7 +161,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="T"></typeparam>
         /// <param name="array"></param>
         /// <returns></returns>
-        public Array<T> Concat<T>(Array array) => JSRef!.Call<Array, Array<T>>("concat", array);
+        public Array<T> Concat<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(Array array) => JSRef!.Call<Array, Array<T>>("concat", array);
         /// <summary>
         /// Joins all elements of an array into a string.
         /// </summary>
@@ -173,7 +174,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="TResult"></typeparam>
         /// <param name="function"></param>
         /// <returns></returns>
-        //public Array<TResult> Map<TResult>(Function function) => JSRef!.Call<Array<TResult>>("map", function);
+        //public Array<TResult> Map<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TResult>(Function function) => JSRef!.Call<Array<TResult>>("map", function);
         /// <summary>
         /// Returns a new array containing the results of invoking a function on every element in the calling array.
         /// </summary>
@@ -181,7 +182,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="TResult"></typeparam>
         /// <param name="mapTo"></param>
         /// <returns></returns>
-        public Array<TResult> Map<T, TResult>(Func<T, TResult> mapTo)
+        public Array<TResult> Map<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TResult>(Func<T, TResult> mapTo)
         {
             using var cb = Callback.Create(mapTo);
             return JSRef!.Call<FuncCallback<T, TResult>, Array<TResult>>("map", cb);
@@ -192,7 +193,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="T"></typeparam>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public Array<T> Filter<T>(Func<T, bool> filter)
+        public Array<T> Filter<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(Func<T, bool> filter)
         {
             using var cb = Callback.Create(filter);
             return JSRef!.Call<FuncCallback<T, bool>, Array<T>>("filter", cb);
@@ -202,7 +203,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>A new array containing the extracted elements.</returns>
-        public Array<T> Slice<T>() => JSRef!.Call<Array<T>>("slice");
+        public Array<T> Slice<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>() => JSRef!.Call<Array<T>>("slice");
         /// <summary>
         /// Extracts a section of the calling array and returns a new array.
         /// </summary>
@@ -214,7 +215,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// - If start &gt;= array.length, nothing is extracted.
         /// </param>
         /// <returns>A new array containing the extracted elements.</returns>
-        public Array<T> Slice<T>(int start) => JSRef!.Call<int, Array<T>>("slice", start);
+        public Array<T> Slice<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(int start) => JSRef!.Call<int, Array<T>>("slice", start);
         /// <summary>
         /// Extracts a section of the calling array and returns a new array.
         /// </summary>
@@ -233,7 +234,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// - If end implies a position before or at the position that start implies, nothing is extracted.<br/>
         /// </param>
         /// <returns>A new array containing the extracted elements.</returns>
-        public Array<T> Slice<T>(int start, int end) => JSRef!.Call<int, int, Array<T>>("slice", start, end);
+        public Array<T> Slice<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(int start, int end) => JSRef!.Call<int, int, Array<T>>("slice", start, end);
         /// <summary>
         /// Extracts a section of the calling array and returns a new array.
         /// </summary>
@@ -273,7 +274,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="mapTo"></param>
-        public void ForEach<T>(Action<T> mapTo)
+        public void ForEach<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(Action<T> mapTo)
         {
             using var cb = Callback.Create(mapTo);
             JSRef!.CallVoid("forEach", cb);
@@ -284,7 +285,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="T"></typeparam>
         /// <param name="disposeThis">If true, this Array JSObject will be disposed after the new cast</param>
         /// <returns></returns>
-        public Array<T> Cast<T>(bool disposeThis = false) => disposeThis ? JSRefMove<Array<T>>() : JSRefCopy<Array<T>>();
+        public Array<T> Cast<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(bool disposeThis = false) => disposeThis ? JSRefMove<Array<T>>() : JSRefCopy<Array<T>>();
         /// <summary>
         /// Return a new generic reference to this array
         /// </summary>        
@@ -349,7 +350,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// - If start is omitted (and splice() is called with no arguments), nothing is deleted. This is different from passing undefined, which is converted to 0.<br/>
         /// </param>
         /// <returns></returns>
-        public Array<T> Splice<T>(int start) => JSRef!.Call<int, Array<T>>("splice", start);
+        public Array<T> Splice<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(int start) => JSRef!.Call<int, Array<T>>("splice", start);
         /// <summary>
         /// Adds and/or removes elements from an array.
         /// </summary>
@@ -366,7 +367,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// - If deleteCount is 0 or negative, no elements are removed. In this case, you should specify at least one new element (see below).
         /// </param>
         /// <returns></returns>
-        public Array<T> Splice<T>(int start, int deleteCount) => JSRef!.Call<int, int, Array<T>>("splice", start, deleteCount);
+        public Array<T> Splice<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(int start, int deleteCount) => JSRef!.Call<int, int, Array<T>>("splice", start, deleteCount);
         /// <summary>
         /// Adds and/or removes elements from an array.
         /// </summary>
@@ -384,7 +385,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </param>
         /// <param name="addItems">The elements to add to the array, beginning from start. If you do not specify any elements, splice() will only remove elements from the array.</param>
         /// <returns></returns>
-        public Array<T> Splice<T>(int start, int deleteCount, T[] addItems) => JSRef!.CallApply<Array<T>>("splice", new object[] { start, deleteCount }.Concat(addItems.Select(o => (object?)o)).ToArray()); /// <summary>
+        public Array<T> Splice<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(int start, int deleteCount, T[] addItems) => JSRef!.CallApply<Array<T>>("splice", new object[] { start, deleteCount }.Concat(addItems.Select(o => (object?)o)).ToArray()); /// <summary>
                                                                                                                                                                                                              /// Sorts the elements of an array in place and returns the reference to the same array, now sorted. The default sort order is ascending, built upon converting the elements into strings, then comparing their sequences of UTF-16 code units values.
                                                                                                                                                                                                              /// </summary>
                                                                                                                                                                                                              /// <param name="compareFn">
@@ -399,7 +400,7 @@ namespace SpawnDev.SpawnJS.JSObjects
                                                                                                                                                                                                              /// If omitted, the array elements are converted to strings, then sorted according to each character's Unicode code point value.
                                                                                                                                                                                                              /// </param>
                                                                                                                                                                                                              /// <returns>This Array instance</returns>
-        public Array Sort<T>(Func<T, T, int> compareFn)
+        public Array Sort<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(Func<T, T, int> compareFn)
         {
             using var cb = Callback.Create(compareFn);
             JSRef!.CallVoid("sort", cb);

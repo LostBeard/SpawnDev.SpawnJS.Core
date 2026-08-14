@@ -1,4 +1,5 @@
-﻿using SpawnDev.SpawnJS.Marshaller;
+using System.Diagnostics.CodeAnalysis;
+using SpawnDev.SpawnJS.Marshaller;
 
 namespace SpawnDev.SpawnJS
 {
@@ -12,36 +13,36 @@ namespace SpawnDev.SpawnJS
         #endregion
         #region Get
         public SpawnJSObjectReference? Get(double key) => JS.InteropCall<double, double, SpawnJSObjectReference>("propertyGet", Id, key);
-        public T Get<T>(double key) => JS.InteropCall<double, double, T>("propertyGet", Id, key);
+        public T Get<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key) => JS.InteropCall<double, double, T>("propertyGet", Id, key);
         #endregion
         #region GetAsync
-        public Task<T> GetAsync<T>(double key) => JS.InteropCallAsync<double, double, T>("propertyGet", Id, key);
+        public Task<T> GetAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key) => JS.InteropCallAsync<double, double, T>("propertyGet", Id, key);
         public Task<SpawnJSObjectReference> GetAsync(double key) => JS.InteropCallAsync<double, double, SpawnJSObjectReference>("propertyGet", Id, key);
         #endregion
         #region New
-        public T NewApply<T>(double key, object?[]? args = null) 
+        public T NewApply<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, object?[]? args = null) 
             => JS.InteropCall<double, double, object?[]?, T>("propertyNewApply", Id, key, args);        
-        public T New<T>(double key)
+        public T New<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key)
             => JS.InteropCall<double, double, T>("propertyNew", Id, key);
-        public T New<T1, T>(double key, T1 arg1)
+        public T New<T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1)
             => JS.InteropCall<double, double, T1, T>("propertyNew", Id, key, arg1);
-        public T New<T1, T2, T>(double key, T1 arg1, T2 arg2)
+        public T New<T1, T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2)
             => JS.InteropCall<double, double, T1, T2, T>("propertyNew", Id, key, arg1, arg2);
-        public T New<T1, T2, T3, T>(double key, T1 arg1, T2 arg2, T3 arg3)
+        public T New<T1, T2, T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3)
             => JS.InteropCall<double, double, T1, T2, T3, T>("propertyNew", Id, key, arg1, arg2, arg3);
-        public T New<T1, T2, T3, T4, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public T New<T1, T2, T3, T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T>("propertyNew", Id, key, arg1, arg2, arg3, arg4);
-        public T New<T1, T2, T3, T4, T5, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public T New<T1, T2, T3, T4, T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T5, T>("propertyNew", Id, key, arg1, arg2, arg3, arg4, arg5);
-        public T New<T1, T2, T3, T4, T5, T6, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+        public T New<T1, T2, T3, T4, T5, T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T5, T6, T>("propertyNew", Id, key, arg1, arg2, arg3, arg4, arg5, arg6);
-        public T New<T1, T2, T3, T4, T5, T6, T7, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+        public T New<T1, T2, T3, T4, T5, T6, T7, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T5, T6, T7, T>("propertyNew", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
-        public T New<T1, T2, T3, T4, T5, T6, T7, T8, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+        public T New<T1, T2, T3, T4, T5, T6, T7, T8, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T5, T6, T7, T8, T>("propertyNew", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
-        public T New<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
+        public T New<T1, T2, T3, T4, T5, T6, T7, T8, T9, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T5, T6, T7, T8, T9, T>("propertyNew", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
-        public T New<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
+        public T New<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>("propertyNew", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
 
         public SpawnJSObjectReference NewApply(double key, object?[]? args = null) 
@@ -71,7 +72,7 @@ namespace SpawnDev.SpawnJS
         #endregion
         #region Call
         public void CallApplyVoid(double key, object?[]? args = null) => JS.InteropCall<double, double, object?[]?, VoidType>("propertyCallApply", Id, key, args);
-        public T CallApply<T>(double key, object?[]? args = null) => JS.InteropCall<double, double, object?[]?, T>("propertyCallApply", Id, key, args);
+        public T CallApply<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, object?[]? args = null) => JS.InteropCall<double, double, object?[]?, T>("propertyCallApply", Id, key, args);
         // CallVoid
         public void CallVoid(double key)
             => JS.InteropCall<double, double, VoidType>("propertyCall", Id, key);
@@ -96,32 +97,32 @@ namespace SpawnDev.SpawnJS
         public void CallVoid<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, VoidType>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
         // Call
-        public T Call<T>(double key)
+        public T Call<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key)
             => JS.InteropCall<double, double, T>("propertyCall", Id, key);
-        public T Call<T1, T>(double key, T1 arg1)
+        public T Call<T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1)
             => JS.InteropCall<double, double, T1, T>("propertyCall", Id, key, arg1);
-        public T Call<T1, T2, T>(double key, T1 arg1, T2 arg2)
+        public T Call<T1, T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2)
             => JS.InteropCall<double, double, T1, T2, T>("propertyCall", Id, key, arg1, arg2);
-        public T Call<T1, T2, T3, T>(double key, T1 arg1, T2 arg2, T3 arg3)
+        public T Call<T1, T2, T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3)
             => JS.InteropCall<double, double, T1, T2, T3, T>("propertyCall", Id, key, arg1, arg2, arg3);
-        public T Call<T1, T2, T3, T4, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public T Call<T1, T2, T3, T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4);
-        public T Call<T1, T2, T3, T4, T5, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public T Call<T1, T2, T3, T4, T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T5, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5);
-        public T Call<T1, T2, T3, T4, T5, T6, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+        public T Call<T1, T2, T3, T4, T5, T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T5, T6, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6);
-        public T Call<T1, T2, T3, T4, T5, T6, T7, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+        public T Call<T1, T2, T3, T4, T5, T6, T7, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T5, T6, T7, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
-        public T Call<T1, T2, T3, T4, T5, T6, T7, T8, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+        public T Call<T1, T2, T3, T4, T5, T6, T7, T8, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T5, T6, T7, T8, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
-        public T Call<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
+        public T Call<T1, T2, T3, T4, T5, T6, T7, T8, T9, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T5, T6, T7, T8, T9, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
-        public T Call<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
+        public T Call<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
             => JS.InteropCall<double, double, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
         #endregion
         #region CallAsync
         public Task CallApplyVoidAsync(double key, object?[]? args = null) => JS.InteropCallAsync<double, double, object?[]?, VoidType>("propertyCallApply", Id, key, args);
-        public Task<T> CallApplyAsync<T>(double key, object?[]? args = null) => JS.InteropCallAsync<double, double, object?[]?, T>("propertyCallApply", Id, key, args);
+        public Task<T> CallApplyAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, object?[]? args = null) => JS.InteropCallAsync<double, double, object?[]?, T>("propertyCallApply", Id, key, args);
         // CallVoidAsync
         public Task CallVoidAsync(double key)
             => JS.InteropCallAsync<double, double, VoidType>("propertyCall", Id, key);
@@ -146,27 +147,27 @@ namespace SpawnDev.SpawnJS
         public Task CallVoidAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
             => JS.InteropCallAsync<double, double, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, VoidType>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
         // CallAsync
-        public Task<T> CallAsync<T>(double key)
+        public Task<T> CallAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key)
             => JS.InteropCallAsync<double, double, T>("propertyCall", Id, key);
-        public Task<T> CallAsync<T1, T>(double key, T1 arg1)
+        public Task<T> CallAsync<T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1)
             => JS.InteropCallAsync<double, double, T1, T>("propertyCall", Id, key, arg1);
-        public Task<T> CallAsync<T1, T2, T>(double key, T1 arg1, T2 arg2)
+        public Task<T> CallAsync<T1, T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2)
             => JS.InteropCallAsync<double, double, T1, T2, T>("propertyCall", Id, key, arg1, arg2);
-        public Task<T> CallAsync<T1, T2, T3, T>(double key, T1 arg1, T2 arg2, T3 arg3)
+        public Task<T> CallAsync<T1, T2, T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3)
             => JS.InteropCallAsync<double, double, T1, T2, T3, T>("propertyCall", Id, key, arg1, arg2, arg3);
-        public Task<T> CallAsync<T1, T2, T3, T4, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public Task<T> CallAsync<T1, T2, T3, T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
             => JS.InteropCallAsync<double, double, T1, T2, T3, T4, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4);
-        public Task<T> CallAsync<T1, T2, T3, T4, T5, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public Task<T> CallAsync<T1, T2, T3, T4, T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
             => JS.InteropCallAsync<double, double, T1, T2, T3, T4, T5, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5);
-        public Task<T> CallAsync<T1, T2, T3, T4, T5, T6, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+        public Task<T> CallAsync<T1, T2, T3, T4, T5, T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
             => JS.InteropCallAsync<double, double, T1, T2, T3, T4, T5, T6, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6);
-        public Task<T> CallAsync<T1, T2, T3, T4, T5, T6, T7, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+        public Task<T> CallAsync<T1, T2, T3, T4, T5, T6, T7, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
             => JS.InteropCallAsync<double, double, T1, T2, T3, T4, T5, T6, T7, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
-        public Task<T> CallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+        public Task<T> CallAsync<T1, T2, T3, T4, T5, T6, T7, T8, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
             => JS.InteropCallAsync<double, double, T1, T2, T3, T4, T5, T6, T7, T8, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
-        public Task<T> CallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
+        public Task<T> CallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
             => JS.InteropCallAsync<double, double, T1, T2, T3, T4, T5, T6, T7, T8, T9, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
-        public Task<T> CallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
+        public Task<T> CallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
             => JS.InteropCallAsync<double, double, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>("propertyCall", Id, key, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
         #endregion
     }

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -65,6 +66,8 @@ namespace SpawnDev.SpawnJS.Marshaller
         /// <summary>
         /// Invoke a generic method using Type
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2060",
+            Justification = "Closes marshalling-dispatch method groups (GetMarshaller<T>, writeTyped<T>, As<T>) whose type parameters declare no DynamicallyAccessedMembers requirements, so the MakeGenericMethod instantiation introduces no members that must be preserved.")]
         public static object? InvokeGeneric(this Delegate methodGroup, Type targetType, params object?[]? args)
         {
             var key = new CacheKeySingle(methodGroup.Method, targetType);
@@ -84,6 +87,8 @@ namespace SpawnDev.SpawnJS.Marshaller
         /// <summary>
         /// Invoke a generic method using Type[]
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2060",
+            Justification = "Closes marshalling-dispatch method groups whose type parameters declare no DynamicallyAccessedMembers requirements, so the MakeGenericMethod instantiation introduces no members that must be preserved.")]
         public static object? InvokeGeneric(this Delegate methodGroup, Type[] targetTypes, params object?[]? args)
         {
             var key = new CacheKey(methodGroup.Method, targetTypes);

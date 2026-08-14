@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Collections;
 
 namespace SpawnDev.SpawnJS.JSObjects
@@ -8,7 +9,7 @@ namespace SpawnDev.SpawnJS.JSObjects
     /// array never materialises the whole thing on the .Net side.
     /// </summary>
     /// <typeparam name="TArrayItem">The type each item is marshalled to</typeparam>
-    public class Array<TArrayItem> : Array//, IEnumerable<TArrayItem>
+    public class Array<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TArrayItem> : Array//, IEnumerable<TArrayItem>
     {
         //#region IEnumerable
         ///// <inheritdoc/>
@@ -146,7 +147,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="TResult"></typeparam>
         /// <param name="mapTo"></param>
         /// <returns></returns>
-        public Array<TResult> Map<TResult>(Func<TArrayItem, TResult> mapTo)
+        public Array<TResult> Map<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TResult>(Func<TArrayItem, TResult> mapTo)
         {
             using var cb = Callback.Create(mapTo);
             return JSRef!.Call<FuncCallback<TArrayItem, TResult>, Array<TResult>>("map", cb);

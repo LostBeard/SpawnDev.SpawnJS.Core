@@ -1,5 +1,6 @@
-﻿using SpawnDev.SpawnJS.Marshaller;
+using SpawnDev.SpawnJS.Marshaller;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SpawnDev.SpawnJS
 {
@@ -17,7 +18,7 @@ namespace SpawnDev.SpawnJS
         /// per-type specialization via <see cref="JSMarshaller.GetMarshaller{T}"/> (e.g. ArrayMarshaller
         /// returns one bound to the concrete element type); that specialization is what gets used and cached.
         /// </summary>
-        public JSMarshaller<TType> GetMarshaller<TType>()
+        public JSMarshaller<TType> GetMarshaller<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TType>()
         {
             var type = typeof(TType);
             //var selectionType = Nullable.GetUnderlyingType(type) ?? type;
@@ -45,6 +46,16 @@ namespace SpawnDev.SpawnJS
             return marshaller;
         }
         /// <summary>
+        /// Marshaller resolution for the WRITE path (.Net -> JS). Identical to <see cref="GetMarshaller{TType}"/>
+        /// but carries NO DynamicallyAccessedMembers requirement: NetToJS only reads a wrapper's JSRef and
+        /// never invokes its constructor, so the PublicConstructors requirement that the read/JSToNet path
+        /// needs does not apply here. Using this on the write path keeps that requirement from cascading onto
+        /// every interop INPUT type parameter - it stays scoped to return types, where wrappers are built.
+        /// </summary>
+        [UnconditionalSuppressMessage("Trimming", "IL2091",
+            Justification = "The resolved marshaller is used only for NetToJS (write), which reads value.JSRef and never constructs the wrapper. The PublicConstructors requirement of GetMarshaller<T> is exercised solely by the read/JSToNet path.")]
+        internal JSMarshaller<T> GetMarshallerForWrite<T>() => GetMarshaller<T>();
+        /// <summary>
         /// Call any SpawnJSInterop static method that returns nothing (void).
         /// </summary>
         internal void InteropCallApplyVoid(string methodName, object?[]? args = null) => InteropCallApply<VoidType>(methodName, args);
@@ -58,7 +69,7 @@ namespace SpawnDev.SpawnJS
         /// Calls a SpawnJSInterop static method synchronously, marshalling <paramref name="args"/> into a JS
         /// array and reading the result back as <typeparamref name="T"/>.
         /// </summary>
-        internal T InteropCallApply<T>(string methodName, object?[]? args = null)
+        internal T InteropCallApply<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, object?[]? args = null)
         {
             var returnType = typeof(T);
             var inMarshaller = GetMarshaller<T>();
@@ -86,7 +97,7 @@ namespace SpawnDev.SpawnJS
                     ((Delegate)writeTyped<object>).InvokeGeneric(itemType, item);
                     void writeTyped<T1>(T1 value)
                     {
-                        var marshaller = GetMarshaller<T1>();
+                        var marshaller = GetMarshallerForWrite<T1>();
                         if (marshaller == null) jsArgs.PropertySetNull(i);
                         else marshaller.NetToJS(jsArgs!, i, value!);
                     }
@@ -94,7 +105,7 @@ namespace SpawnDev.SpawnJS
             }
             return _InteropCallApply<T>(methodName, jsArgs);
         }
-        internal T _InteropCallApply<T>(int methodIndex, SpawnJSObjectReference? jsArgs = null)
+        internal T _InteropCallApply<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(int methodIndex, SpawnJSObjectReference? jsArgs = null)
         {
             if (methodIndex < 0) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {InteropMethods.Length} {methodIndex}");
             var returnType = typeof(T);
@@ -187,7 +198,7 @@ namespace SpawnDev.SpawnJS
             }
             return ret;
         }
-        async Task<T> _InteropCallApplyAsync<T>(double methodIndex, SpawnJSObjectReference? jsArgs = null)
+        async Task<T> _InteropCallApplyAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(double methodIndex, SpawnJSObjectReference? jsArgs = null)
         {
             var typeOfT = typeof(T);
             var returnMarshaller = GetMarshaller<T>();
@@ -354,7 +365,7 @@ namespace SpawnDev.SpawnJS
         /// [JSExport] with that id, which completes the task. The assembly export table is loaded once on
         /// the first async call.
         /// </summary>
-        internal async Task<T> InteropCallApplyAsync<T>(string methodName, object?[]? args = null)
+        internal async Task<T> InteropCallApplyAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, object?[]? args = null)
         {
             // The JS side empties this array's slot after the call, so it can be returned to the pool.
             SpawnJSObjectReference? jsArgs = null;
@@ -377,7 +388,7 @@ namespace SpawnDev.SpawnJS
                     ((Delegate)writeTyped<object>).InvokeGeneric(itemType, item);
                     void writeTyped<T1>(T1 value)
                     {
-                        var marshaller = GetMarshaller<T1>();
+                        var marshaller = GetMarshallerForWrite<T1>();
                         if (marshaller == null) jsArgs.PropertySetNull(i);
                         else marshaller.NetToJS(jsArgs!, i, value!);
                     }
@@ -388,65 +399,65 @@ namespace SpawnDev.SpawnJS
         /// <summary>
         /// InteropCall methods are efficient callers into SpawnJSInterop because instead of passing the methodName to JS for teh call, they pass the method index
         /// </summary>
-        internal T InteropCall<T>(string methodName)
+        internal T InteropCall<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName)
             => _InteropCallApply<T>(methodName);
-        internal T InteropCall<T1, T>(string methodName, T1 arg1)
+        internal T InteropCall<T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1)
             => _InteropCallApply<T>(methodName, NewJSArray(arg1));
-        internal T InteropCall<T1, T2, T>(string methodName, T1 arg1, T2 arg2)
+        internal T InteropCall<T1, T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2)
             => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2));
-        internal T InteropCall<T1, T2, T3, T>(string methodName, T1 arg1, T2 arg2, T3 arg3)
+        internal T InteropCall<T1, T2, T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3)
             => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2, arg3));
-        internal T InteropCall<T1, T2, T3, T4, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        internal T InteropCall<T1, T2, T3, T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
             => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4));
-        internal T InteropCall<T1, T2, T3, T4, T5, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        internal T InteropCall<T1, T2, T3, T4, T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
             => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5));
-        internal T InteropCall<T1, T2, T3, T4, T5, T6, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+        internal T InteropCall<T1, T2, T3, T4, T5, T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
             => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6));
-        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
             => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7));
-        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
             => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8));
-        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
+        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T9, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
             => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9));
-        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
+        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
             => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10));
-        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
+        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
             => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11));
-        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
+        internal T InteropCall<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
             => _InteropCallApply<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12));
-        internal Task<T> InteropCallAsync<T>(string methodName)
+        internal Task<T> InteropCallAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName)
             => _InteropCallApplyAsync<T>(methodName);
-        internal Task<T> InteropCallAsync<T1, T>(string methodName, T1 arg1)
+        internal Task<T> InteropCallAsync<T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1)
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1));
-        internal Task<T> InteropCallAsync<T1, T2, T>(string methodName, T1 arg1, T2 arg2)
+        internal Task<T> InteropCallAsync<T1, T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2)
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2));
-        internal Task<T> InteropCallAsync<T1, T2, T3, T>(string methodName, T1 arg1, T2 arg2, T3 arg3)
+        internal Task<T> InteropCallAsync<T1, T2, T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3)
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3));
-        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4));
-        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5));
-        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6));
-        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7));
-        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8));
-        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9));
-        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10));
-        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11));
-        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
+        internal Task<T> InteropCallAsync<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
             => _InteropCallApplyAsync<T>(methodName, NewJSArray(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12));
-        Task<T> _InteropCallApplyAsync<T>(string methodName, SpawnJSObjectReference? jsArgs = null)
+        Task<T> _InteropCallApplyAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, SpawnJSObjectReference? jsArgs = null)
         {
             var methodIndex = InteropMethods.IndexOf(methodName);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {InteropMethods.Length} {methodName}");
             return _InteropCallApplyAsync<T>(methodIndex, jsArgs);
         }
-        internal T _InteropCallApply<T>(string methodName, SpawnJSObjectReference? jsArgs = null)
+        internal T _InteropCallApply<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string methodName, SpawnJSObjectReference? jsArgs = null)
         {
             var methodIndex = InteropMethods.IndexOf(methodName);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {InteropMethods.Length} {methodName}");

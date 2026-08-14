@@ -5,10 +5,55 @@ namespace SpawnDev.SpawnJS
     public partial class SpawnJSRuntime
     {
         /// <summary>
-        /// Creates a new JS Array, holds it, and returns the sjsId
+        /// This is the ONLY JSImport/JSExport that is allowed to use JSObject and it is ONLY used to get a reference to this .Net Wasm app's DotNet Instance
         /// </summary>
-        [JSImport("globalThis.SpawnJSInterop.spawnJSObjectNewObject")]
-        internal static partial double _spawnJSObjectNewObject();
+        /// <param name="dotnetInstance">ONLY allowed JSObject in entire library and will ONLY be called once</param>
+        /// <returns></returns>
+        [JSImport("globalThis.SpawnJSInterop._registerInstance")]
+        internal static partial double _registerInstance(
+            JSObject dotnetInstance,
+            [JSMarshalAs<JSType.Function>] Action onMethodAdded,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.String>>] Action<double, string> onAsyncResolvedVoid,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Number, JSType.String>>] Action<double, double, string> onAsyncResolvedDouble,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Boolean, JSType.String>>] Action<double, bool, string> onAsyncResolvedBool,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.String, JSType.String>>] Action<double, string, string> onAsyncResolvedString,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Any, JSType.String>>] Action<double, object, string> onAsyncResolvedDoubleNullable,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Any, JSType.String>>] Action<double, object, string> onAsyncResolvedBooleanNullable,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Number, JSType.String>>] Action<double, int, string> onAsyncResolvedInt32,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Any, JSType.String>>] Action<double, object, string> onAsyncResolvedInt32Nullable,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Number>>] Action<long, long> onDetachedHeap,
+            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Number, JSType.Number>>] Action<double, double, double> onCallback);
+
+        #region _spawnJSInteropCall
+        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
+        internal static partial bool? _spawnJSInteropCallBooleanNullable(int returnType, int methodIndex, double argsId);
+
+        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
+        internal static partial double? _spawnJSInteropCallDoubleNullable(int returnType, int methodIndex, double argsId);
+
+        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
+        internal static partial bool _spawnJSInteropCallBoolean(int returnType, int methodIndex, double argsId);
+
+        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
+        internal static partial int _spawnJSInteropCallInt32(int returnType, int methodIndex, double argsId);
+
+        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
+        internal static partial int? _spawnJSInteropCallInt32Nullable(int returnType, int methodIndex, double argsId);
+
+        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
+        internal static partial double _spawnJSInteropCallDouble(int returnType, int methodIndex, double argsId);
+
+        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
+        internal static partial string _spawnJSInteropCallString(int returnType, int methodIndex, double argsId);
+
+        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
+        internal static partial void _spawnJSInteropCallVoid(int returnType, int methodIndex, double argsId);
+        #endregion
+
+        #region _spawnJSInteropCallAsync
+        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCallAsync")]
+        internal static partial void _spawnJSInteropCallAsync(int returnType, double dotnetId, double asyncCallId, double methodIndex, double argsId);
+        #endregion
 
         /// <summary>
         /// Creates a new JS Array, holds it, and returns the sjsId
@@ -16,6 +61,23 @@ namespace SpawnDev.SpawnJS
         [JSImport("globalThis.SpawnJSInterop.spawnJSObjectNewArray")]
         internal static partial double _spawnJSObjectNewArray();
 
+        /// <summary>
+        /// Gets an up to date method map so calls can use method indexes instead of names
+        /// </summary>
+        /// <returns></returns>
+        [JSImport("globalThis.SpawnJSInterop.refreshMethodMap")]
+        internal static partial string[] _refreshMethodMap();
+
+        /// <summary>
+        /// Releases a Callback function
+        /// </summary>
+        /// <param name="dotnetId">The owning dotnet instance id</param>
+        /// <param name="callbackId">The  Callback's Id</param>
+        [JSImport("globalThis.SpawnJSInterop.releaseCallback")]
+        internal static partial void _releaseCallback(double dotnetId, double callbackId);
+
+        #region SpawnJSObject self
+        #region spawnJSObjectRelease
         /// <summary>
         /// Release a SPawnJSObject reference in Javascript
         /// </summary>
@@ -71,6 +133,8 @@ namespace SpawnDev.SpawnJS
         /// <param name="sjsId"></param>
         [JSImport("globalThis.SpawnJSInterop.spawnJSObjectRelease")]
         internal static partial string SpawnJSObjectReleaseString(double sjsId);
+        #endregion
+
         /// <summary>
         /// Release a SPawnJSObject reference in Javascript and return the value as a string
         /// </summary>
@@ -84,64 +148,6 @@ namespace SpawnDev.SpawnJS
         // propertyTypeInfo: returns "<typeof> <toStringTag>" for a property, or null if absent.
         [JSImport("globalThis.SpawnJSInterop.getTypeInfo")]
         internal static partial string _getTypeInfo(double sjsId);
-
-        /// <summary>
-        /// This is the ONLY JSImport/JSExport that is allowed to use JSObject and it is ONLY used to get a reference to this .Net Wasm apps DotNet Instance
-        /// </summary>
-        /// <param name="dotnetInstance">ONLY allowed JSObject in entire library and will ONLY be called once</param>
-        /// <returns></returns>
-        [JSImport("globalThis.SpawnJSInterop._registerInstance")]
-        internal static partial double _registerInstance(
-            JSObject dotnetInstance,
-            [JSMarshalAs<JSType.Function>] Action onMethodAdded,
-            [JSMarshalAs<JSType.Function<JSType.Number, JSType.String>>] Action<double, string> onAsyncResolvedVoid,
-            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Number, JSType.String>>] Action<double, double, string> onAsyncResolvedDouble,
-            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Boolean, JSType.String>>] Action<double, bool, string> onAsyncResolvedBool,
-            [JSMarshalAs<JSType.Function<JSType.Number, JSType.String, JSType.String>>] Action<double, string, string> onAsyncResolvedString,
-            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Any, JSType.String>>] Action<double, object, string> onAsyncResolvedDoubleNullable,
-            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Any, JSType.String>>] Action<double, object, string> onAsyncResolvedBooleanNullable,
-            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Number, JSType.String>>] Action<double, int, string> onAsyncResolvedInt32,
-            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Any, JSType.String>>] Action<double, object, string> onAsyncResolvedInt32Nullable,
-            [JSMarshalAs<JSType.Function<JSType.Number, JSType.Number, JSType.Number>>] Action<double, double, double> onCallback);
-
-        [JSImport("globalThis.SpawnJSInterop.refreshMethodMap")]
-        internal static partial string[] _refreshMethodMap();
-
-        [JSImport("globalThis.SpawnJSInterop.releaseCallback")]
-        internal static partial void _releaseCallback(double dotnetId, double callbackId);
-
-        // Synchronous marshalled call. All six overloads bind to the same JS function _spawnJSInteropCall;
-        // the C# return type chosen at the call site tells the runtime how to read the JS result, and the
-        // returnType index tells JS how to shape it (see ReturnType and the JS _serializeToNet switch).
-        #region MarshalledArgsAndReturnType
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
-        internal static partial bool? _spawnJSInteropCallBooleanNullable(int returnType, int methodIndex, double argsId);
-
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
-        internal static partial double? _spawnJSInteropCallDoubleNullable(int returnType, int methodIndex, double argsId);
-
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
-        internal static partial bool _spawnJSInteropCallBoolean(int returnType, int methodIndex, double argsId);
-
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
-        internal static partial int _spawnJSInteropCallInt32(int returnType, int methodIndex, double argsId);
-
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
-        internal static partial int? _spawnJSInteropCallInt32Nullable(int returnType, int methodIndex, double argsId);
-
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
-        internal static partial double _spawnJSInteropCallDouble(int returnType, int methodIndex, double argsId);
-
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
-        internal static partial string _spawnJSInteropCallString(int returnType, int methodIndex, double argsId);
-
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCall")]
-        internal static partial void _spawnJSInteropCallVoid(int returnType, int methodIndex, double argsId);
-        #endregion
-
-        #region MarshalledArgsAndReturnTypeAsync
-        [JSImport("globalThis.SpawnJSInterop._spawnJSInteropCallAsync")]
-        internal static partial void _spawnJSInteropCallAsync(int returnType, double dotnetId, double asyncCallId, double methodIndex, double argsId);
         #endregion
     }
 }

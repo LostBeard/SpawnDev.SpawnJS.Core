@@ -1,4 +1,5 @@
-﻿namespace SpawnDev.SpawnJS
+using System.Diagnostics.CodeAnalysis;
+namespace SpawnDev.SpawnJS
 {
     /// <summary>
     /// With ActionEvent the operands += and -= can be used to attach and detach .Net callbacks to Javascript events.<br/>
@@ -92,7 +93,7 @@
     /// All reference handling is done automatically when events are added and removed.<br/>
     /// Parameters of event handlers may be omitted if not required.<br/>
     /// </summary>
-    public class ActionEvent<T1> : ActionEvent
+    public class ActionEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1> : ActionEvent
     {
         /// <summary>
         /// Adds an event handler
@@ -177,7 +178,7 @@
     /// All reference handling is done automatically when events are added and removed.<br/>
     /// Parameters of event handlers may be omitted if not required.<br/>
     /// </summary>
-    public class ActionEvent<T1, T2> : ActionEvent<T1>
+    public class ActionEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2> : ActionEvent<T1>
     {
         /// <summary>
         /// Adds an event handler
@@ -281,7 +282,7 @@
     /// All reference handling is done automatically when events are added and removed.<br/>
     /// Parameters of event handlers may be omitted if not required.<br/>
     /// </summary>
-    public class ActionEvent<T1, T2, T3> : ActionEvent<T1, T2>
+    public class ActionEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3> : ActionEvent<T1, T2>
     {
         /// <summary>
         /// Adds an event handler
@@ -404,7 +405,7 @@
     /// All reference handling is done automatically when events are added and removed.<br/>
     /// Parameters of event handlers may be omitted if not required.<br/>
     /// </summary>
-    public class ActionEvent<T1, T2, T3, T4> : ActionEvent<T1, T2, T3>
+    public class ActionEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4> : ActionEvent<T1, T2, T3>
     {
         /// <summary>
         /// Adds an event handler
@@ -546,7 +547,7 @@
     /// All reference handling is done automatically when events are added and removed.<br/>
     /// Parameters of event handlers may be omitted if not required.<br/>
     /// </summary>
-    public class ActionEvent<T1, T2, T3, T4, T5> : ActionEvent<T1, T2, T3, T4>
+    public class ActionEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5> : ActionEvent<T1, T2, T3, T4>
     {
         /// <summary>
         /// Adds an event handler
@@ -707,7 +708,7 @@
     /// All reference handling is done automatically when events are added and removed.<br/>
     /// Parameters of event handlers may be omitted if not required.<br/>
     /// </summary>
-    public class ActionEvent<T1, T2, T3, T4, T5, T6> : ActionEvent<T1, T2, T3, T4, T5>
+    public class ActionEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6> : ActionEvent<T1, T2, T3, T4, T5>
     {
         /// <summary>
         /// Adds an event handler
@@ -887,7 +888,7 @@
     /// All reference handling is done automatically when events are added and removed.<br/>
     /// Parameters of event handlers may be omitted if not required.<br/>
     /// </summary>
-    public class ActionEvent<T1, T2, T3, T4, T5, T6, T7> : ActionEvent<T1, T2, T3, T4, T5, T6>
+    public class ActionEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T7> : ActionEvent<T1, T2, T3, T4, T5, T6>
     {
         /// <summary>
         /// Adds an event handler

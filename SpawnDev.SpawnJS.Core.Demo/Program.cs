@@ -7,33 +7,84 @@ var JS = SpawnJSRuntime.Instance;
 JS.Marshallers.Add(new SpawnJSObjectMarshaller<SpawnJSObject>());
 JS.Verbose = true;
 
-using var document = JS.Get("document");
-double width = 500;
-double height = 500;
-using var fpsDisplay = JS.Call<string, SpawnJSObjectReference>("document.createElement", "div");
-document.CallVoid("body.append", fpsDisplay);
-using var canvas = JS.Call<string, SpawnJSObjectReference>("document.createElement", "canvas");
-document.CallVoid("body.append", canvas);
-canvas.Set("width", width);
-canvas.Set("height", height);
-using var ctx = canvas.Call<string, SpawnJSObjectReference>("getContext", "2d");
+using var document = JS.Get("document")!;
+
 using var performance = JS.Get("performance");
 
-double maxIter = 80; // Balanced for real-time frame rates
-double lastTime = performance.Call<double>("now");
+double lastTime = performance!.Call<double>("now");
 double frameCount = 0;
 double fps = 0;
 double scale = 1.0;
+
+JS.Set("_growHeap", Callback.Create(() => {
+    JS.GrowHeap();
+}));
+
+
+var runIt = false;
+double width = 500;
+double height = 500;
+double maxIter = 80; // Balanced for real-time frame rates
+
+var fpsDisplay = document.Call<string, SpawnJSObjectReference>("createElement", "div");
+var canvas = document.Call<string, SpawnJSObjectReference>("createElement", "canvas");
+canvas.Set("width", width);
+canvas.Set("height", height);
+using var ctx = canvas.Call<string, SpawnJSObjectReference>("getContext", "2d");
+ctx.Set("fillStyle", "#000000");
+ctx.CallVoid("fillRect", 0, 0, width, height);
 
 Callback? cb = null;
 // image data
 var data = new byte[(int)(width * height * 4)];
 // direct heap view of image data
 using var heapView = HeapView.Create(data);
-// heap view as Uint8ArrayClamped
+// heap view as Uint8ClampedArray
 using var uint8ArrayClamped = heapView.As<Uint8ClampedArray>();
-// get an ImageData view of our data to give to the canvas 2d context
-using var imgData = JS.New<Uint8ClampedArray, double, double, SpawnJSObjectReference>("ImageData", uint8ArrayClamped, width, height);
+SpawnJSObjectReference? imgData = null;
+JS.OnHeapGrow += (_, _) =>
+{
+    Console.WriteLine($"Rebuilding imgData");
+    imgData = JS.New<Uint8ClampedArray, double, double, SpawnJSObjectReference>("ImageData", uint8ArrayClamped, width, height);
+};
+imgData = JS.New<Uint8ClampedArray, double, double, SpawnJSObjectReference>("ImageData", uint8ArrayClamped, width, height);
+
+using var stopButton = document.Call<string, SpawnJSObjectReference>("createElement", "button");
+stopButton.Set("textContent", "Stop");
+stopButton.CallVoid("addEventListener", "click", Callback.Create(() =>
+{
+    runIt = false;
+    JS.CallVoid("stopJSAnimation");
+}));
+document!.CallVoid("body.append", stopButton);
+
+using var startJSButton = document.Call<string, SpawnJSObjectReference>("createElement", "button");
+startJSButton.Set("textContent", "Start JS");
+startJSButton.CallVoid("addEventListener", "click", Callback.Create(() =>
+{
+    runIt = false;
+    JS.CallVoid("startJSAnimation");
+}));
+document!.CallVoid("body.append", startJSButton);
+
+using var startCSButton = document.Call<string, SpawnJSObjectReference>("createElement", "button");
+startCSButton.Set("textContent", "Start CS");
+startCSButton.CallVoid("addEventListener", "click", Callback.Create(() =>
+{
+    if (runIt) return;
+    JS.CallVoid("stopJSAnimation");
+    startAnimation();
+}));
+document!.CallVoid("body.append", startCSButton);
+
+document!.CallVoid("body.append", fpsDisplay);
+document.CallVoid("body.append", canvas);
+
+// update fps display
+fpsDisplay.Set("textContent", $"C#");
+
+JS.CallVoid("initJS");
+
 // create the animationFrame callback
 cb = Callback.Create((double currentTime) =>
 {
@@ -41,7 +92,7 @@ cb = Callback.Create((double currentTime) =>
     // Smoothly scale the view boundary over time
     scale = 1.0 + Math.Sin(currentTime * 0.0005) * 0.4;
 
-    double p = 0;
+    int p = 0;
     for (double y = 0; y < height; y++)
     {
         // Map y to complex imaginary plane, scaled dynamically
@@ -73,13 +124,24 @@ cb = Callback.Create((double currentTime) =>
                 b = Math.Floor((n / maxIter) * 255);
             }
 
-            data[(int)p] = (byte)r;
-            data[(int)p + 1] = (byte)g;
-            data[(int)p + 2] = (byte)b;
-            data[(int)p + 3] = 255;
+            unsafe
+            {
+                byte* pDest = (byte*)(heapView.Pointer.ToPointer()) + p; // p should be an int, not a double
+                *pDest = (byte)r;
+                pDest[1] = (byte)g;
+                pDest[2] = (byte)b;
+                pDest[3] = 255;
+            }
+
+            //data[(int)p] = (byte)r;
+            //data[(int)p + 1] = (byte)g;
+            //data[(int)p + 2] = (byte)b;
+            //data[(int)p + 3] = 255;
             p += 4;
         }
     }
+
+    // get an ImageData view of our data to give to the canvas 2d context
     ctx.CallVoid("putImageData", imgData, 0, 0);
 
     // Performance Tracking
@@ -94,11 +156,18 @@ cb = Callback.Create((double currentTime) =>
         lastTime = currentTime;
     }
     // update fps display
-    fpsDisplay.Set("textContent", $"FPS: {fps} | Frame Time: {Math.Round(duration, 1)}ms");
+    fpsDisplay.Set("textContent", $"C# FPS: {fps} | Frame Time: {Math.Round(duration, 1)}ms");
     /// request next frame
-    JS.CallVoid("requestAnimationFrame", cb);
+    if (runIt) JS.CallVoid("requestAnimationFrame", cb);
 });
-/// request first frame
-JS.CallVoid("requestAnimationFrame", cb);
-// keep the using vars alive
+
+void startAnimation()
+{
+    if (runIt) return;
+    runIt = true;
+    /// request first frame
+    JS.CallVoid("requestAnimationFrame", cb);
+}
+
+// keep the using app alive
 await new TaskCompletionSource().Task;

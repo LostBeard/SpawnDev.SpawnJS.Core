@@ -1,4 +1,5 @@
-﻿namespace SpawnDev.SpawnJS
+using System.Diagnostics.CodeAnalysis;
+namespace SpawnDev.SpawnJS
 {
     /// <summary>
     /// An Action Callback
@@ -23,7 +24,7 @@
     /// <summary>
     /// An Action Callback
     /// </summary>
-    public class ActionCallback<T1> : Callback
+    public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1> : Callback
     {
         Action<T1> _callback;
         public ActionCallback(Action<T1> action, bool once = false) : base(once)
@@ -43,7 +44,7 @@
     /// <summary>
     /// An Action Callback
     /// </summary>
-    public class ActionCallback<T1, T2> : Callback
+    public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2> : Callback
     {
         Action<T1, T2> _callback;
         public ActionCallback(Action<T1, T2> action, bool once = false) : base(once)
@@ -64,7 +65,7 @@
     /// <summary>
     /// An Action Callback
     /// </summary>
-    public class ActionCallback<T1, T2, T3> : Callback
+    public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3> : Callback
     {
         Action<T1, T2, T3> _callback;
         public ActionCallback(Action<T1, T2, T3> action, bool once = false) : base(once)
@@ -86,7 +87,7 @@
     /// <summary>
     /// An Action Callback
     /// </summary>
-    public class ActionCallback<T1, T2, T3, T4> : Callback
+    public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4> : Callback
     {
         Action<T1, T2, T3, T4> _callback;
         public ActionCallback(Action<T1, T2, T3, T4> action, bool once = false) : base(once)
@@ -109,7 +110,7 @@
     /// <summary>
     /// An Action Callback
     /// </summary>
-    public class ActionCallback<T1, T2, T3, T4, T5> : Callback
+    public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5> : Callback
     {
         Action<T1, T2, T3, T4, T5> _callback;
         public ActionCallback(Action<T1, T2, T3, T4, T5> action, bool once = false) : base(once)
@@ -133,7 +134,7 @@
     /// <summary>
     /// An Action Callback
     /// </summary>
-    public class ActionCallback<T1, T2, T3, T4, T5, T6> : Callback
+    public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6> : Callback
     {
         Action<T1, T2, T3, T4, T5, T6> _callback;
         public ActionCallback(Action<T1, T2, T3, T4, T5, T6> action, bool once = false) : base(once)
@@ -158,7 +159,7 @@
     /// <summary>
     /// An Action Callback
     /// </summary>
-    public class ActionCallback<T1, T2, T3, T4, T5, T6, T7> : Callback
+    public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T7> : Callback
     {
         Action<T1, T2, T3, T4, T5, T6, T7> _callback;
         public ActionCallback(Action<T1, T2, T3, T4, T5, T6, T7> action, bool once = false) : base(once)
@@ -184,7 +185,7 @@
     /// <summary>
     /// An Action Callback
     /// </summary>
-    public class ActionCallback<T1, T2, T3, T4, T5, T6, T7, T8> : Callback
+    public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T7, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T8> : Callback
     {
         Action<T1, T2, T3, T4, T5, T6, T7, T8> _callback;
         public ActionCallback(Action<T1, T2, T3, T4, T5, T6, T7, T8> action, bool once = false) : base(once)
@@ -211,7 +212,7 @@
     /// <summary>
     /// An Action Callback
     /// </summary>
-    public class ActionCallback<T1, T2, T3, T4, T5, T6, T7, T8, T9> : Callback
+    public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T7, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T8, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T9> : Callback
     {
         Action<T1, T2, T3, T4, T5, T6, T7, T8, T9> _callback;
         public ActionCallback(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9> action, bool once = false) : base(once)
@@ -239,7 +240,7 @@
     /// <summary>
     /// An Action Callback
     /// </summary>
-    public class ActionCallback<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> : Callback
+    public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T7, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T8, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T9, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T10> : Callback
     {
         Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> _callback;
         public ActionCallback(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> action, bool once = false) : base(once)

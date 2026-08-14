@@ -18,35 +18,42 @@
         globalThis._error = new Error('some error');
     </script>
     <script>
-        const documentReady = () => {
-            return new Promise((resolve) => {
-                // Check if the DOM is already fully parsed and ready
-                if (document.readyState === "interactive" || document.readyState === "complete") {
-                    resolve();
-                } else {
-                    // Otherwise, wait for the DOMContentLoaded event
-                    document.addEventListener("DOMContentLoaded", () => resolve(), { once: true });
-                }
-            });
-        };
-        (async function () {
-            return;
-            await documentReady();
-            const width = 500;
-            const height = 500;
-            const fpsDisplay = document.createElement('div');
+        var run = false;
+        var fpsDisplay = null;
+        var canvas = null;
+        var ctx = null;
+        var imgData = null;
+        var data = null;
+        var beenInit = false;
+        const width = 500;
+        const height = 500;
+        const maxIter = 80; // Balanced for real-time frame rates
+
+        function initJS() {
+            beenInit = true;
+            fpsDisplay = document.createElement('div');
             document.body.append(fpsDisplay);
-            const canvas = document.createElement('canvas');
+            canvas = document.createElement('canvas');
             document.body.append(canvas);
             canvas.width = width;
             canvas.height = height;
+            ctx = canvas.getContext('2d');
+            ctx.fillStyle = "#000000"; // Choose your color
+            ctx.fillRect(0, 0, canvas.width, canvas.height); // Fill entire area
+            imgData = ctx.createImageData(width, height);
+            data = imgData.data;
 
-            const ctx = canvas.getContext('2d');
+            fpsDisplay.textContent = `Javascript`;
+        }
+        function stopJSAnimation() {
+            run = false;
+        }
+        function startJSAnimation() {
+            if (run) return;
+            run = true;
 
-            const imgData = ctx.createImageData(width, height);
-            const data = imgData.data;
+            if (!beenInit) initJS();
 
-            const maxIter = 80; // Balanced for real-time frame rates
             let lastTime = performance.now();
             let frameCount = 0;
             let fps = 0;
@@ -107,15 +114,15 @@
                     lastTime = currentTime;
                 }
 
-                fpsDisplay.textContent = `FPS: ${fps} | Frame Time: ${duration.toFixed(1)} ms`;
+                fpsDisplay.textContent = `Javascript FPS: ${fps} | Frame Time: ${duration.toFixed(1)} ms`;
 
                 // Request next frame
-                requestAnimationFrame(animate);
+                if (run) requestAnimationFrame(animate);
             }
 
             // Start the animation loop
             requestAnimationFrame(animate);
-        }) ()
+        }
     </script>
 
 </head>

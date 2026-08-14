@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 namespace SpawnDev.SpawnJS
 {
     /// <summary>
@@ -38,7 +39,9 @@ namespace SpawnDev.SpawnJS
         /// Returns this object as type T and disposes this wrapper.<br/>
         /// If type T is a SpawnJSObject the JSRef is moved instead of copied.
         /// </summary>
-        public T JSRefMove<T>()
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2087",
+            Justification = "The Activator path runs only when T is a SpawnJSObject subclass; built-in wrappers' .ctor(SpawnJSObjectReference) is preserved by the embedded ILLink.Descriptors.xml (preserve=methods) in SpawnDev.SpawnJS.JSObjects. A consumer-defined wrapper subclass is responsible for preserving its own deserialization ctor under trimming.")]
+        public T JSRefMove<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
         {
             if (IsWrapperDisposed) throw new ObjectDisposedException(nameof(JSRef));
             var _ref = JSRef;
@@ -69,7 +72,7 @@ namespace SpawnDev.SpawnJS
         /// <summary>
         /// Returns this SpawnJSObject as type T
         /// </summary>
-        public T JSRefAs<T>()
+        public T JSRefAs<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
         {
             if (IsWrapperDisposed) throw new ObjectDisposedException(nameof(JSRef));
             return JSRef!.As<T>();
@@ -77,7 +80,7 @@ namespace SpawnDev.SpawnJS
         /// <summary>
         /// Returns this SpawnJSObject as type T. Synonym for JSRefAs&lt;T&gt;
         /// </summary>
-        public T JSRefCopy<T>()
+        public T JSRefCopy<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
         {
             if (IsWrapperDisposed) throw new ObjectDisposedException(nameof(JSRef));
             return JSRef!.As<T>();
@@ -101,14 +104,14 @@ namespace SpawnDev.SpawnJS
         /// <summary>
         /// Returns true if the referenced Javascript object's constructor.name == typeof(T).Name
         /// </summary>
-        public bool JSRefIs<T>() => JSRefIs(typeof(T).Name);
+        public bool JSRefIs<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>() => JSRefIs(typeof(T).Name);
         /// <summary>
         /// If this object's constructor.name == constructorName, sets value to this object as type T and returns true
         /// </summary>
         /// <param name="constructorName">The constructor.name to test for</param>
         /// <param name="value">Set if the constructor.name matches</param>
         /// <param name="moveJSRef">If true, moves the JSRef (disposing this wrapper) instead of copying it</param>
-        public bool JSRefIs<T>(string constructorName, out T value, bool moveJSRef = false)
+        public bool JSRefIs<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string constructorName, out T value, bool moveJSRef = false)
         {
             if (IsWrapperDisposed) throw new ObjectDisposedException(nameof(JSRef));
             if (JSRef?.ConstructorName != constructorName)
@@ -122,7 +125,7 @@ namespace SpawnDev.SpawnJS
         /// <summary>
         /// If this object's constructor.name == typeof(T).Name, sets value to this object as type T and returns true
         /// </summary>
-        public bool JSRefIs<T>(out T value, bool moveJSRef = false) => JSRefIs(typeof(T).Name, out value, moveJSRef);
+        public bool JSRefIs<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(out T value, bool moveJSRef = false) => JSRefIs(typeof(T).Name, out value, moveJSRef);
         /// <summary>
         /// Compare this SpawnJSObject to obj2 using Javascript equality.<br/>
         /// Returns full ? this === obj2 : this == obj2

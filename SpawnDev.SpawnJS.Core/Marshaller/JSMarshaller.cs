@@ -1,4 +1,6 @@
-﻿namespace SpawnDev.SpawnJS.Marshaller
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace SpawnDev.SpawnJS.Marshaller
 {
     /// <summary>
     /// Marshals data between .Net and Javascript using SpawnJSObjectReference
@@ -19,7 +21,7 @@
         /// If this class reported true to CanMarshal, GetMarshaller may be called to get the marshaller to do the marshalling<br/>
         /// </summary>
         /// <returns></returns>
-        public virtual JSMarshaller<T> GetMarshaller<T>() => (JSMarshaller<T>)this;
+        public virtual JSMarshaller<T> GetMarshaller<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>() => (JSMarshaller<T>)this;
     }
     /// <summary>
     /// Strongly-typed marshaller for <typeparamref name="TType"/>. This is the layer the no-boxing path

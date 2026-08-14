@@ -1,8 +1,13 @@
 ﻿
 using SpawnDev.SpawnJS;
 using SpawnDev.SpawnJS.Marshaller;
+using System.Diagnostics.CodeAnalysis;
 
-public class SpawnJSObjectMarshaller<TSpawnJSObject> : JSMarshallerFromSpawnJSObjectReference<TSpawnJSObject?> where TSpawnJSObject : SpawnJSObject
+// DAM(PublicConstructors) on TSpawnJSObject makes the trimmer preserve the wrapper's
+// .ctor(SpawnJSObjectReference). The requirement flows in from the generic interop entry points
+// (As<T>/Get<T>/Call<T>...), so a consumer's own wrapper is preserved automatically when named
+// concretely, and a consumer flowing an abstract generic T gets an actionable warning to annotate it.
+public class SpawnJSObjectMarshaller<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSpawnJSObject> : JSMarshallerFromSpawnJSObjectReference<TSpawnJSObject?> where TSpawnJSObject : SpawnJSObject
 {
     /// <inheritdoc/>
     public override bool CanMarshal(Type type) => typeof(SpawnJSObject).IsAssignableFrom(type);
@@ -10,7 +15,7 @@ public class SpawnJSObjectMarshaller<TSpawnJSObject> : JSMarshallerFromSpawnJSOb
     /// Builds an <see cref="ArrayMarshaller{T}"/> bound to the concrete element type of
     /// <typeparamref name="T"/> (e.g. selecting for <c>int[]</c> yields an <c>ArrayMarshaller&lt;int&gt;</c>).
     /// </summary>
-    public override JSMarshaller<T> GetMarshaller<T>()
+    public override JSMarshaller<T> GetMarshaller<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
     {
         if (this is JSMarshaller<T> _this) return _this;
         var marshallerTyped = typeof(SpawnJSObjectMarshaller<>).MakeGenericType(typeof(T));

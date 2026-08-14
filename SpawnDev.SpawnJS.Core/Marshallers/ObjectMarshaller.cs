@@ -23,7 +23,7 @@ namespace SpawnDev.SpawnJS.Marshallers
                 ((Delegate)writeTyped<object>).InvokeGeneric(valueType, value);
                 void writeTyped<T>(T value)
                 {
-                    var marshaller = JS.GetMarshaller<T>();
+                    var marshaller = JS.GetMarshallerForWrite<T>();
                     marshaller.NetToJS(jsParent, jsKey, value);
                 }
             }
@@ -45,7 +45,7 @@ namespace SpawnDev.SpawnJS.Marshallers
                 ((Delegate)writeTyped<object>).InvokeGeneric(valueType, value);
                 void writeTyped<T>(T value)
                 {
-                    var marshaller = JS.GetMarshaller<T>();
+                    var marshaller = JS.GetMarshallerForWrite<T>();
                     marshaller.NetToJS(jsParent, jsKey, value);
                 }
             }

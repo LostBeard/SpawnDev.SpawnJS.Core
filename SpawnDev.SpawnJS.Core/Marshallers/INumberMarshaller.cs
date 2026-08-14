@@ -1,17 +1,20 @@
-﻿using SpawnDev.SpawnJS.Marshaller;
+using System.Diagnostics.CodeAnalysis;
+using SpawnDev.SpawnJS.Marshaller;
 using System.Numerics;
 
 namespace SpawnDev.SpawnJS.Marshallers
 {
     public class INumberMarshaller<TNumber> : JSMarshallerFromDouble<TNumber> where TNumber : INumber<TNumber>
     {
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2070",
+            Justification = "Probes whether a type implements INumber<>. INumber<> is referenced by this marshaller, so the trimmer preserves that interface implementation on any numeric type it keeps; a type whose INumber<> interface was trimmed would be an unused number type that never reaches this check.")]
         public override bool CanMarshal(Type type)
         {
             if (type.IsGenericTypeDefinition) return false;
             return type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INumber<>));
         }
 
-        public override JSMarshaller<T> GetMarshaller<T>()
+        public override JSMarshaller<T> GetMarshaller<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
         {
             if (this is JSMarshaller<T> _this) return _this;
             var typeT = typeof(T);

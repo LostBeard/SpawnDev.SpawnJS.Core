@@ -1,11 +1,12 @@
-﻿using SpawnDev.SpawnJS.Marshaller;
+using System.Diagnostics.CodeAnalysis;
+using SpawnDev.SpawnJS.Marshaller;
 
 namespace SpawnDev.SpawnJS.Marshallers
 {
     /// <summary>
     /// Marshalls Task as Promise
     /// </summary>
-    public class TaskMarshaller<T> : JSMarshallerFromSpawnJSObjectReference<Task<T>?>
+    public class TaskMarshaller<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T> : JSMarshallerFromSpawnJSObjectReference<Task<T>?>
     {
         public override Task<T>? JSToNet(SpawnJSObjectReference value)
         {
@@ -116,7 +117,7 @@ namespace SpawnDev.SpawnJS.Marshallers
             if (genericType == typeof(Task<>)) return true;
             return false;
         }
-        public override JSMarshaller<T> GetMarshaller<T>()
+        public override JSMarshaller<T> GetMarshaller<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
         {
             if (this is JSMarshaller<T> _this) return _this;
             var typeT = typeof(T);

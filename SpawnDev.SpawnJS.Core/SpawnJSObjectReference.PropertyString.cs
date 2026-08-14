@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace SpawnDev.SpawnJS
 {
@@ -81,95 +82,95 @@ namespace SpawnDev.SpawnJS
             => SpawnJSRuntime._propertySetHeapView(Id, key, JS.DotnetInstance.Id, (double)value.Type, value.Offset, value.Length, value.Copy);
         #endregion
         #region PropertyGet
-        internal string? PropertyGetWithReplacerString(string replacer, string key, double replacerConfig)
+        internal string? PropertyGetWithReplacerString(string key, string replacer, double replacerConfig)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerString(Id, methodIndex, key, replacerConfig);
+            return SpawnJSRuntime._propertyGetWithReplacerString(Id, key, methodIndex, replacerConfig);
         }
-        internal double PropertyGetWithReplacerDouble(string replacer, string key, double replacerConfig)
+        internal double PropertyGetWithReplacerDouble(string key, string replacer, double replacerConfig)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerDouble(Id, methodIndex, key, replacerConfig);
+            return SpawnJSRuntime._propertyGetWithReplacerDouble(Id, key, methodIndex, replacerConfig);
         }
-        internal bool PropertyGetWithReplacerBoolean(string replacer, string key, double replacerConfig)
+        internal bool PropertyGetWithReplacerBoolean(string key, string replacer, double replacerConfig)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerBoolean(Id, methodIndex, key, replacerConfig);
+            return SpawnJSRuntime._propertyGetWithReplacerBoolean(Id, key, methodIndex, replacerConfig);
         }
-        internal double? PropertyGetWithReplacerDoubleNullable(string replacer, string key, double replacerConfig)
+        internal double? PropertyGetWithReplacerDoubleNullable(string key, string replacer, double replacerConfig)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerDoubleNullable(Id, methodIndex, key, replacerConfig);
+            return SpawnJSRuntime._propertyGetWithReplacerDoubleNullable(Id, key, methodIndex, replacerConfig);
         }
-        internal bool? PropertyGetWithReplacerBooleanNullable(string replacer, string key, double replacerConfig)
+        internal bool? PropertyGetWithReplacerBooleanNullable(string key, string replacer, double replacerConfig)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerBooleanNullable(Id, methodIndex, key, replacerConfig);
+            return SpawnJSRuntime._propertyGetWithReplacerBooleanNullable(Id, key, methodIndex, replacerConfig);
         }
-        internal string? PropertyGetWithReplacerString(string replacer, string key, string replacerConfig)
+        internal string? PropertyGetWithReplacerString(string key, string replacer, string replacerConfig)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerString(Id, methodIndex, key, replacerConfig);
+            return SpawnJSRuntime._propertyGetWithReplacerString(Id, key, methodIndex, replacerConfig);
         }
-        internal double PropertyGetWithReplacerDouble(string replacer, string key, string replacerConfig)
+        internal double PropertyGetWithReplacerDouble(string key, string replacer, string replacerConfig)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerDouble(Id, methodIndex, key, replacerConfig);
+            return SpawnJSRuntime._propertyGetWithReplacerDouble(Id, key, methodIndex, replacerConfig);
         }
-        internal bool PropertyGetWithReplacerBoolean(string replacer, string key, string replacerConfig)
+        internal bool PropertyGetWithReplacerBoolean(string key, string replacer, string replacerConfig)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerBoolean(Id, methodIndex, key, replacerConfig);
+            return SpawnJSRuntime._propertyGetWithReplacerBoolean(Id, key, methodIndex, replacerConfig);
         }
-        internal double? PropertyGetWithReplacerDoubleNullable(string replacer, string key, string replacerConfig)
+        internal double? PropertyGetWithReplacerDoubleNullable(string key, string replacer, string replacerConfig)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerDoubleNullable(Id, methodIndex, key, replacerConfig);
+            return SpawnJSRuntime._propertyGetWithReplacerDoubleNullable(Id, key, methodIndex, replacerConfig);
         }
-        internal bool? PropertyGetWithReplacerBooleanNullable(string replacer, string key, string replacerConfig)
+        internal bool? PropertyGetWithReplacerBooleanNullable(string key, string replacer, string replacerConfig)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerBooleanNullable(Id, methodIndex, key, replacerConfig);
+            return SpawnJSRuntime._propertyGetWithReplacerBooleanNullable(Id, key, methodIndex, replacerConfig);
         }
-        internal string? PropertyGetWithReplacerString(string replacer, string key)
+        internal string? PropertyGetWithReplacerString(string key, string replacer)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerString(Id, methodIndex, key);
+            return SpawnJSRuntime._propertyGetWithReplacerString(Id, key, methodIndex);
         }
-        internal double PropertyGetWithReplacerDouble(string replacer, string key)
+        internal double PropertyGetWithReplacerDouble(string key, string replacer)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerDouble(Id, methodIndex, key);
+            return SpawnJSRuntime._propertyGetWithReplacerDouble(Id, key, methodIndex);
         }
-        internal bool PropertyGetWithReplacerBoolean(string replacer, string key)
+        internal bool PropertyGetWithReplacerBoolean(string key, string replacer)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerBoolean(Id, methodIndex, key);
+            return SpawnJSRuntime._propertyGetWithReplacerBoolean(Id, key, methodIndex);
         }
-        internal double? PropertyGetWithReplacerDoubleNullable(string replacer, string key)
+        internal double? PropertyGetWithReplacerDoubleNullable(string key, string replacer)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerDoubleNullable(Id, methodIndex, key);
+            return SpawnJSRuntime._propertyGetWithReplacerDoubleNullable(Id, key, methodIndex);
         }
-        internal bool? PropertyGetWithReplacerBooleanNullable(string replacer, string key)
+        internal bool? PropertyGetWithReplacerBooleanNullable(string key, string replacer)
         {
             var methodIndex = JS.InteropMethods.IndexOf(replacer);
             if (methodIndex == -1) throw new Exception($"Unknown SpawnJSInterop method. Index not found: {JS.InteropMethods.Length} {replacer}");
-            return SpawnJSRuntime._propertyGetWithReplacerBooleanNullable(Id, methodIndex, key);
+            return SpawnJSRuntime._propertyGetWithReplacerBooleanNullable(Id, key, methodIndex);
         }
         internal string? PropertyGetString(string key) => SpawnJSRuntime._propertyGetString(Id, key);
         internal double PropertyGetDouble(string key) => SpawnJSRuntime._propertyGetDouble(Id, key);
@@ -179,9 +180,9 @@ namespace SpawnDev.SpawnJS
         internal SpawnJSObjectReference? PropertyGetSpawnJSObjectReference(string key, bool force = false)
         {
             var id = SpawnJSRuntime._propertyGetSpawnJSObjectReference(Id, key, force);
-            return id == null ? null : new SpawnJSObjectReference(id.Value);
+            return FromID(id);
         }
-        internal T PropertyGetJson<T>(string key, JsonSerializerOptions? options = null)
+        internal T PropertyGetJson<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string key, JsonSerializerOptions? options = null)
         {
             var json = SpawnJSRuntime._propertyGetJson(Id, key);
             return json == null ? default! : JsonSerializer.Deserialize<T>(json, options)!;

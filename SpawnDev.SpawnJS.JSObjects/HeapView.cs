@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 
 namespace SpawnDev.SpawnJS.JSObjects
 {
@@ -514,6 +515,8 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <summary>
         /// Creates a copy of the data and returns it as a TypedArray
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2067",
+            Justification = "typedArrayType is a TypedArray subclass; those live in SpawnDev.SpawnJS.JSObjects and their .ctor(ArrayBuffer) is preserved by the embedded ILLink.Descriptors.xml (preserve=methods).")]
         public TypedArray To(Type typedArrayType, long byteOffset, long elementCount)
         {
             var byteLength = TypedArray.GetTypedArrayElementSize(typedArrayType) * elementCount;
@@ -529,6 +532,8 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <summary>
         /// Creates a copy of the data and returns it as a TypedArray
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2087",
+            Justification = "TTypedArray is constrained to TypedArray; those live in SpawnDev.SpawnJS.JSObjects and their .ctor(ArrayBuffer) is preserved by the embedded ILLink.Descriptors.xml (preserve=methods).")]
         public TTypedArray To<TTypedArray>(long byteOffset, long elementCount) where TTypedArray : TypedArray
         {
             var byteLength = TypedArray.GetTypedArrayElementSize<TTypedArray>() * elementCount;
@@ -539,12 +544,12 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <summary>
         /// Returns a TypedArray that points at the pinned data.
         /// </summary>
-        public TTypedArray As<TTypedArray>(long byteOffset = 0) where TTypedArray : TypedArray
+        public TTypedArray As<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TTypedArray>(long byteOffset = 0) where TTypedArray : TypedArray
             => As<TTypedArray>(byteOffset, (long)Math.Floor((float)(ByteLength - byteOffset) / (float)TypedArray.GetTypedArrayElementSize<TTypedArray>()));
         /// <summary>
         /// Returns a TypedArray that points at the pinned data.
         /// </summary>
-        public TTypedArray As<TTypedArray>(long byteOffset, long elementCount) where TTypedArray : TypedArray
+        public TTypedArray As<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TTypedArray>(long byteOffset, long elementCount) where TTypedArray : TypedArray
         {
             var viewType = FromType(typeof(TTypedArray));
             // byteLength must be sized by the TARGET view's element size, not the HeapView's source ElementSize -
@@ -620,7 +625,7 @@ namespace SpawnDev.SpawnJS.JSObjects
             return jsView;
         }
         List<IDisposable> DisposableViews = new List<IDisposable>();
-        T ToDispose<T>(T disposable) where T : IDisposable
+        T ToDispose<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T disposable) where T : IDisposable
         {
             DisposableViews.Add(disposable);
             return disposable;

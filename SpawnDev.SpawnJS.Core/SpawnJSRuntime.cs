@@ -1,4 +1,5 @@
-﻿using SpawnDev.SpawnJS.Marshaller;
+using System.Diagnostics.CodeAnalysis;
+using SpawnDev.SpawnJS.Marshaller;
 using SpawnDev.SpawnJS.Marshallers;
 using System.Runtime.InteropServices.JavaScript;
 
@@ -43,7 +44,17 @@ namespace SpawnDev.SpawnJS
         /// <summary>
         /// When true, marshaller selection is logged to the console. Off by default so libraries stay quiet.
         /// </summary>
-        public bool Verbose;
+        public bool Verbose
+        {
+            get => _verbose;
+            set
+            {
+                if (_verbose == value) return;
+                _verbose = value;
+                Set("SpawnJSInterop.verbose", _verbose);
+            }
+        }
+        bool _verbose = false;
         internal string[] InteropMethods;
         /// <summary>
         /// Creates the runtime. The base id is <see cref="GlobalThis"/> so the instance addresses JS
@@ -107,10 +118,20 @@ namespace SpawnDev.SpawnJS
                 ResolveBooleanNullable,
                 ResolveInt32,
                 ResolveInt32Nullable,
+                OnDetachedHeap,
                 Callback.HandleCallback));
             // load method names to enable indexed based interop calling (vs string)
             InteropMethods = _refreshMethodMap();
+            HeapSize = GetHeapSize();
         }
+        public long HeapSize { get; private set; } = 0;
+        void OnDetachedHeap(long oldSize, long newSize)
+        {
+            HeapSize = newSize;
+            Console.WriteLine($"OnDetachedHeap: {oldSize} > {HeapSize}");
+            OnHeapGrow?.Invoke(oldSize, newSize);
+        }
+        public event Action<long, long>? OnHeapGrow;
         /// <summary>
         /// Get the current heap size
         /// </summary>
@@ -129,14 +150,15 @@ namespace SpawnDev.SpawnJS
             {
                 try
                 {
-                    var heapSizeNow = GetHeapSize();
-                    diff = heapSizeNow - heapSize;
+                    var sizeNow = GetHeapSize();
+                    diff = sizeNow - heapSize;
                     if (diff > 0) break;
-                    var data = new byte[16000000];
+                    var data = new byte[5000000];
                     tmp.Add(data);
                 }
-                catch
+                catch(Exception ex)
                 {
+                    Console.WriteLine($"GrowHeap eror: {ex.ToString()}");
                     break;
                 }
             }
@@ -149,7 +171,7 @@ namespace SpawnDev.SpawnJS
         /// </summary>
         /// <typeparam name="T">The type to return value as</typeparam>
         /// <returns>value as type T</returns>
-        public T As<T1, T>(T1 value) => InteropCall<T1, T>("returnMe", value);
+        public T As<T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T1 value) => InteropCall<T1, T>("returnMe", value);
         public object? As(Type type, object? value)
         {
             return ((Delegate)As<object>).InvokeGeneric(type, value);

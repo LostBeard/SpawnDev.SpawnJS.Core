@@ -1,11 +1,12 @@
-﻿namespace SpawnDev.SpawnJS
+using System.Diagnostics.CodeAnalysis;
+namespace SpawnDev.SpawnJS
 {
     /// <summary>
     /// CallbackGroup can be used as a container for a group of Callbacks allowing the entire group to be disposed with 1 call.
     /// </summary>
     public class CallbackGroup : IDisposable
     {
-        public static T TryAdd<T>(T callback, CallbackGroup? callbackGroup) where T : Callback
+        public static T TryAdd<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T callback, CallbackGroup? callbackGroup) where T : Callback
         {
             callbackGroup?.Add(callback);
             return callback;
@@ -20,7 +21,7 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="wrapper"></param>
         /// <returns></returns>
-        public T Add<T>(T wrapper) where T : Callback
+        public T Add<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T wrapper) where T : Callback
         {
             Callbacks.Add(wrapper);
             return wrapper;
