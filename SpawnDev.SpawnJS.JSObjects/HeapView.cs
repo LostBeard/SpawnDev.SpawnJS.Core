@@ -127,19 +127,7 @@ namespace SpawnDev.SpawnJS.JSObjects
     /// </summary>
     public class HeapView : IDisposable
     {
-        /// <summary>
-        /// The data size to use for heap priming
-        /// </summary>
-        public static int DefaultHeapPrimeSize = 16 * 1024 * 1024;
-        /// <summary>
-        /// When true, the PrimeHeap will be used when new instance
-        /// </summary>
-        public static bool UsePrimer = false;
         static int InstanceCount = 0;
-        // The heap ArrayBuffer byteLength captured right after the last PrimeHeap. WASM memory.grow is one-way
-        // (the heap never shrinks), so the headroom a prime reserves PERSISTS until something grows the heap.
-        // -1 = never primed. Used to skip re-priming while the reserved headroom is still intact.
-        static long _lastPrimedHeapSize = -1;
         /// <summary>
         /// New instance
         /// </summary>
@@ -147,51 +135,8 @@ namespace SpawnDev.SpawnJS.JSObjects
         {
             DataType = dataType;
             ElementType = elementType;
-            // Prime only when no view is outstanding (the prime's compacting GC would detach an outstanding view)
-            // AND the heap has GROWN since our last prime. If it hasn't grown, the ~16MB of headroom the last
-            // prime reserved is still available (memory.grow is one-way), so re-priming would just burn a forced
-            // compacting GC for nothing — that per-view GC made hot CopyFrom loops (100+ uploads) time out. So we
-            // prime at most once per grow-epoch: heap grew -> headroom was consumed by a grow -> re-establish it.
-            if (UsePrimer && InstanceCount == 0)
-            {
-                long heapSize = GetHeapBufferSize();
-                if (_lastPrimedHeapSize < 0 || heapSize > _lastPrimedHeapSize)
-                {
-                    PrimeHeap();
-                    _lastPrimedHeapSize = GetHeapBufferSize();
-                }
-            }
             InstanceCount++;
         }
-        /// <summary>
-        /// Allocates memory on the heap and then releases it to delay heap growth after this call.<br/>
-        /// When the heap ArrayBuffer resizes all existing views become detached.
-        /// </summary>
-        /// <param name="preAllocateSize"></param>
-        public static void PrimeHeap(int preAllocateSize)
-        {
-            try
-            {
-                // Allocate a large byte array to force a heap resize
-                byte[]? bigArray = new byte[preAllocateSize];
-                // To ensure the allocation isn't optimized away, perform a trivial operation
-                // on the array. In a real scenario, this might not be strictly necessary
-                // as the JIT is limited in Blazor WASM, but it's a good practice.
-                if (bigArray.Length > 0)
-                {
-                    bigArray[0] = 0xAA;
-                }
-                // Release the reference and call Collect
-                bigArray = null;
-                GC.Collect(2, GCCollectionMode.Forced, blocking: true, compacting: true);
-            }
-            catch { }
-        }
-        /// <summary>
-        /// Allocates memory on the heap and then releases it to delay heap growth after this call.<br/>
-        /// When the heap ArrayBuffer resizes all existing views become detached.
-        /// </summary>
-        public static void PrimeHeap() => PrimeHeap(DefaultHeapPrimeSize);
         /// <summary>
         /// Explicit conversion to HeapView
         /// </summary>
@@ -376,7 +321,7 @@ namespace SpawnDev.SpawnJS.JSObjects
             if (DataType == typeof(string))
             {
                 using var textDecoder = new TextDecoder("utf-16");
-                var jsString = textDecoder.JSRef!.Call<StringPrimitive>("decode", (Uint8Array)this);
+                var jsString = textDecoder.JSRef!.Call<Uint8Array, StringPrimitive>("decode", (Uint8Array)this);
                 return jsString;
             }
             else
@@ -497,7 +442,6 @@ namespace SpawnDev.SpawnJS.JSObjects
         {
             if (Disposed) return;
             Disposed = true;
-            IDisposableTracker.DisposableDisposed(_disposableTracker, disposing);
             if (InstanceCount > 0) InstanceCount--;
             Address = 0;
             if (handle.IsAllocated) handle.Free();
@@ -513,7 +457,6 @@ namespace SpawnDev.SpawnJS.JSObjects
                 catch { }
             }
         }
-        (IDisposableTracker? disposableTracker, ulong disposableId) _disposableTracker;
         /// <summary>
         /// Dispose resources
         /// </summary>
@@ -536,7 +479,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// This happens VERY frequently, therefore this Uint8Array must be used immediately.
         /// </summary>
         /// <returns></returns>
-        public static Uint8Array GetHeap() => JS.Get<Uint8Array>(new HeapViewDescriptor());
+        public static Uint8Array GetHeap() => JS.As<HeapViewDescriptor, Uint8Array>(new HeapViewDescriptor(0, -1));
         /// <summary>
         /// BlazorJSRuntime
         /// </summary>
@@ -620,14 +563,39 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         public TTypedArray As<TTypedArray>(long byteOffset, long elementCount) where TTypedArray : TypedArray
         {
-            var viewType = typeof(TTypedArray).Name;
+            var viewType = FromType(typeof(TTypedArray));
             // byteLength must be sized by the TARGET view's element size, not the HeapView's source ElementSize -
             // they differ for cross-type views (e.g. HeapView<double>.As<Uint8Array>()). Using the source size
             // over-sized the descriptor (elementCount * 8 instead of * 1) -> reviver built an oversized/OOB view.
-            var typedArray = JS.ReturnMe<TTypedArray>(new HeapViewInit(viewType, Address + byteOffset, elementCount * TypedArray.GetTypedArrayElementSize<TTypedArray>()));
+            var typedArray = JS.As<HeapViewDescriptor, TTypedArray>(new HeapViewDescriptor(Address + byteOffset, elementCount * TypedArray.GetTypedArrayElementSize<TTypedArray>(), viewType));
             ToDispose(typedArray);
             return typedArray;
         }
+        JSArrayBufferView FromType(Type arrayBufferViewType)
+        {
+            if (arrayBufferViewType == typeof(BigInt64Array)) return JSArrayBufferView.BigInt64Array;
+            if (arrayBufferViewType == typeof(BigUint64Array)) return JSArrayBufferView.BigUint64Array;
+
+            if (arrayBufferViewType == typeof(Float16Array)) return JSArrayBufferView.Float16Array;
+            if (arrayBufferViewType == typeof(Float32Array)) return JSArrayBufferView.Float32Array;
+            if (arrayBufferViewType == typeof(Float64Array)) return JSArrayBufferView.Float64Array;
+
+            if (arrayBufferViewType == typeof(Int16Array)) return JSArrayBufferView.Int16Array;
+            if (arrayBufferViewType == typeof(Int32Array)) return JSArrayBufferView.Int32Array;
+            if (arrayBufferViewType == typeof(Int8Array)) return JSArrayBufferView.Int8Array;
+
+            if (arrayBufferViewType == typeof(Uint16Array)) return JSArrayBufferView.Uint16Array;
+            if (arrayBufferViewType == typeof(Uint32Array)) return JSArrayBufferView.Uint32Array;
+            if (arrayBufferViewType == typeof(Uint8Array)) return JSArrayBufferView.Uint8Array;
+            if (arrayBufferViewType == typeof(Uint8ClampedArray)) return JSArrayBufferView.Uint8ClampedArray;
+
+            if (arrayBufferViewType == typeof(DataView)) return JSArrayBufferView.DataView;
+
+            if (arrayBufferViewType == typeof(ArrayBuffer)) return JSArrayBufferView.ArrayBuffer;
+            throw new NotSupportedException();
+        }
+
+
         /// <summary>
         /// Returns a TypedArray that points at the pinned data.
         /// </summary>
@@ -640,7 +608,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         {
             var viewType = typedArrayType.Name;
             // byteLength sized by the TARGET view's element size, not the HeapView's source ElementSize (see As<TTypedArray> above).
-            var typedArray = (TypedArray)JS.ReturnMe(typedArrayType, new HeapViewInit(viewType, Address + byteOffset, elementCount * TypedArray.GetTypedArrayElementSize(typedArrayType)))!;
+            var typedArray = (TypedArray)JS.As(typedArrayType, new HeapViewDescriptor(Address + byteOffset, elementCount * TypedArray.GetTypedArrayElementSize(typedArrayType)))!;
             ToDispose(typedArray);
             return typedArray;
         }
@@ -653,7 +621,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         public DataView AsDataView(long byteOffset, long byteLength)
         {
-            var jsView = JS.ReturnMe<DataView>(new HeapViewDescriptor(typeof(DataView).Name, Address + byteOffset, byteLength))!;
+            var jsView = JS.As<HeapViewDescriptor, DataView>(new HeapViewDescriptor(Address + byteOffset, byteLength, JSArrayBufferView.DataView))!;
             ToDispose(jsView);
             return jsView;
         }
@@ -675,36 +643,6 @@ namespace SpawnDev.SpawnJS.JSObjects
         {
             DisposableViews.Add(disposable);
             return disposable;
-        }
-        /// <summary>
-        /// This is method tries to force the .Net heap to grow by requesting more and more space until it grows.<br/>
-        /// Primarily used for testing.
-        /// </summary>
-        public static bool ForceHeapGrowth()
-        {
-            var heapSize = HeapView.GetHeapBuffer().Using(o => o.ByteLength);
-            long heapSizeNow = heapSize;
-            var dataSize = 5_000_000;
-            var i = 0;
-            var datas = new List<byte[]>();
-            while (heapSize == heapSizeNow)
-            {
-                try
-                {
-                    i++;
-                    var textDataBytes3 = new byte[dataSize];
-                    textDataBytes3[5] = 0xaa;
-                    datas.Add(textDataBytes3);
-                    heapSizeNow = HeapView.GetHeapBuffer().Using(o => o.ByteLength);
-                }
-                catch
-                {
-                    break;
-                }
-            }
-            datas.Clear();
-            GC.Collect(2, GCCollectionMode.Forced, blocking: true, compacting: true);
-            return heapSize != heapSizeNow;
         }
     }
 }

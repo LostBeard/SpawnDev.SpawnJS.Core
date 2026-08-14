@@ -4,7 +4,7 @@
     {
         // big
         BigInt64Array,
-        BigUInt64Array,
+        BigUint64Array,
         // float
         Float16Array,
         Float32Array,

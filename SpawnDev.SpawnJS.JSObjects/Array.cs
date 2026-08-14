@@ -1,3 +1,6 @@
+using SpawnDev.SpawnJS.Marshaller;
+using System.Collections;
+
 namespace SpawnDev.SpawnJS.JSObjects
 {
     /// <summary>
@@ -47,7 +50,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static bool IsArray(object? obj) => JS.Call<bool>("Array.isArray", obj);
+        public static bool IsArray(object obj) => JS.Call<object, bool>("Array.isArray", obj);
         /// <summary>
         /// Deserialization constructor
         /// </summary>
@@ -93,14 +96,14 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="T"></typeparam>
         /// <param name="index"></param>
         /// <returns></returns>
-        public T At<T>(int index) => JSRef!.Call<T>("at", index);
+        public T At<T>(int index) => JSRef!.Call<int, T>("at", index);
         /// <summary>
         /// Returns the array item at the given index. Accepts negative integers, which count back from the last item.
         /// </summary>
         /// <param name="type"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public object? At(Type type, int index) => JSRef!.Call(type, "at", index);
+        public object? At(Type type, int index) => ((Delegate)At<object>).InvokeGeneric(type, index);
         /// <summary>
         /// Removes the last element from an array and returns that element.
         /// </summary>
@@ -112,7 +115,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public object? Pop(Type type) => JSRef!.Call(type, "pop");
+        public object? Pop(Type type) => ((Delegate)Pop<object>).InvokeGeneric(type);
         /// <summary>
         /// Removes the first element from an array and returns that element.
         /// </summary>
@@ -124,7 +127,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public object? Shift(Type type) => JSRef!.Call(type, "shift");
+        public object? Shift(Type type) => ((Delegate)Shift<object>).InvokeGeneric(type);
         /// <summary>
         /// Set the value of the item at the given index
         /// </summary>
@@ -144,33 +147,33 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="type"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public object? GetItem(Type type, int index) => JSRef!.Get(type, index);
+        public object? GetItem(Type type, int index) => ((Delegate)GetItem<object>).InvokeGeneric(type, index);
         /// <summary>
         /// Returns a new array that is the calling array joined with other array(s) and/or value(s).
         /// </summary>
         /// <param name="array"></param>
         /// <returns></returns>
-        public Array Concat(Array array) => JSRef!.Call<Array>("concat", array);
+        public Array Concat(Array array) => JSRef!.Call<Array, Array>("concat", array);
         /// <summary>
         /// Returns a new array that is the calling array joined with other array(s) and/or value(s).
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="array"></param>
         /// <returns></returns>
-        public Array<T> Concat<T>(Array array) => JSRef!.Call<Array<T>>("concat", array);
+        public Array<T> Concat<T>(Array array) => JSRef!.Call<Array, Array<T>>("concat", array);
         /// <summary>
         /// Joins all elements of an array into a string.
         /// </summary>
         /// <param name="separator"></param>
         /// <returns></returns>
-        public string Join(string separator = "") => JSRef!.Call<string>("join", separator);
+        public string Join(string separator = "") => JSRef!.Call<string, string>("join", separator);
         /// <summary>
         /// Returns a new array containing the results of invoking a function on every element in the calling array.
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="function"></param>
         /// <returns></returns>
-        public Array<TResult> Map<TResult>(Function function) => JSRef!.Call<Array<TResult>>("map", function);
+        //public Array<TResult> Map<TResult>(Function function) => JSRef!.Call<Array<TResult>>("map", function);
         /// <summary>
         /// Returns a new array containing the results of invoking a function on every element in the calling array.
         /// </summary>
@@ -181,7 +184,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         public Array<TResult> Map<T, TResult>(Func<T, TResult> mapTo)
         {
             using var cb = Callback.Create(mapTo);
-            return JSRef!.Call<Array<TResult>>("map", cb);
+            return JSRef!.Call<FuncCallback<T, TResult>, Array<TResult>>("map", cb);
         }
         /// <summary>
         /// Returns a new array containing all elements of the calling array for which the provided filtering function returns true.
@@ -192,7 +195,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         public Array<T> Filter<T>(Func<T, bool> filter)
         {
             using var cb = Callback.Create(filter);
-            return JSRef!.Call<Array<T>>("filter", cb);
+            return JSRef!.Call<FuncCallback<T, bool>, Array<T>>("filter", cb);
         }
         /// <summary>
         /// Extracts a section of the calling array and returns a new array.
@@ -211,7 +214,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// - If start &gt;= array.length, nothing is extracted.
         /// </param>
         /// <returns>A new array containing the extracted elements.</returns>
-        public Array<T> Slice<T>(int start) => JSRef!.Call<Array<T>>("slice", start);
+        public Array<T> Slice<T>(int start) => JSRef!.Call<int, Array<T>>("slice", start);
         /// <summary>
         /// Extracts a section of the calling array and returns a new array.
         /// </summary>
@@ -230,7 +233,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// - If end implies a position before or at the position that start implies, nothing is extracted.<br/>
         /// </param>
         /// <returns>A new array containing the extracted elements.</returns>
-        public Array<T> Slice<T>(int start, int end) => JSRef!.Call<Array<T>>("slice", start, end);
+        public Array<T> Slice<T>(int start, int end) => JSRef!.Call<int, int, Array<T>>("slice", start, end);
         /// <summary>
         /// Extracts a section of the calling array and returns a new array.
         /// </summary>
@@ -246,7 +249,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// - If start &gt;= array.length, nothing is extracted.
         /// </param>
         /// <returns>A new array containing the extracted elements.</returns>
-        public virtual Array Slice(int start) => JSRef!.Call<Array>("slice", start);
+        public virtual Array Slice(int start) => JSRef!.Call<int, Array>("slice", start);
         /// <summary>
         /// Extracts a section of the calling array and returns a new array.
         /// </summary>
@@ -264,7 +267,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// - If end implies a position before or at the position that start implies, nothing is extracted.<br/>
         /// </param>
         /// <returns>A new array containing the extracted elements.</returns>
-        public virtual Array Slice(int start, int end) => JSRef!.Call<Array>("slice", start, end);
+        public virtual Array Slice(int start, int end) => JSRef!.Call<int, int, Array>("slice", start, end);
         /// <summary>
         /// Calls a function for each element in the calling array.
         /// </summary>
@@ -299,7 +302,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// - If start is omitted (and splice() is called with no arguments), nothing is deleted. This is different from passing undefined, which is converted to 0.<br/>
         /// </param>
         /// <returns></returns>
-        public virtual Array Splice(int start) => JSRef!.Call<Array>("splice", start);
+        public virtual Array Splice(int start) => JSRef!.Call<int, Array>("splice", start);
         /// <summary>
         /// Adds and/or removes elements from an array.
         /// </summary>
@@ -316,7 +319,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// - If deleteCount is 0 or negative, no elements are removed. In this case, you should specify at least one new element (see below).
         /// </param>
         /// <returns></returns>
-        public virtual Array Splice(int start, int deleteCount) => JSRef!.Call<Array>("splice", start, deleteCount);
+        public virtual Array Splice(int start, int deleteCount) => JSRef!.Call<int, int, Array>("splice", start, deleteCount);
         /// <summary>
         /// Adds and/or removes elements from an array.
         /// </summary>
@@ -346,7 +349,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// - If start is omitted (and splice() is called with no arguments), nothing is deleted. This is different from passing undefined, which is converted to 0.<br/>
         /// </param>
         /// <returns></returns>
-        public Array<T> Splice<T>(int start) => JSRef!.Call<Array<T>>("splice", start);
+        public Array<T> Splice<T>(int start) => JSRef!.Call<int, Array<T>>("splice", start);
         /// <summary>
         /// Adds and/or removes elements from an array.
         /// </summary>
@@ -363,7 +366,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// - If deleteCount is 0 or negative, no elements are removed. In this case, you should specify at least one new element (see below).
         /// </param>
         /// <returns></returns>
-        public Array<T> Splice<T>(int start, int deleteCount) => JSRef!.Call<Array<T>>("splice", start, deleteCount);
+        public Array<T> Splice<T>(int start, int deleteCount) => JSRef!.Call<int, int, Array<T>>("splice", start, deleteCount);
         /// <summary>
         /// Adds and/or removes elements from an array.
         /// </summary>

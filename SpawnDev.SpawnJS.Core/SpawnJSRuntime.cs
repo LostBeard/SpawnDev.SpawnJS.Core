@@ -118,14 +118,25 @@ namespace SpawnDev.SpawnJS
         {
             var tmp = new List<byte[]>();
             var heapSize = GetHeapSize();
+            long diff = 0;
             while (true)
             {
-                var heapSizeNow = GetHeapSize();
-                var diff = heapSizeNow - heapSize;
-                if (diff > 0) return diff;
-                var data = new byte[16000000];
-                tmp.Add(data);
+                try
+                {
+                    var heapSizeNow = GetHeapSize();
+                    diff = heapSizeNow - heapSize;
+                    if (diff > 0) break;
+                    var data = new byte[16000000];
+                    tmp.Add(data);
+                }
+                catch
+                {
+                    break;
+                }
             }
+            tmp.Clear();
+            GC.Collect(2, GCCollectionMode.Forced, blocking: true, compacting: true);
+            return diff;
         }
         /// <summary>
         /// Returns value as type T
@@ -133,6 +144,10 @@ namespace SpawnDev.SpawnJS
         /// <typeparam name="T">The type to return value as</typeparam>
         /// <returns>value as type T</returns>
         public T As<T1, T>(T1 value) => InteropCall<T1, T>("returnMe", value);
+        public object? As(Type type, object? value)
+        {
+            return ((Delegate)As<object>).InvokeGeneric(type, value);
+        }
         /// <summary>
         /// Compares two values using Javascript equality.<br/>
         /// full == true uses strict equality (===), otherwise loose equality (==)
