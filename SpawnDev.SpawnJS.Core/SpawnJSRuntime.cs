@@ -88,6 +88,8 @@ namespace SpawnDev.SpawnJS
             Marshallers.Add(new TaskMarshaller());
             // .Net: BingInteger <-> JS: BigInt
             Marshallers.Add(new BigIntegerMarshaller());
+            // .Net: BingInteger? <-> JS: BigInt?
+            Marshallers.Add(new BigIntegerNullableMarshaller());
             // The one and only permitted JSObject use: hand this app's DotnetInstance to the JS side and
             // immediately reduce it to a numeric SpawnJSObjectReference id. Never touched as a JSObject again.
             DotnetInstance = new SpawnJSObjectReference(

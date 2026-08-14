@@ -9,7 +9,7 @@ namespace SpawnDev.SpawnJS.JSObjects
     public class BigInt : SpawnJSObject
     {
         /// <inheritdoc/>
-        public BigInt(BigInteger value) : base(JS.New("BigInt", value.ToString())) { }
+        public BigInt(BigInteger value) : base(JS.Call<string, SpawnJSObjectReference>("BigInt", value.ToString())) { }
         /// <inheritdoc/>
         public BigInt(SpawnJSObjectReference jsRef) : base(jsRef) { }
         /// <summary>

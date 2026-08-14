@@ -450,7 +450,7 @@
             var { parent, propertyName, shortCircuit } = SpawnJSInterop.pathObjectInfo(obj, key);
             if (shortCircuit) return;
             // create the heapView meta data
-            var heapViewInfo = { dotnetId, viewType, offset, length };
+            var heapViewInfo = { dotnetId, viewType, offset, length, copy };
             if (!heapViewInfo.viewType) heapViewInfo.viewType = 'Uint8Array';
             heapViewInfo.instance = SpawnJSInterop.getInstace(heapViewInfo.dotnetId);
             heapViewInfo.dotnet = SpawnJSInterop.spawnJSObjectGet(heapViewInfo.dotnetId);
@@ -469,7 +469,7 @@
                 var length = heapViewInfo.length === -1 ? /* entire buffer */ heapViewInfo.buffer.byteLength - offset : heapViewInfo.length;
                 if (heapViewInfo.viewType === 13) {
                     // ArrayBuffer requested
-                    if (copy) {
+                    if (heapViewInfo.copy) {
                         // create a copy
                         value = heapViewInfo.buffer.slice(offset, offset + length);
                     } else {
@@ -481,7 +481,7 @@
                 } else {
                     // ArrayBufferView reqeusted
                     value = new heapViewInfo.ctor(heapViewInfo.buffer, heapViewInfo.offset, length);
-                    value = copy ? value.slice() : value;
+                    value = heapViewInfo.copy ? value.slice() : value;
                 }
                 value._heapViewInfo = heapViewInfo;
                 heapViewInfo.bufferLength = heapViewInfo.buffer.byteLength;
@@ -551,7 +551,7 @@
         //
         static stringToBigInt(value) {
             if (!globalThis.BigInt) throw new Error('BigInt not supported on this platform');
-            return value === undefined || value === null ? null : new globalThis.BigInt(value);
+            return value === undefined || value === null ? null : globalThis.BigInt(value);
         }
         // set property to using a SpawnJSInterop[methodName](value) call
         // methodName can be a SpawnJSInterop methodName or a methodIndex

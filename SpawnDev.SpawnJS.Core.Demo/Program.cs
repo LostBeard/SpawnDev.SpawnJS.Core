@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 try
 {
     var JS = SpawnJSRuntime.Instance;
-    JS.Verbose = false;
+    JS.Verbose = true;
 
     var js = (SpawnJSObjectReference)JS;
     
