@@ -325,7 +325,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="T"></typeparam>
         /// <param name="srcData"></param>
         /// <param name="destByteOffset"></param>
-        public void Write<T>(T[] srcData, long destByteOffset = 0) where T : struct => Write<T>(srcData, destByteOffset, 0, srcData.Length);
+        public void Write<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T[] srcData, long destByteOffset = 0) where T : struct => Write<T>(srcData, destByteOffset, 0, srcData.Length);
         /// <summary>
         /// Writes an array of struct to this TypedArray. This is a direct byte for byte copy with no type conversions.
         /// </summary>
@@ -335,7 +335,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="srcOffset"></param>
         /// <param name="length"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public void Write<T>(T[] srcData, long destByteOffset, long srcOffset, long length) where T : struct
+        public void Write<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T[] srcData, long destByteOffset, long srcOffset, long length) where T : struct
         {
             if (destByteOffset < 0) new IndexOutOfRangeException(nameof(destByteOffset));
             if (length == 0) return;
@@ -360,7 +360,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="offset"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public long Read<T>(long srcByteOffset, T[] buffer, long offset, long count) where T : struct
+        public long Read<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(long srcByteOffset, T[] buffer, long offset, long count) where T : struct
         {
             if (srcByteOffset < 0) new IndexOutOfRangeException(nameof(srcByteOffset));
             var tSize = Marshal.SizeOf<T>();
@@ -387,7 +387,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="count"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public T[] Read<T>(long srcByteOffset, long count) where T : struct
+        public T[] Read<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(long srcByteOffset, long count) where T : struct
         {
             if (srcByteOffset < 0) new IndexOutOfRangeException(nameof(srcByteOffset));
             if (count == 0) return new T[0];
@@ -412,7 +412,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="srcByteOffset"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public T[] Read<T>(long srcByteOffset = 0) where T : struct => Read<T>(srcByteOffset, (ByteLength - srcByteOffset) / Marshal.SizeOf<T>());
+        public T[] Read<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(long srcByteOffset = 0) where T : struct => Read<T>(srcByteOffset, (ByteLength - srcByteOffset) / Marshal.SizeOf<T>());
         /// <summary>
         /// Read an array of type T starting at this TypedArray's ByteOffset + byteOffset
         /// </summary>
@@ -444,7 +444,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="T"></typeparam>
         /// <param name="srcData"></param>
         /// <param name="destOffset">The destination index to start copying to</param>
-        public void FromArray<T>(T[] srcData, long destOffset = 0) where T : struct => Write<T>(srcData, destOffset * Marshal.SizeOf<T>());
+        public void FromArray<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T[] srcData, long destOffset = 0) where T : struct => Write<T>(srcData, destOffset * Marshal.SizeOf<T>());
         /// <summary>
         /// Writes an array of struct to this TypedArray
         /// </summary>
@@ -453,7 +453,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="destOffset">The destination index to start copying to</param>
         /// <param name="srcOffset">The source index to start copying from</param>
         /// <param name="length">The number of items to copy</param>
-        public void FromArray<T>(T[] srcData, long destOffset, long srcOffset, long length) where T : struct => Write<T>(srcData, destOffset * Marshal.SizeOf<T>(), srcOffset, length);
+        public void FromArray<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T[] srcData, long destOffset, long srcOffset, long length) where T : struct => Write<T>(srcData, destOffset * Marshal.SizeOf<T>(), srcOffset, length);
         static Dictionary<Type, int> TypedArrayElementSize = new Dictionary<Type, int>
         {
             { typeof(Uint8ClampedArray), 1 },

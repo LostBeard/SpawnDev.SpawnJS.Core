@@ -8,6 +8,11 @@ var JS = SpawnJSRuntime.Instance;
 JS.Marshallers.Add(new SpawnJSObjectMarshaller<SpawnJSObject>());
 JS.Verbose = true;
 
+var gggg = JS.TypeInfo();
+var ggfg = JS.ConstructorNames();
+var gssg = JS.Keys();
+var nmt = true;
+
 // ===== PocoMarshaller round-trip test (property-walk clone, honours Json attributes; no JSON serialization) =====
 {
     var person = new TestPerson

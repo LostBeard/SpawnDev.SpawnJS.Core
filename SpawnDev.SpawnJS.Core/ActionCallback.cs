@@ -6,6 +6,8 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public class ActionCallback : Callback
     {
+        /// <summary>Implicitly converts a .Net delegate into a ActionCallback.</summary>
+        public static implicit operator ActionCallback?(Action? callback) => callback == null ? null : new ActionCallback(callback);
         Action _callback;
         public ActionCallback(Action action, bool once = false) : base(once)
         {
@@ -26,6 +28,8 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1> : Callback
     {
+        /// <summary>Implicitly converts a .Net delegate into a ActionCallback.</summary>
+        public static implicit operator ActionCallback<T1>?(Action<T1>? callback) => callback == null ? null : new ActionCallback<T1>(callback);
         Action<T1> _callback;
         public ActionCallback(Action<T1> action, bool once = false) : base(once)
         {
@@ -46,6 +50,8 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2> : Callback
     {
+        /// <summary>Implicitly converts a .Net delegate into a ActionCallback.</summary>
+        public static implicit operator ActionCallback<T1, T2>?(Action<T1, T2>? callback) => callback == null ? null : new ActionCallback<T1, T2>(callback);
         Action<T1, T2> _callback;
         public ActionCallback(Action<T1, T2> action, bool once = false) : base(once)
         {
@@ -67,6 +73,8 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3> : Callback
     {
+        /// <summary>Implicitly converts a .Net delegate into a ActionCallback.</summary>
+        public static implicit operator ActionCallback<T1, T2, T3>?(Action<T1, T2, T3>? callback) => callback == null ? null : new ActionCallback<T1, T2, T3>(callback);
         Action<T1, T2, T3> _callback;
         public ActionCallback(Action<T1, T2, T3> action, bool once = false) : base(once)
         {
@@ -89,6 +97,8 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4> : Callback
     {
+        /// <summary>Implicitly converts a .Net delegate into a ActionCallback.</summary>
+        public static implicit operator ActionCallback<T1, T2, T3, T4>?(Action<T1, T2, T3, T4>? callback) => callback == null ? null : new ActionCallback<T1, T2, T3, T4>(callback);
         Action<T1, T2, T3, T4> _callback;
         public ActionCallback(Action<T1, T2, T3, T4> action, bool once = false) : base(once)
         {
@@ -112,6 +122,8 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5> : Callback
     {
+        /// <summary>Implicitly converts a .Net delegate into a ActionCallback.</summary>
+        public static implicit operator ActionCallback<T1, T2, T3, T4, T5>?(Action<T1, T2, T3, T4, T5>? callback) => callback == null ? null : new ActionCallback<T1, T2, T3, T4, T5>(callback);
         Action<T1, T2, T3, T4, T5> _callback;
         public ActionCallback(Action<T1, T2, T3, T4, T5> action, bool once = false) : base(once)
         {
@@ -136,6 +148,8 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6> : Callback
     {
+        /// <summary>Implicitly converts a .Net delegate into a ActionCallback.</summary>
+        public static implicit operator ActionCallback<T1, T2, T3, T4, T5, T6>?(Action<T1, T2, T3, T4, T5, T6>? callback) => callback == null ? null : new ActionCallback<T1, T2, T3, T4, T5, T6>(callback);
         Action<T1, T2, T3, T4, T5, T6> _callback;
         public ActionCallback(Action<T1, T2, T3, T4, T5, T6> action, bool once = false) : base(once)
         {
@@ -161,6 +175,8 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T7> : Callback
     {
+        /// <summary>Implicitly converts a .Net delegate into a ActionCallback.</summary>
+        public static implicit operator ActionCallback<T1, T2, T3, T4, T5, T6, T7>?(Action<T1, T2, T3, T4, T5, T6, T7>? callback) => callback == null ? null : new ActionCallback<T1, T2, T3, T4, T5, T6, T7>(callback);
         Action<T1, T2, T3, T4, T5, T6, T7> _callback;
         public ActionCallback(Action<T1, T2, T3, T4, T5, T6, T7> action, bool once = false) : base(once)
         {
@@ -187,6 +203,8 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T7, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T8> : Callback
     {
+        /// <summary>Implicitly converts a .Net delegate into a ActionCallback.</summary>
+        public static implicit operator ActionCallback<T1, T2, T3, T4, T5, T6, T7, T8>?(Action<T1, T2, T3, T4, T5, T6, T7, T8>? callback) => callback == null ? null : new ActionCallback<T1, T2, T3, T4, T5, T6, T7, T8>(callback);
         Action<T1, T2, T3, T4, T5, T6, T7, T8> _callback;
         public ActionCallback(Action<T1, T2, T3, T4, T5, T6, T7, T8> action, bool once = false) : base(once)
         {
@@ -214,6 +232,8 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T7, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T8, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T9> : Callback
     {
+        /// <summary>Implicitly converts a .Net delegate into a ActionCallback.</summary>
+        public static implicit operator ActionCallback<T1, T2, T3, T4, T5, T6, T7, T8, T9>?(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9>? callback) => callback == null ? null : new ActionCallback<T1, T2, T3, T4, T5, T6, T7, T8, T9>(callback);
         Action<T1, T2, T3, T4, T5, T6, T7, T8, T9> _callback;
         public ActionCallback(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9> action, bool once = false) : base(once)
         {
@@ -242,6 +262,8 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public class ActionCallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T6, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T7, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T8, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T9, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T10> : Callback
     {
+        /// <summary>Implicitly converts a .Net delegate into a ActionCallback.</summary>
+        public static implicit operator ActionCallback<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>?(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>? callback) => callback == null ? null : new ActionCallback<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(callback);
         Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> _callback;
         public ActionCallback(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> action, bool once = false) : base(once)
         {

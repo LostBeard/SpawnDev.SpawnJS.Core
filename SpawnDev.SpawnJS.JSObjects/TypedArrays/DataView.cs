@@ -1,4 +1,5 @@
-﻿using Microsoft.JSInterop;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.JSInterop;
 using System.Numerics;
 
 namespace SpawnDev.SpawnJS.JSObjects
@@ -360,7 +361,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="data"></param>
         /// <param name="offset"></param>
         /// <returns></returns>
-        public static DataView Create<T>(T[] data, long offset = 0) where T : struct
+        public static DataView Create<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T[] data, long offset = 0) where T : struct
         {
             using var heapView = HeapView.Create(data, offset);
             return heapView.ToDataView();
@@ -373,7 +374,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="offset"></param>
         /// <param name="length"></param>
         /// <returns></returns>
-        public static DataView Create<T>(T[] data, long offset, long length) where T : struct
+        public static DataView Create<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T[] data, long offset, long length) where T : struct
         {
             using var heapView = HeapView.Create(data, offset, length);
             return heapView.ToDataView();

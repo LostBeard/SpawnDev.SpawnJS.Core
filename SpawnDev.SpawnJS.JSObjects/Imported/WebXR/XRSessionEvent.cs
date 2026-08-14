@@ -1,0 +1,18 @@
+
+using SpawnDev.SpawnJS;
+using SpawnDev.SpawnJS.JSObjects;
+namespace SpawnDev.SpawnJS.JSObjects
+{
+    /// <summary>
+    /// https://developer.mozilla.org/en-US/docs/Web/API/XRSessionEvent
+    /// </summary>
+    public class XRSessionEvent : Event
+    {
+        /// <inheritdoc/>
+        public XRSessionEvent(SpawnJSObjectReference _ref) : base(_ref) { }
+        /// <summary>
+        /// The XRSession to which the event refers.
+        /// </summary>
+        public XRSession Session => JSRef!.Get<XRSession>("session");
+    }
+}

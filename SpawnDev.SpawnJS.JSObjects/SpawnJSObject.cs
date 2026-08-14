@@ -99,7 +99,7 @@ namespace SpawnDev.SpawnJS
         public bool JSRefIs(string constructorName)
         {
             if (IsWrapperDisposed) throw new ObjectDisposedException(nameof(JSRef));
-            return JSRef?.ConstructorName == constructorName;
+            return JSRef?.ConstructorName() == constructorName;
         }
         /// <summary>
         /// Returns true if the referenced Javascript object's constructor.name == typeof(T).Name
@@ -114,7 +114,7 @@ namespace SpawnDev.SpawnJS
         public bool JSRefIs<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(string constructorName, out T value, bool moveJSRef = false)
         {
             if (IsWrapperDisposed) throw new ObjectDisposedException(nameof(JSRef));
-            if (JSRef?.ConstructorName != constructorName)
+            if (JSRef?.ConstructorName() != constructorName)
             {
                 value = default!;
                 return false;

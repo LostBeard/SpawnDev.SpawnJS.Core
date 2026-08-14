@@ -1,0 +1,25 @@
+
+using SpawnDev.SpawnJS;
+using SpawnDev.SpawnJS.JSObjects;
+using System.Text.Json.Serialization;
+
+namespace SpawnDev.SpawnJS.JSObjects
+{
+    /// <summary>
+    /// A dictionary object containing the init params for the AudioEncoder
+    /// </summary>
+    public class AudioEncoderInit
+    {
+        /// <summary>
+        /// A callback which takes a EncodedAudioChunk object as the first argument, and an optional metadata object dictionary as the second.
+        /// </summary>
+        [JsonPropertyName("output")]
+        public required ActionCallback<EncodedAudioChunk, EncodedAudioChunkMetadata> Output { get; set; }
+
+        /// <summary>
+        /// A callback which takes an Error object as the only argument.
+        /// </summary>
+        [JsonPropertyName("error")]
+        public required ActionCallback<DOMException> Error { get; set; }
+    }
+}

@@ -350,7 +350,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static HeapView Create<T>(ReadOnlyMemory<T> data) where T : struct
+        public static HeapView Create<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(ReadOnlyMemory<T> data) where T : struct
         {
             if (MemoryMarshal.TryGetArray(data, out ArraySegment<T> segment))
             {
@@ -368,7 +368,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static HeapView Create<T>(ArraySegment<T> data) where T : struct
+        public static HeapView Create<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(ArraySegment<T> data) where T : struct
         {
             var underlyingArray = data.Array!;
             int offset = data.Offset;
@@ -384,7 +384,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="offset">Start index in the data</param>
         /// <param name="length">The number of elements to include</param>
         /// <returns></returns>
-        public static HeapView Create<T>(T[] data, long offset, long length) where T : struct => new HeapView<T>(data, offset, length);
+        public static HeapView Create<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T[] data, long offset, long length) where T : struct => new HeapView<T>(data, offset, length);
         /// <summary>
         /// Creates a new HeapView of the provided array
         /// </summary>
@@ -392,7 +392,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="data"></param>
         /// <param name="offset">Start index in the data</param>
         /// <returns></returns>
-        public static HeapView Create<T>(T[] data, long offset = 0) where T : struct => new HeapView<T>(data, offset);
+        public static HeapView Create<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T[] data, long offset = 0) where T : struct => new HeapView<T>(data, offset);
         /// <summary>
         /// Creates a new HeapView of the provided string
         /// </summary>

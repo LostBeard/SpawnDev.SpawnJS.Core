@@ -1,3 +1,4 @@
+using SpawnDev.SpawnJS.Marshaller;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
@@ -48,7 +49,56 @@ namespace SpawnDev.SpawnJS
         /// <summary>
         /// Constructor.name
         /// </summary>
-        public string? ConstructorName => Get<string>("constructor?.name");
+        public string ConstructorName()
+        {
+            if (_typeOf == null) GetTypeInfo();
+            return _constructorName!;
+        }
+        ///// <summary>
+        ///// Constructor.name
+        ///// </summary>
+        public string TypeOf()
+        {
+            if (_typeOf == null) GetTypeInfo();
+            return _typeOf!;
+        }
+        private void GetTypeInfo()
+        {
+            try
+            {
+                var tmp = SpawnJSRuntime._getTypeInfo(Id) ?? "";
+                var parts = tmp.Split(" ");
+                _typeOf = parts[0];
+                _constructorName = parts.Length > 1 ? parts[1] : "";
+            }
+            catch { }
+            if (string.IsNullOrEmpty(_typeOf)) _typeOf = "undefined";
+            if (string.IsNullOrEmpty(_constructorName)) _constructorName = "";
+        }
+        string? _constructorName = null;
+        string? _typeOf = null;
+        public (string TypeOf, string ConstructorName) TypeInfo() => (TypeOf(), ConstructorName());
+
+        /// <summary>The object's own enumerable property names (Object.keys).</summary>
+        public List<string> Keys(bool hasOwnProperty = false)
+            => JS.SpawnJSInterop.Call<SpawnJSObjectReference, bool, List<string>>("objectKeys", this, hasOwnProperty);
+
+        /// <summary>Awaits a promise-valued property, discarding the result.</summary>
+        public Task GetVoidAsync(string key) => GetAsync<VoidType>(key);
+
+        /// <summary>The constructor names down the prototype chain (most-derived first).</summary>
+        public List<string> ConstructorNames()
+        {
+            if (_constructorNames != null) return _constructorNames;
+            try
+            {
+                _constructorNames ??= JS.SpawnJSInterop.Call<SpawnJSObjectReference, List<string>>("getConstructorNames", this);
+            }
+            catch { }
+            _constructorNames ??= new List<string>();
+            return _constructorNames;
+        }
+        List<string>? _constructorNames = null;
         /// <summary>Wraps an existing JS object table id.</summary>
         public SpawnJSObjectReference(double sjsId)
         {

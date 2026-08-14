@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 namespace SpawnDev.SpawnJS.JSObjects
 {
     /// <summary>
@@ -86,7 +87,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="data"></param>
         /// <param name="offset"></param>
         /// <returns></returns>
-        public static SharedArrayBuffer Create<T>(T[] data, long offset = 0) where T : struct
+        public static SharedArrayBuffer Create<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T[] data, long offset = 0) where T : struct
         {
             using var heapView = HeapView.Create(data, offset);
             return heapView.ToSharedArrayBuffer();
@@ -99,7 +100,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="offset"></param>
         /// <param name="length"></param>
         /// <returns></returns>
-        public static SharedArrayBuffer Create<T>(T[] data, long offset, long length) where T : struct
+        public static SharedArrayBuffer Create<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T[] data, long offset, long length) where T : struct
         {
             using var heapView = HeapView.Create(data, offset, length);
             return heapView.ToSharedArrayBuffer();

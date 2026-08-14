@@ -5,7 +5,24 @@ namespace SpawnDev.SpawnJS
 {
     public partial class SpawnJSObjectReference
     {
-        public string TypeInfo(double key) => SpawnJSRuntime._propertyTypeInfo(Id, key);
+        public string ConstructorName(double key) => TypeInfo(key).ConstructorName;
+        public string TypeOf(double key) => TypeInfo(key).TypeOf;
+        public (string TypeOf, string ConstructorName) TypeInfo(double key)
+        {
+            string? typeOf = null;
+            string? constructorName = null;
+            try
+            {
+                var tmp = SpawnJSRuntime._propertyTypeInfo(Id, key);
+                var parts = tmp.Split(" ");
+                typeOf = parts[0];
+                constructorName = parts.Length > 1 ? parts[1] : "";
+            }
+            catch { }
+            if (string.IsNullOrEmpty(typeOf)) typeOf = "undefined";
+            if (string.IsNullOrEmpty(constructorName)) constructorName = "";
+            return (typeOf, constructorName);
+        }
         public bool Exists(double key) => SpawnJSRuntime._propertyIn(Id, key);
         public bool Delete(double key) => SpawnJSRuntime._propertyDelete(Id, key);
         #region Set

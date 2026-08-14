@@ -21,6 +21,7 @@ namespace SpawnDev.SpawnJS
     /// </summary>
     public partial class SpawnJSRuntime : SpawnJSObjectReference
     {
+        internal SpawnJSObjectReference SpawnJSInterop { get; } = new SpawnJSObjectReference(SpawnJSInteropId);
         /// <summary>
         /// The process-wide singleton. Created on first access if it does not already exist.
         /// </summary>
