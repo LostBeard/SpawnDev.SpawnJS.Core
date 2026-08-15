@@ -31,6 +31,6 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="name"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public PerformanceEntry[] GetEntriesByName(string name, string? type = null) => JSRef!.Call<string, string, PerformanceEntry[]>("getEntriesByName", name, type);
+        public PerformanceEntry[] GetEntriesByName(string name, string? type = null) => JSRef!.Call<string, string, PerformanceEntry[]>("getEntriesByName", name, type!);
     }
 }

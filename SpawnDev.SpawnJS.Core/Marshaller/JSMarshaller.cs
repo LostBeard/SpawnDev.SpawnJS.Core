@@ -7,7 +7,7 @@ namespace SpawnDev.SpawnJS.Marshaller
     /// </summary>
     public abstract class JSMarshaller
     {
-        public abstract ReturnType ReturnType { get; }
+        public virtual ReturnType ReturnType => throw new NotImplementedException();
         /// <summary>
         /// SpawnJSRuntime
         /// </summary>

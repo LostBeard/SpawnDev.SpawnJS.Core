@@ -20,6 +20,8 @@ namespace SpawnDev.SpawnJS
         /// known to be finished - calling GetResult there hands back the Task object itself, which then
         /// gets marshalled to Javascript in place of the actual result.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2075",
+            Justification = "Reflects the 'Result' property of a framework Task<T>; Task<T> and its Result are always present, so no trimming can remove the target.")]
         public static object? GetCompletedResult(this Task _this)
         {
             var typeofTask = _this.GetType();
@@ -39,6 +41,8 @@ namespace SpawnDev.SpawnJS
         /// </summary>
         /// <param name="_this"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2075",
+            Justification = "Reflects the 'Result' property of a framework Task<T>; Task<T> and its Result are always present, so no trimming can remove the target.")]
         public static async Task<object?> GetResult(this Task _this)
         {
             await _this;
@@ -60,6 +64,8 @@ namespace SpawnDev.SpawnJS
         /// <param name="task"></param>
         /// <param name="type"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2060",
+            Justification = "MakeGenericMethod closes the private ConvertTaskObjectTyped<TResult> over a runtime type; that helper only casts an awaited object to TResult and reflects no members of it.")]
         public static object RecastTask(this Task<object?> task, Type type)
         {
             if (type == typeof(void)) return ConvertTaskObjectVoid(task);
@@ -82,6 +88,8 @@ namespace SpawnDev.SpawnJS
         /// <param name="task"></param>
         /// <param name="type"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessage("Trimming", "IL2060",
+            Justification = "MakeGenericMethod closes the private ConvertTaskObjectTypedValueTask<TResult> over a runtime type; that helper only casts an awaited object to TResult and reflects no members of it.")]
         public static object? RecastValueTask(this Task<object?> task, Type type)
         {
             if (type == typeof(void)) return ConvertTaskObjectTypedValueTaskVoid(task);

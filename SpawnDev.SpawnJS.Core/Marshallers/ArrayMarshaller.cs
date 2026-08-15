@@ -45,6 +45,7 @@ namespace SpawnDev.SpawnJS.Marshallers
             {
                 retArray[i] = value1.Get<TElement>(i);
             }
+            value1.Dispose();
             return retArray;
         }
         /// <inheritdoc/>

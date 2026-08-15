@@ -90,7 +90,16 @@ namespace SpawnDev.SpawnJS.Marshallers
                 // runtime Type -> <TMember> write with no boxing, straight into the new JS object by name
                 var memberType = memberValue.GetType();
                 ((Delegate)writeTyped<object>).InvokeGeneric(memberType, memberValue);
-                void writeTyped<TMember>(TMember v) => JS.GetMarshallerForWrite<TMember>().NetToJS(outObj, name, v);
+                void writeTyped<TMember>(TMember v)
+                {
+                    // When the member's runtime type is fixed (value type or sealed), resolve its marshaller
+                    // once and reuse it - the per-member Type->marshaller lookup is otherwise repaid on every
+                    // marshal. Otherwise a base-typed member may hold any subclass, so it must resolve per value.
+                    var marshaller = member.RuntimeTypeIsKnown
+                        ? (JSMarshaller<TMember>)(member.CachedMarshaller ??= JS.GetMarshallerForWrite<TMember>())
+                        : JS.GetMarshallerForWrite<TMember>();
+                    marshaller.NetToJS(outObj, name, v);
+                }
             }
             return outObj;
         }

@@ -20,7 +20,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <param name="key">The key you want to check for in your key range. This can be any type.</param>
         /// <returns>IDBKeyRange: The newly created key range.</returns>
-        public bool Includes(TKey? key) => JSRef!.Call<TKey, bool>("includes", key);
+        public bool Includes(TKey? key) => JSRef!.Call<TKey, bool>("includes", key!);
         /// <summary>
         /// Lower bound of the key range.
         /// </summary>

@@ -419,7 +419,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="element">The Element for which to get the computed style.</param>
         /// <param name="pseudoElement">A string specifying the pseudo-element to match. Omitted (or null) for real elements.</param>
         /// <returns>A live CSSStyleDeclaration object, which updates automatically when the element's styles are changed.</returns>
-        public CSSStyleDeclaration GetComputedStyle(Element element, string? pseudoElement = null) => JSRef!.Call<global::SpawnDev.SpawnJS.JSObjects.Element, string, CSSStyleDeclaration>("getComputedStyle", element, pseudoElement);
+        public CSSStyleDeclaration GetComputedStyle(Element element, string? pseudoElement = null) => JSRef!.Call<global::SpawnDev.SpawnJS.JSObjects.Element, string, CSSStyleDeclaration>("getComputedStyle", element, pseudoElement!);
         /// <summary>
         /// The getSelection() method of the Window interface returns the Selection object associated with the window's document, representing the range of text selected by the user or the current position of the caret.
         /// </summary>

@@ -83,13 +83,13 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <param name="callback"></param>
         /// <returns></returns>
-        public long RequestAnimationFrame(Action<double, XRFrame?> callback) => JSRef!.Call<global::SpawnDev.SpawnJS.ActionCallback<double, global::SpawnDev.SpawnJS.JSObjects.XRFrame>, long>("requestAnimationFrame", Callback.CreateOne(callback));
+        public long RequestAnimationFrame(Action<double, XRFrame?> callback) => JSRef!.Call<global::SpawnDev.SpawnJS.ActionCallback<double, global::SpawnDev.SpawnJS.JSObjects.XRFrame>, long>("requestAnimationFrame", Callback.CreateOne(callback)!);
         /// <summary>
         /// Schedules the specified method to be called the next time the user agent is working on rendering an animation frame for the WebXR device. Returns an integer value which can be used to identify the request for the purposes of canceling the callback using cancelAnimationFrame(). This method is comparable to the Window.requestAnimationFrame() method.
         /// </summary>
         /// <param name="callback"></param>
         /// <returns></returns>
-        public long RequestAnimationFrame(ActionCallback<double, XRFrame?> callback) => JSRef!.Call<global::SpawnDev.SpawnJS.ActionCallback<double, global::SpawnDev.SpawnJS.JSObjects.XRFrame>, long>("requestAnimationFrame", callback);
+        public long RequestAnimationFrame(ActionCallback<double, XRFrame?> callback) => JSRef!.Call<global::SpawnDev.SpawnJS.ActionCallback<double, global::SpawnDev.SpawnJS.JSObjects.XRFrame>, long>("requestAnimationFrame", callback!);
         /// <summary>
         /// Requests an XRHitTestSource object that handles hit test subscription.
         /// </summary>

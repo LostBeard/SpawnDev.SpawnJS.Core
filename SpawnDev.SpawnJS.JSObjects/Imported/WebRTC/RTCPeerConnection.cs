@@ -127,7 +127,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="label"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public RTCDataChannel CreateDataChannel(string label, RTCDataChannelOptions? options = null) => JSRef!.Call<string, global::SpawnDev.SpawnJS.JSObjects.RTCDataChannelOptions, RTCDataChannel>("createDataChannel", label, options);
+        public RTCDataChannel CreateDataChannel(string label, RTCDataChannelOptions? options = null) => JSRef!.Call<string, global::SpawnDev.SpawnJS.JSObjects.RTCDataChannelOptions, RTCDataChannel>("createDataChannel", label, options!);
         /// <summary>
         /// The createOffer() method of the RTCPeerConnection interface initiates the creation of an SDP offer for the purpose of starting a new WebRTC connection to a remote peer. The SDP offer includes information about any MediaStreamTrack objects already attached to the WebRTC session, codec, and options supported by the browser, and any candidates already gathered by the ICE agent, for the purpose of being sent over the signaling channel to a potential peer to request a connection or to update the configuration of an existing connection.
         /// </summary>
@@ -230,7 +230,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <param name="selector">A MediaStreamTrack for which to gather statistics. If this is null (the default value), statistics will be gathered for the entire RTCPeerConnection.</param>
         /// <returns></returns>
-        public Task<RTCStatsReport> GetStats(MediaStreamTrack? selector = null) => JSRef!.CallAsync<global::SpawnDev.SpawnJS.JSObjects.MediaStreamTrack, RTCStatsReport>("getStats", selector);
+        public Task<RTCStatsReport> GetStats(MediaStreamTrack? selector = null) => JSRef!.CallAsync<global::SpawnDev.SpawnJS.JSObjects.MediaStreamTrack, RTCStatsReport>("getStats", selector!);
         /// <summary>
         /// Returns an array of RTCRtpTransceiver objects being used to send and receive data on the connection.
         /// </summary>

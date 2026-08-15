@@ -224,7 +224,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="newNode"></param>
         /// <param name="referenceNode"></param>
         /// <returns></returns>
-        public TNode InsertBefore<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TNode>(TNode newNode, Node? referenceNode) where TNode : Node => JSRef!.Call<TNode, global::SpawnDev.SpawnJS.JSObjects.Node, TNode>("insertBefore", newNode, referenceNode);
+        public TNode InsertBefore<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TNode>(TNode newNode, Node? referenceNode) where TNode : Node => JSRef!.Call<TNode, global::SpawnDev.SpawnJS.JSObjects.Node, TNode>("insertBefore", newNode, referenceNode!);
         /// <summary>
         /// The isSameNode() method of the Node interface is a legacy alias the for the === strict equality operator. That is, it tests whether two nodes are the same (in other words, whether they reference the same object).
         /// </summary>

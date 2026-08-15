@@ -45,7 +45,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// Returns keys using Object.keys
         /// </summary>
         /// <returns></returns>
-        public List<string> GetItemKeys() => JS.Call<global::SpawnDev.SpawnJS.SpawnJSObjectReference, List<string>>("Object.keys", JSRef);
+        public List<string> GetItemKeys() => JS.Call<global::SpawnDev.SpawnJS.SpawnJSObjectReference, List<string>>("Object.keys", JSRef!);
         /// <summary>
         /// When passed a key name, will return that key's value.
         /// </summary>
@@ -73,6 +73,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Uses reflection-based System.Text.Json; the deserialized type T and its members must be preserved under trimming. Use a JsonTypeInfo/JsonSerializerContext source generator, or preserve T yourself.")]
         public T GetJSON<T>(string key)
         {
             var str = GetItem(key);
@@ -85,6 +86,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <param name="value"></param>
+        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Uses reflection-based System.Text.Json; the serialized type T and its members must be preserved under trimming. Use a JsonTypeInfo/JsonSerializerContext source generator, or preserve T yourself.")]
         public void SetJSON<T>(string key, T value) => JSRef!.CallVoid("setItem", key, JsonSerializer.Serialize(value, DefaultJsonSerializerOptions));
         #endregion
     }

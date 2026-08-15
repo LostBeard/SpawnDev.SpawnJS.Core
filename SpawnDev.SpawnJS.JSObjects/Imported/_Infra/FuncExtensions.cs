@@ -242,7 +242,7 @@ namespace SpawnDev.SpawnJS
         /// <param name="_this">This method</param>
         /// <param name="allowCreate">If true and the Callback does not already exist, it will be created</param>
         /// <returns>A Callback or null</returns>
-        public static FuncCallback<T0, TResult>? CallbackGet<T0, TResult>(this Func<T0, TResult> _this, bool allowCreate = false)
+        public static FuncCallback<T0, TResult>? CallbackGet<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T0, TResult>(this Func<T0, TResult> _this, bool allowCreate = false)
             => (FuncCallback<T0, TResult>?)(!_callbacks.TryGetValue(_this, out Callback? ret) && allowCreate ? _callbacks[_this] = ret = Callback.Create(_this) : ret);
         /// <summary>
         /// Gets or creates a Callback attached to this method.<br/>
@@ -251,7 +251,7 @@ namespace SpawnDev.SpawnJS
         /// <param name="_this">This method</param>
         /// <param name="allowCreate">If true and the Callback does not already exist, it will be created</param>
         /// <returns>A Callback or null</returns>
-        public static FuncCallback<T0, T1, TResult>? CallbackGet<T0, T1, TResult>(this Func<T0, T1, TResult> _this, bool allowCreate = false)
+        public static FuncCallback<T0, T1, TResult>? CallbackGet<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T0, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T1, TResult>(this Func<T0, T1, TResult> _this, bool allowCreate = false)
             => (FuncCallback<T0, T1, TResult>?)(!_callbacks.TryGetValue(_this, out Callback? ret) && allowCreate ? _callbacks[_this] = ret = Callback.Create(_this) : ret);
         /// <summary>
         /// Gets or creates a Callback attached to this method.<br/>
@@ -260,7 +260,7 @@ namespace SpawnDev.SpawnJS
         /// <param name="_this">This method</param>
         /// <param name="allowCreate">If true and the Callback does not already exist, it will be created</param>
         /// <returns>A Callback or null</returns>
-        public static FuncCallback<T0, T1, T2, TResult>? CallbackGet<T0, T1, T2, TResult>(this Func<T0, T1, T2, TResult> _this, bool allowCreate = false)
+        public static FuncCallback<T0, T1, T2, TResult>? CallbackGet<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T0, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T2, TResult>(this Func<T0, T1, T2, TResult> _this, bool allowCreate = false)
             => (FuncCallback<T0, T1, T2, TResult>?)(!_callbacks.TryGetValue(_this, out Callback? ret) && allowCreate ? _callbacks[_this] = ret = Callback.Create(_this) : ret);
         /// <summary>
         /// Gets or creates a Callback attached to this method.<br/>
@@ -269,7 +269,7 @@ namespace SpawnDev.SpawnJS
         /// <param name="_this">This method</param>
         /// <param name="allowCreate">If true and the Callback does not already exist, it will be created</param>
         /// <returns>A Callback or null</returns>
-        public static FuncCallback<T0, T1, T2, T3, TResult>? CallbackGet<T0, T1, T2, T3, TResult>(this Func<T0, T1, T2, T3, TResult> _this, bool allowCreate = false)
+        public static FuncCallback<T0, T1, T2, T3, TResult>? CallbackGet<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T0, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T3, TResult>(this Func<T0, T1, T2, T3, TResult> _this, bool allowCreate = false)
             => (FuncCallback<T0, T1, T2, T3, TResult>?)(!_callbacks.TryGetValue(_this, out Callback? ret) && allowCreate ? _callbacks[_this] = ret = Callback.Create(_this) : ret);
         /// <summary>
         /// Gets or creates a Callback attached to this method.<br/>
@@ -278,7 +278,7 @@ namespace SpawnDev.SpawnJS
         /// <param name="_this">This method</param>
         /// <param name="allowCreate">If true and the Callback does not already exist, it will be created</param>
         /// <returns>A Callback or null</returns>
-        public static FuncCallback<T0, T1, T2, T3, T4, TResult>? CallbackGet<T0, T1, T2, T3, T4, TResult>(this Func<T0, T1, T2, T3, T4, TResult> _this, bool allowCreate = false)
+        public static FuncCallback<T0, T1, T2, T3, T4, TResult>? CallbackGet<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T0, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T4, TResult>(this Func<T0, T1, T2, T3, T4, TResult> _this, bool allowCreate = false)
             => (FuncCallback<T0, T1, T2, T3, T4, TResult>?)(!_callbacks.TryGetValue(_this, out Callback? ret) && allowCreate ? _callbacks[_this] = ret = Callback.Create(_this) : ret);
         /// <summary>
         /// Gets or creates a Callback attached to this method.<br/>
@@ -287,7 +287,7 @@ namespace SpawnDev.SpawnJS
         /// <param name="_this">This method</param>
         /// <param name="allowCreate">If true and the Callback does not already exist, it will be created</param>
         /// <returns>A Callback or null</returns>
-        public static FuncCallback<T0, T1, T2, T3, T4, T5, TResult>? CallbackGet<T0, T1, T2, T3, T4, T5, TResult>(this Func<T0, T1, T2, T3, T4, T5, TResult> _this, bool allowCreate = false)
+        public static FuncCallback<T0, T1, T2, T3, T4, T5, TResult>? CallbackGet<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T0, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T5, TResult>(this Func<T0, T1, T2, T3, T4, T5, TResult> _this, bool allowCreate = false)
             => (FuncCallback<T0, T1, T2, T3, T4, T5, TResult>?)(!_callbacks.TryGetValue(_this, out Callback? ret) && allowCreate ? _callbacks[_this] = ret = Callback.Create(_this) : ret);
         /// <summary>
         /// Gets or creates a Callback attached to this method.<br/>
@@ -296,7 +296,7 @@ namespace SpawnDev.SpawnJS
         /// <param name="_this">This method</param>
         /// <param name="allowCreate">If true and the Callback does not already exist, it will be created</param>
         /// <returns>A Callback or null</returns>
-        public static FuncCallback<T0, T1, T2, T3, T4, T5, T6, TResult>? CallbackGet<T0, T1, T2, T3, T4, T5, T6, TResult>(this Func<T0, T1, T2, T3, T4, T5, T6, TResult> _this, bool allowCreate = false)
+        public static FuncCallback<T0, T1, T2, T3, T4, T5, T6, TResult>? CallbackGet<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T0, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T1, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T2, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T3, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T4, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T5, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] T6, TResult>(this Func<T0, T1, T2, T3, T4, T5, T6, TResult> _this, bool allowCreate = false)
             => (FuncCallback<T0, T1, T2, T3, T4, T5, T6, TResult>?)(!_callbacks.TryGetValue(_this, out Callback? ret) && allowCreate ? _callbacks[_this] = ret = Callback.Create(_this) : ret);
         /// <summary>
         /// Returns the attached Function or null

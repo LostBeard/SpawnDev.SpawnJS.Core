@@ -45,14 +45,14 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <param name="name">The name of the index to open.</param>
         /// <returns>An IDBIndex object for accessing the index.</returns>
-        public IDBIndex<TIndexKey, TPrimaryKey, TValue> Index<TIndexKey>(string name) => JSRef!.Call<string, IDBIndex<TIndexKey, TPrimaryKey, TValue>>("index", name);
+        public IDBIndex<TIndexKey, TPrimaryKey, TValue> Index<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] TIndexKey>(string name) => JSRef!.Call<string, IDBIndex<TIndexKey, TPrimaryKey, TValue>>("index", name);
         /// <summary>
         /// Creates a new index during a version upgrade, returning a new IDBIndex object in the connected database.
         /// </summary>
         /// <param name="indexName">The name of the index to create. Note that it is possible to create an index with an empty name.</param>
         /// <param name="keyPath">The key path for the index to use. Note that it is possible to create an index with an empty keyPath, and also to pass in a sequence (array) as a keyPath.</param>
         /// <returns></returns>
-        public IDBIndex<TIndexKey, TPrimaryKey, TValue> CreateIndex<TIndexKey>(string indexName, Union<string, string[]> keyPath) => JSRef!.Call<string, global::SpawnDev.SpawnJS.Union<string, string[]>, IDBIndex<TIndexKey, TPrimaryKey, TValue>>("createIndex", indexName, keyPath);
+        public IDBIndex<TIndexKey, TPrimaryKey, TValue> CreateIndex<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] TIndexKey>(string indexName, Union<string, string[]> keyPath) => JSRef!.Call<string, global::SpawnDev.SpawnJS.Union<string, string[]>, IDBIndex<TIndexKey, TPrimaryKey, TValue>>("createIndex", indexName, keyPath);
         /// <summary>
         /// Creates a new index during a version upgrade, returning a new IDBIndex object in the connected database.
         /// </summary>
@@ -60,7 +60,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="keyPath">The key path for the index to use. Note that it is possible to create an index with an empty keyPath, and also to pass in a sequence (array) as a keyPath.</param>
         /// <param name="options">Additional options</param>
         /// <returns></returns>
-        public IDBIndex<TIndexKey, TPrimaryKey, TValue> CreateIndex<TIndexKey>(string indexName, string keyPath, IDBObjectStoreCreateIndexOptions options) => JSRef!.Call<string, string, global::SpawnDev.SpawnJS.JSObjects.IDBObjectStoreCreateIndexOptions, IDBIndex<TIndexKey, TPrimaryKey, TValue>>("createIndex", indexName, keyPath, options);
+        public IDBIndex<TIndexKey, TPrimaryKey, TValue> CreateIndex<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] TIndexKey>(string indexName, string keyPath, IDBObjectStoreCreateIndexOptions options) => JSRef!.Call<string, string, global::SpawnDev.SpawnJS.JSObjects.IDBObjectStoreCreateIndexOptions, IDBIndex<TIndexKey, TPrimaryKey, TValue>>("createIndex", indexName, keyPath, options);
         /// <summary>
         /// Returns an IDBRequest object, and, in a separate thread, deletes the store object selected by the specified key. This is for deleting individual records out of an object store.
         /// </summary>
@@ -168,7 +168,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public IDBRequest<TValueAlt> Get<TValueAlt>(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey> key) => JSRef!.Call<global::SpawnDev.SpawnJS.Union<global::SpawnDev.SpawnJS.JSObjects.IDBKeyRange<TPrimaryKey>, TPrimaryKey>, IDBRequest<TValueAlt>>("get", key);
+        public IDBRequest<TValueAlt> Get<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] TValueAlt>(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey> key) => JSRef!.Call<global::SpawnDev.SpawnJS.Union<global::SpawnDev.SpawnJS.JSObjects.IDBKeyRange<TPrimaryKey>, TPrimaryKey>, IDBRequest<TValueAlt>>("get", key);
         /// <summary>
         /// Returns the store object store selected by the specified key. This is for retrieving specific records from an object store.
         /// </summary>
@@ -180,7 +180,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public Task<TValueAlt> GetAsync<TValueAlt>(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey> key) => Get<TValueAlt>(key).WaitAsync();
+        public Task<TValueAlt> GetAsync<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] TValueAlt>(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey> key) => Get<TValueAlt>(key).WaitAsync();
         /// <summary>
         /// Returns an IDBRequest object retrieves all objects in the object store matching the specified parameter or all objects in the store if no parameters are given.
         /// </summary>
@@ -190,7 +190,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// Returns an IDBRequest object retrieves all objects in the object store matching the specified parameter or all objects in the store if no parameters are given.
         /// </summary>
         /// <returns></returns>
-        public IDBRequest<Array<TValueAlt>> GetAll<TValueAlt>() => JSRef!.Call<IDBRequest<Array<TValueAlt>>>("getAll");
+        public IDBRequest<Array<TValueAlt>> GetAll<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] TValueAlt>() => JSRef!.Call<IDBRequest<Array<TValueAlt>>>("getAll");
         /// <summary>
         /// Retrieves all objects in the object store matching the specified parameter or all objects in the store if no parameters are given.
         /// </summary>
@@ -200,7 +200,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// Retrieves all objects in the object store matching the specified parameter or all objects in the store if no parameters are given.
         /// </summary>
         /// <returns></returns>
-        public Task<Array<TValueAlt>> GetAllAsync<TValueAlt>() => GetAll<TValueAlt>().WaitAsync();
+        public Task<Array<TValueAlt>> GetAllAsync<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] TValueAlt>() => GetAll<TValueAlt>().WaitAsync();
         /// <summary>
         /// Returns an IDBRequest object, and, in a separate thread retrieves and returns the record key for the object in the object stored matching the specified parameter.
         /// </summary>
@@ -212,7 +212,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public IDBRequest<TPrimaryKeyAlt> GetKey<TPrimaryKeyAlt>(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey> key) => JSRef!.Call<global::SpawnDev.SpawnJS.Union<global::SpawnDev.SpawnJS.JSObjects.IDBKeyRange<TPrimaryKey>, TPrimaryKey>, IDBRequest<TPrimaryKeyAlt>>("getKey", key);
+        public IDBRequest<TPrimaryKeyAlt> GetKey<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] TPrimaryKeyAlt>(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey> key) => JSRef!.Call<global::SpawnDev.SpawnJS.Union<global::SpawnDev.SpawnJS.JSObjects.IDBKeyRange<TPrimaryKey>, TPrimaryKey>, IDBRequest<TPrimaryKeyAlt>>("getKey", key);
         /// <summary>
         /// Retrieves and returns the record key for the object in the object stored matching the specified parameter.
         /// </summary>
@@ -224,7 +224,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public Task<TPrimaryKeyAlt> GetKeyAsync<TPrimaryKeyAlt>(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey> key) => GetKey<TPrimaryKeyAlt>(key).WaitAsync();
+        public Task<TPrimaryKeyAlt> GetKeyAsync<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] TPrimaryKeyAlt>(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey> key) => GetKey<TPrimaryKeyAlt>(key).WaitAsync();
         /// <summary>
         /// Returns an IDBRequest object retrieves record keys for all objects in the object store matching the specified parameter or all objects in the store if no parameters are given.
         /// </summary>
@@ -234,7 +234,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// Returns an IDBRequest object retrieves record keys for all objects in the object store matching the specified parameter or all objects in the store if no parameters are given.
         /// </summary>
         /// <returns></returns>
-        public IDBRequest<Array<TPrimaryKeyAlt>> GetAllKeys<TPrimaryKeyAlt>() => JSRef!.Call<IDBRequest<Array<TPrimaryKeyAlt>>>("getAllKeys");
+        public IDBRequest<Array<TPrimaryKeyAlt>> GetAllKeys<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] TPrimaryKeyAlt>() => JSRef!.Call<IDBRequest<Array<TPrimaryKeyAlt>>>("getAllKeys");
         /// <summary>
         /// Returns record keys for all objects in the object store matching the specified parameter or all objects in the store if no parameters are given.
         /// </summary>
@@ -244,7 +244,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// Returns record keys for all objects in the object store matching the specified parameter or all objects in the store if no parameters are given.
         /// </summary>
         /// <returns></returns>
-        public Task<Array<TPrimaryKeyAlt>> GetAllKeysAsync<TPrimaryKeyAlt>() => GetAllKeys<TPrimaryKeyAlt>().WaitAsync();
+        public Task<Array<TPrimaryKeyAlt>> GetAllKeysAsync<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] TPrimaryKeyAlt>() => GetAllKeys<TPrimaryKeyAlt>().WaitAsync();
         /// <summary>
         /// Destroys the specified index in the connected database, used during a version upgrade.
         /// </summary>
@@ -265,7 +265,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <param name="query">A key or IDBKeyRange to use as the cursor's range. If nothing is passed, this will default to a key range that selects all the records in this object store.</param>
         /// <returns></returns>
-        public IDBRequest<IDBCursorWithValue<TPrimaryKey, TPrimaryKey, TValue>> OpenCursor(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey>? query) => JSRef!.Call<global::SpawnDev.SpawnJS.Union<global::SpawnDev.SpawnJS.JSObjects.IDBKeyRange<TPrimaryKey>, TPrimaryKey>, IDBRequest<IDBCursorWithValue<TPrimaryKey, TPrimaryKey, TValue>>>("openCursor", query);
+        public IDBRequest<IDBCursorWithValue<TPrimaryKey, TPrimaryKey, TValue>> OpenCursor(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey>? query) => JSRef!.Call<global::SpawnDev.SpawnJS.Union<global::SpawnDev.SpawnJS.JSObjects.IDBKeyRange<TPrimaryKey>, TPrimaryKey>, IDBRequest<IDBCursorWithValue<TPrimaryKey, TPrimaryKey, TValue>>>("openCursor", query!);
         /// <summary>
         /// Returns a new IDBCursorWithValue object. Used for iterating through an object store by primary key with a cursor.
         /// </summary>
@@ -284,7 +284,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// "prevunique" - The cursor is opened at the start of the store; then, the cursor returns all records, that are not duplicates, in the decreasing order of keys.<br/>
         /// </param>
         /// <returns></returns>
-        public IDBRequest<IDBCursorWithValue<TPrimaryKey, TPrimaryKey, TValue>> OpenCursor(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey>? query, string direction) => JSRef!.Call<global::SpawnDev.SpawnJS.Union<global::SpawnDev.SpawnJS.JSObjects.IDBKeyRange<TPrimaryKey>, TPrimaryKey>, string, IDBRequest<IDBCursorWithValue<TPrimaryKey, TPrimaryKey, TValue>>>("openCursor", query, direction);
+        public IDBRequest<IDBCursorWithValue<TPrimaryKey, TPrimaryKey, TValue>> OpenCursor(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey>? query, string direction) => JSRef!.Call<global::SpawnDev.SpawnJS.Union<global::SpawnDev.SpawnJS.JSObjects.IDBKeyRange<TPrimaryKey>, TPrimaryKey>, string, IDBRequest<IDBCursorWithValue<TPrimaryKey, TPrimaryKey, TValue>>>("openCursor", query!, direction);
         /// <summary>
         /// Returns a new IDBCursorWithValue object. Used for iterating through an object store by primary key with a cursor.
         /// </summary>
@@ -305,7 +305,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="range">A key or IDBKeyRange to use as the cursor's range. If nothing is passed, this will default to a key range that selects all the records in this object store.</param>
         /// <param name="direction">The cursor's direction. See IDBCursor Constants for possible values.</param>
         /// <returns></returns>
-        public IDBRequest<IDBCursor<TPrimaryKey, TPrimaryKey, TValue>> OpenKeyCursor(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey>? range, string direction) => JSRef!.Call<global::SpawnDev.SpawnJS.Union<global::SpawnDev.SpawnJS.JSObjects.IDBKeyRange<TPrimaryKey>, TPrimaryKey>, string, IDBRequest<IDBCursor<TPrimaryKey, TPrimaryKey, TValue>>>("openKeyCursor", range, direction);
+        public IDBRequest<IDBCursor<TPrimaryKey, TPrimaryKey, TValue>> OpenKeyCursor(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey>? range, string direction) => JSRef!.Call<global::SpawnDev.SpawnJS.Union<global::SpawnDev.SpawnJS.JSObjects.IDBKeyRange<TPrimaryKey>, TPrimaryKey>, string, IDBRequest<IDBCursor<TPrimaryKey, TPrimaryKey, TValue>>>("openKeyCursor", range!, direction);
         /// <summary>
         /// Creates a cursor over the specified key range, as arranged by this index.
         /// </summary>
@@ -318,7 +318,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// </summary>
         /// <param name="range">A key or IDBKeyRange to use as the cursor's range. If nothing is passed, this will default to a key range that selects all the records in this object store.</param>
         /// <returns></returns>
-        public IDBRequest<IDBCursor<TPrimaryKey, TPrimaryKey, TValue>> OpenKeyCursor(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey>? range) => JSRef!.Call<global::SpawnDev.SpawnJS.Union<global::SpawnDev.SpawnJS.JSObjects.IDBKeyRange<TPrimaryKey>, TPrimaryKey>, IDBRequest<IDBCursor<TPrimaryKey, TPrimaryKey, TValue>>>("openKeyCursor", range);
+        public IDBRequest<IDBCursor<TPrimaryKey, TPrimaryKey, TValue>> OpenKeyCursor(Union<IDBKeyRange<TPrimaryKey>, TPrimaryKey>? range) => JSRef!.Call<global::SpawnDev.SpawnJS.Union<global::SpawnDev.SpawnJS.JSObjects.IDBKeyRange<TPrimaryKey>, TPrimaryKey>, IDBRequest<IDBCursor<TPrimaryKey, TPrimaryKey, TValue>>>("openKeyCursor", range!);
         /// <summary>
         /// Creates a cursor over the specified key range, as arranged by this index.
         /// </summary>

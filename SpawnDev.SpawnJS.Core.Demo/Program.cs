@@ -18,16 +18,92 @@ if (JS.Keys().Count == 0) throw new Exception("Expected more than 0 keys");
 
 
 
-var nmt = true;
+// ===== Marshaller round-trip tests (Tuple / ValueTuple / ValueTuple? / Union / Action / Func) =====
+{
+    int pass = 0, fail = 0;
+    void Test(string name, Func<bool> body)
+    {
+        try
+        {
+            if (body()) { pass++; Console.WriteLine($"  PASS  {name}"); }
+            else { fail++; Console.WriteLine($"  FAIL  {name}"); }
+        }
+        catch (Exception ex)
+        {
+            fail++;
+            Console.WriteLine($"  FAIL  {name} -> {ex.GetType().Name}: {ex.Message}");
+            Console.WriteLine(ex.ToString());
+        }
+    }
 
-var valueTuple = ("Hello", "world!");
-JS.Set("_valueTuple", valueTuple);
-var valueTupleRead = JS.Get<(string, string)>("_valueTuple");
+    Test("ValueTuple (string,string)", () =>
+    {
+        (string, string) v = ("Hello", "world!");
+        JS.Set("_valueTuple", v);
+        var r = JS.Get<(string, string)>("_valueTuple");
+        return r.Item1 == "Hello" && r.Item2 == "world!";
+    });
+    Test("Tuple<string,int>", () =>
+    {
+        var v = new Tuple<string, int>("Hello", 42);
+        JS.Set("_tuple", v);
+        var r = JS.Get<Tuple<string, int>>("_tuple");
+        return r != null && r.Item1 == "Hello" && r.Item2 == 42;
+    });
+    Test("ValueTuple? non-null", () =>
+    {
+        (int, string)? v = (7, "seven");
+        JS.Set("_vtn", v);
+        var r = JS.Get<(int, string)?>("_vtn");
+        return r.HasValue && r.Value.Item1 == 7 && r.Value.Item2 == "seven";
+    });
+    Test("ValueTuple? null", () =>
+    {
+        (int, string)? v = null;
+        JS.Set("_vtNull", v);
+        var r = JS.Get<(int, string)?>("_vtNull");
+        return !r.HasValue;
+    });
+    Test("Union<string,int> int arm", () =>
+    {
+        Union<string, int> u = 42;
+        JS.Set("_ui", u);
+        var r = JS.Get<Union<string, int>>("_ui");
+        return r != null && r.Is<int>() && (int)r == 42;
+    });
+    Test("Union<string,int> string arm", () =>
+    {
+        Union<string, int> u = "hello";
+        JS.Set("_us", u);
+        var r = JS.Get<Union<string, int>>("_us");
+        return r != null && r.Is<string>() && (string)r == "hello";
+    });
+    Test("Action -> JS function invoke", () =>
+    {
+        bool called = false;
+        Action act = () => { called = true; };
+        JS.Set("_act", act);
+        JS.CallVoid("_act");
+        return called;
+    });
+    Test("Action<int> -> JS function arg", () =>
+    {
+        int got = 0;
+        Action<int> act = x => { got = x; };
+        JS.Set("_act1", act);
+        JS.CallVoid("_act1", 99);
+        return got == 99;
+    });
+    Test("Func<int,int> -> JS function return", () =>
+    {
+        Func<int, int> dbl = x => x * 2;
+        JS.Set("_dbl", dbl);
+        var r = JS.Call<int, int>("_dbl", 21);
+        return r == 42;
+    });
 
-var tuple = new Tuple<string, string>("Hello", "world!");
-JS.Set("_tuple", tuple);
-var tupleRead = JS.Get<Tuple<string, string>>("_tuple");
-var art = true;
+    Console.WriteLine($"MARSHALLER TESTS: {pass} passed, {fail} failed");
+}
 
 
 
@@ -112,10 +188,12 @@ stopButton.OnClick += () =>
     runIt = false;
     JS.CallVoid("stopJSAnimation");
 };
+
+// Union marshaller now handles the Append call below.
 document.Body!.Append(stopButton);
 
 using var startJSButton = document.CreateElement<HTMLButtonElement>("button");
-stopButton.TextContent = "Start JS";
+startJSButton.TextContent = "Start JS";
 startJSButton.OnClick += () =>
 {
     runIt = false;
@@ -124,7 +202,7 @@ startJSButton.OnClick += () =>
 document.Body!.Append(startJSButton);
 
 using var startCSButton = document.CreateElement<HTMLButtonElement>("button");
-stopButton.TextContent = "Start CS";
+startCSButton.TextContent = "Start CS";
 startCSButton.OnClick += () =>
 {
     if (runIt) return;
@@ -222,7 +300,7 @@ void startAnimation()
     if (runIt) return;
     runIt = true;
     /// request first frame
-    JS.CallVoid("requestAnimationFrame", cb);
+    JS.CallVoid("requestAnimationFrame", cb!);
 }
 
 // keep the using app alive

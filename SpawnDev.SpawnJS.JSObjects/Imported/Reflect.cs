@@ -15,7 +15,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="thisArgument">The value of this provided for the call to target</param>
         /// <param name="argumentList">An array-like object specifying the arguments with which target should be called.</param>
         /// <returns>The result of calling the given target function with the specified this value and arguments.</returns>
-        public static T Apply<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(Function target, object? thisArgument, object[] argumentList) => JS.Call<global::SpawnDev.SpawnJS.JSObjects.Function, object, object[], T>("Reflect.apply", target, thisArgument, argumentList);
+        public static T Apply<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(Function target, object? thisArgument, object[] argumentList) => JS.Call<global::SpawnDev.SpawnJS.JSObjects.Function, object, object[], T>("Reflect.apply", target, thisArgument!, argumentList);
         /// <summary>
         /// Calls a target function with arguments as specified by the argumentsList parameter. See also Function.prototype.apply()
         /// </summary>

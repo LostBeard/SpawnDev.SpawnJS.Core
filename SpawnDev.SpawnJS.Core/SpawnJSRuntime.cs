@@ -91,6 +91,8 @@ namespace SpawnDev.SpawnJS
             Marshallers.Add(new BooleanMarshaller());
             // .Net: bool? <-> JS: bool?
             Marshallers.Add(new BooleanNullableMarshaller());
+            // .Net: Tuple, ValueTuple <-> JS: Array
+            Marshallers.Add(new ITupleMarshallerFactory());
             // .Net: SpawnJSObjectReference <-> JS: Any
             Marshallers.Add(new SpawnJSObjectReferenceMarshaller());
             // .Net: T[] <-> JS: Array<>
@@ -107,6 +109,10 @@ namespace SpawnDev.SpawnJS
             Marshallers.Add(new TaskMarshaller());
             // .Net: BingInteger <-> JS: BigInt
             Marshallers.Add(new BigIntegerMarshaller());
+            // .Net: Union <-> JS: Any
+            Marshallers.Add(new UnionMarshallerFactory());
+            // .Net: Action, Action<>, Func<> -> JS: Function
+            Marshallers.Add(new DelegateMarshallerFactory());
             // .Net: BingInteger? <-> JS: BigInt?
             Marshallers.Add(new BigIntegerNullableMarshaller());
             // The one and only permitted JSObject use: hand this app's DotnetInstance to the JS side and
@@ -160,7 +166,7 @@ namespace SpawnDev.SpawnJS
                     var data = new byte[5000000];
                     tmp.Add(data);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine($"GrowHeap eror: {ex.ToString()}");
                     break;
@@ -176,10 +182,7 @@ namespace SpawnDev.SpawnJS
         /// <typeparam name="T">The type to return value as</typeparam>
         /// <returns>value as type T</returns>
         public T As<T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T1 value) => InteropCall<T1, T>("returnMe", value);
-        public object? As(Type type, object? value)
-        {
-            return ((Delegate)As<object>).InvokeGeneric(type, value);
-        }
+        public object? As(Type type, object? value) => ((Delegate)As<object, object>).InvokeGeneric([value?.GetType() ?? typeof(object), type], value);
         /// <summary>
         /// Compares two values using Javascript equality.<br/>
         /// full == true uses strict equality (===), otherwise loose equality (==)

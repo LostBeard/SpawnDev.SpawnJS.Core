@@ -90,7 +90,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="thisObj">The value of this provided for the call to the function. Note that this may not be the actual value seen by the method: if the method is a function in non-strict mode code, null and undefined will be replaced with the global object, and primitive values will be boxed. This argument is required.</param>
         /// <param name="args">An array-like object, specifying the arguments with which func should be called, or null or undefined if no arguments should be provided to the function.</param>
         /// <returns>The result of calling the function with the specified this value and arguments.</returns>
-        public T Apply<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(object? thisObj = null, object?[]? args = null) => JSRef!.Call<object, object[], T>("apply", thisObj, args);
+        public T Apply<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(object? thisObj = null, object?[]? args = null) => JSRef!.Call<object, object[], T>("apply", thisObj!, args!);
         /// <summary>
         /// Calls the function with a given this value and arguments provided as an array (or an array-like object).
         /// </summary>
@@ -98,7 +98,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="thisObj">The value of this provided for the call to the function.</param>
         /// <param name="args">An array-like object, specifying the arguments with which func should be called.</param>
         /// <returns>A Task that resolves to the result of calling the function.</returns>
-        public Task<T> ApplyAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(object? thisObj = null, object?[]? args = null) => JSRef!.CallAsync<object, object[], T>("apply", thisObj, args);
+        public Task<T> ApplyAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(object? thisObj = null, object?[]? args = null) => JSRef!.CallAsync<object, object[], T>("apply", thisObj!, args!);
         /// <summary>
         /// Calls the function with a given this value and arguments provided as an array (or an array-like object).
         /// </summary>
@@ -113,7 +113,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="thisObj">The value of this provided for the call to the function.</param>
         /// <param name="args">Arguments for the function.</param>
         /// <returns>The result of calling the function.</returns>
-        public T Call<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(object? thisObj = null, params object?[] args) => JSRef!.Call<object, object[], T>("apply", thisObj, args);
+        public T Call<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(object? thisObj = null, params object?[] args) => JSRef!.Call<object, object[], T>("apply", thisObj!, args!);
         /// <summary>
         /// Calls the function with a given this value and arguments provided individually.
         /// </summary>
@@ -121,7 +121,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="thisObj">The value of this provided for the call to the function.</param>
         /// <param name="args">Arguments for the function.</param>
         /// <returns>A Task that resolves to the result of calling the function.</returns>
-        public Task<T> CallAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(object? thisObj = null, params object?[] args) => JSRef!.CallAsync<object, object[], T>("apply", thisObj, args);
+        public Task<T> CallAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(object? thisObj = null, params object?[] args) => JSRef!.CallAsync<object, object[], T>("apply", thisObj!, args!);
         /// <summary>
         /// Calls the function with a given this value and arguments provided individually.
         /// </summary>

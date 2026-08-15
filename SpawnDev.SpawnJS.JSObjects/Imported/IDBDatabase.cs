@@ -92,7 +92,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <param name="storeName">The name of the new object store to be created. Note that it is possible to create an object store with an empty name.</param>
         /// <param name="options">An options object whose attributes are optional parameters to the method</param>
         /// <returns>A new IDBObjectStore.</returns>
-        public IDBObjectStore<TKey, TValue> CreateObjectStore<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TValue>(string storeName, IDBObjectStoreCreateOptions? options = null) => JSRef!.Call<string, global::SpawnDev.SpawnJS.JSObjects.IDBObjectStoreCreateOptions, IDBObjectStore<TKey, TValue>>("createObjectStore", storeName, options);
+        public IDBObjectStore<TKey, TValue> CreateObjectStore<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TKey, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TValue>(string storeName, IDBObjectStoreCreateOptions? options = null) => JSRef!.Call<string, global::SpawnDev.SpawnJS.JSObjects.IDBObjectStoreCreateOptions, IDBObjectStore<TKey, TValue>>("createObjectStore", storeName, options!);
         /// <summary>
         /// Destroys the object store with the given name in the connected database, along with any indexes that reference it.
         /// </summary>
