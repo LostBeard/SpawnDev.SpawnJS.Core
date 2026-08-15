@@ -14,10 +14,10 @@ namespace SpawnDev.SpawnJS
             _callback = action;
         }
         /// <summary>
-        // args is the incoming data AND where the outgoing result will be written (at index 0)
-        // args does not have to be disposed. it is auto removed from the hold after the call ends
+        /// argsis the incoming data AND where the outgoing result will be written (at index 0)
+        /// argsdoes not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
-        /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
+        /// <param name="args">The incoming AND outgoing buffer. Auto-released after the call</param>
         protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
             _callback();
@@ -36,10 +36,10 @@ namespace SpawnDev.SpawnJS
             _callback = action;
         }
         /// <summary>
-        // args is the incoming data AND where the outgoing result will be written (at index 0)
-        // args does not have to be disposed. it is auto removed from the hold after the call ends
+        /// argsis the incoming data AND where the outgoing result will be written (at index 0)
+        /// argsdoes not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
-        /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
+        /// <param name="args">The incoming AND outgoing buffer. Auto-released after the call</param>
         protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
             _callback(argsCount <= 0 ? default! : args.Get<T1>(0));
@@ -58,10 +58,10 @@ namespace SpawnDev.SpawnJS
             _callback = action;
         }
         /// <summary>
-        // args is the incoming data AND where the outgoing result will be written (at index 0)
-        // args does not have to be disposed. it is auto removed from the hold after the call ends
+        /// argsis the incoming data AND where the outgoing result will be written (at index 0)
+        /// argsdoes not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
-        /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
+        /// <param name="args">The incoming AND outgoing buffer. Auto-released after the call</param>
         protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
             _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
@@ -81,10 +81,10 @@ namespace SpawnDev.SpawnJS
             _callback = action;
         }
         /// <summary>
-        // args is the incoming data AND where the outgoing result will be written (at index 0)
-        // args does not have to be disposed. it is auto removed from the hold after the call ends
+        /// argsis the incoming data AND where the outgoing result will be written (at index 0)
+        /// argsdoes not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
-        /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
+        /// <param name="args">The incoming AND outgoing buffer. Auto-released after the call</param>
         protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
             _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
@@ -105,10 +105,10 @@ namespace SpawnDev.SpawnJS
             _callback = action;
         }
         /// <summary>
-        // args is the incoming data AND where the outgoing result will be written (at index 0)
-        // args does not have to be disposed. it is auto removed from the hold after the call ends
+        /// argsis the incoming data AND where the outgoing result will be written (at index 0)
+        /// argsdoes not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
-        /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
+        /// <param name="args">The incoming AND outgoing buffer. Auto-released after the call</param>
         protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
             _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
@@ -130,10 +130,10 @@ namespace SpawnDev.SpawnJS
             _callback = action;
         }
         /// <summary>
-        // args is the incoming data AND where the outgoing result will be written (at index 0)
-        // args does not have to be disposed. it is auto removed from the hold after the call ends
+        /// argsis the incoming data AND where the outgoing result will be written (at index 0)
+        /// argsdoes not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
-        /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
+        /// <param name="args">The incoming AND outgoing buffer. Auto-released after the call</param>
         protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
             _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
@@ -156,10 +156,10 @@ namespace SpawnDev.SpawnJS
             _callback = action;
         }
         /// <summary>
-        // args is the incoming data AND where the outgoing result will be written (at index 0)
-        // args does not have to be disposed. it is auto removed from the hold after the call ends
+        /// argsis the incoming data AND where the outgoing result will be written (at index 0)
+        /// argsdoes not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
-        /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
+        /// <param name="args">The incoming AND outgoing buffer. Auto-released after the call</param>
         protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
             _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
@@ -183,10 +183,10 @@ namespace SpawnDev.SpawnJS
             _callback = action;
         }
         /// <summary>
-        // args is the incoming data AND where the outgoing result will be written (at index 0)
-        // args does not have to be disposed. it is auto removed from the hold after the call ends
+        /// argsis the incoming data AND where the outgoing result will be written (at index 0)
+        /// argsdoes not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
-        /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
+        /// <param name="args">The incoming AND outgoing buffer. Auto-released after the call</param>
         protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
             _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
@@ -211,10 +211,10 @@ namespace SpawnDev.SpawnJS
             _callback = action;
         }
         /// <summary>
-        // args is the incoming data AND where the outgoing result will be written (at index 0)
-        // args does not have to be disposed. it is auto removed from the hold after the call ends
+        /// argsis the incoming data AND where the outgoing result will be written (at index 0)
+        /// argsdoes not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
-        /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
+        /// <param name="args">The incoming AND outgoing buffer. Auto-released after the call</param>
         protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
             _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
@@ -240,10 +240,10 @@ namespace SpawnDev.SpawnJS
             _callback = action;
         }
         /// <summary>
-        // args is the incoming data AND where the outgoing result will be written (at index 0)
-        // args does not have to be disposed. it is auto removed from the hold after the call ends
+        /// argsis the incoming data AND where the outgoing result will be written (at index 0)
+        /// argsdoes not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
-        /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
+        /// <param name="args">The incoming AND outgoing buffer. Auto-released after the call</param>
         protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
             _callback(argsCount <= 0 ? default! : args.Get<T1>(0),
@@ -270,10 +270,10 @@ namespace SpawnDev.SpawnJS
             _callback = action;
         }
         /// <summary>
-        // args is the incoming data AND where the outgoing result will be written (at index 0)
-        // args does not have to be disposed. it is auto removed from the hold after the call ends
+        /// argsis the incoming data AND where the outgoing result will be written (at index 0)
+        /// argsdoes not have to be disposed. it is auto removed from the hold after the call ends
         /// </summary>
-        /// <param name="argsId">The incoming AND outgoing buffer. Auto-released after the call</param>
+        /// <param name="args">The incoming AND outgoing buffer. Auto-released after the call</param>
         protected override void HandleCallback(SpawnJSObjectReference args, double argsCount)
         {
             _callback(argsCount <= 0 ? default! : args.Get<T1>(0),

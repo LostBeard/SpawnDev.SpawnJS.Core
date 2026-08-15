@@ -257,6 +257,7 @@ namespace SpawnDev.SpawnJS
             else
             {
                 GlobalScope = GlobalScope.NonBrowser;
+                GlobalThis = Get<SpawnJSObject>("globalThis");
             }
             AppBaseUri = SpawnJSInterop.Call<SpawnJSObjectReference, string>("appBaseUri", DotnetInstance) ?? "";
             Console.WriteLine($"SpawnJSRuntime: {GlobalScopeName} {AppBaseUri}");

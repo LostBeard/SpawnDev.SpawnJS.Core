@@ -28,7 +28,6 @@
         /// <param name="offset">byte offset</param>
         /// <param name="length">Number of JSArrayBufferView elements</param>
         /// <param name="copy">Copy if true and a live heap view if false</param>
-        /// <param name="keepFresh">If true a new view will be created whenever a detached view is detected</param>
         public HeapViewDescriptor(long offset, long length, bool copy = false)
         {
             Offset = offset;
@@ -42,7 +41,6 @@
         /// <param name="length">Number of JSArrayBufferView elements</param>
         /// <param name="type">ArrayBufferView type</param>
         /// <param name="copy">Copy if true and a live heap view if false</param>
-        /// <param name="keepFresh">If true a new view will be created whenever a detached view is detected</param>
         public HeapViewDescriptor(long offset, long length, JSArrayBufferView type, bool copy = false)
         {
             Offset = offset;

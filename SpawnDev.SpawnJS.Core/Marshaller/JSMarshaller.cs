@@ -26,7 +26,7 @@ namespace SpawnDev.SpawnJS.Marshaller
     /// <summary>
     /// Strongly-typed marshaller for <typeparamref name="TType"/>. This is the layer the no-boxing path
     /// targets: the runtime bridges a value's runtime Type back into <typeparamref name="TType"/> and calls
-    /// <see cref="NetToJS(Type, SpawnJSObjectReference, double, TType)"/> / the <c>JSToNet</c> overloads
+    /// NetToJS(Type, SpawnJSObjectReference, double, TType) / the <c>JSToNet</c> overloads
     /// directly, so the value never has to be boxed as <c>object</c>. The non-generic base's
     /// <c>JSToNetBoxed</c> overloads simply forward to the typed <c>JSToNet</c> for callers that only have a
     /// <see cref="Type"/>. Each subclass overrides only the one <c>JSToNet</c> overload matching its
@@ -42,7 +42,6 @@ namespace SpawnDev.SpawnJS.Marshaller
         /// <summary>
         /// Not data interop
         /// </summary>
-        /// <param name="type"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public virtual TType JSToNet() => throw new NotImplementedException(this.GetType().Name);
@@ -88,12 +87,10 @@ namespace SpawnDev.SpawnJS.Marshaller
         public virtual TType JSToNet(SpawnJSObjectReference value) => throw new NotImplementedException(this.GetType().Name);
         /// <summary>
         /// Given a JS parent object, the JS property key, and the .Net value: write the value.<br/>
-        /// <paramref name="type"/> and <paramref name="value"/> may be null when the .Net value being marshalled is null.
         /// </summary>
         public abstract void NetToJS(SpawnJSObjectReference jsParent, string jsKey, TType value);
         /// <summary>
         /// Given a JS parent object, the JS property key, and the .Net value: write the value.<br/>
-        /// <paramref name="type"/> and <paramref name="value"/> may be null when the .Net value being marshalled is null.
         /// </summary>
         public abstract void NetToJS(SpawnJSObjectReference jsParent, int jsKey, TType value);
     }

@@ -25,7 +25,7 @@
   on PublishTrimmed without knowing any of this exists.
 -->
 <linker>
-  <assembly fullname="SpawnDev.SpawnJS">
+  <assembly fullname="SpawnDev.SpawnJS.Core">
     <type fullname="SpawnDev.SpawnJS.JSObjects*" required="false" preserve="all" />
     <type fullname="SpawnDev.SpawnJS.SpawnJSObject" required="false">
       <method signature="System.Void .ctor(SpawnDev.SpawnJS.SpawnJSObjectReference)" />

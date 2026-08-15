@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -7,7 +6,7 @@ namespace SpawnDev.SpawnJS.Marshaller
 {
     /// <summary>
     /// The machinery behind the "runtime Type -> compile-time &lt;T&gt;" trick the marshaller pipeline relies
-    /// on. Given a generic method group and a runtime <see cref="Type"/>, <see cref="InvokeGeneric(Delegate, Type)"/>
+    /// on. Given a generic method group and a runtime <see cref="Type"/>, InvokeGeneric(Delegate, Type)
     /// closes the method over that type and invokes it - so a value whose type is only known at runtime can
     /// still be dispatched into a strongly-typed generic method (e.g. <c>writeTyped&lt;T1&gt;</c>) without
     /// boxing. Closed <see cref="MethodInfo"/>s are cached (single- and multi-type keys) so the expensive

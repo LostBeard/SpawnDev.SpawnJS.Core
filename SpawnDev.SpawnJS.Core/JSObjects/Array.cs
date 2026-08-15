@@ -174,7 +174,7 @@ namespace SpawnDev.SpawnJS.JSObjects
         /// <typeparam name="TResult"></typeparam>
         /// <param name="function"></param>
         /// <returns></returns>
-        //public Array<TResult> Map<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TResult>(Function function) => JSRef!.Call<Array<TResult>>("map", function);
+        public Array<TResult> Map<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TResult>(Function function) => JSRef!.Call<Function, Array<TResult>>("map", function);
         /// <summary>
         /// Returns a new array containing the results of invoking a function on every element in the calling array.
         /// </summary>
