@@ -5,5 +5,4 @@
   </Folder>
   <Project Path="SpawnDev.SpawnJS.Core.Demo/SpawnDev.SpawnJS.Core.Demo.csproj" />
   <Project Path="SpawnDev.SpawnJS.Core/SpawnDev.SpawnJS.Core.csproj" />
-  <Project Path="SpawnDev.SpawnJS.JSObjects/SpawnDev.SpawnJS.JSObjects.csproj" Id="72f40dd4-8f3d-4b13-968a-dadcecf1bb6e" />
 </Solution>

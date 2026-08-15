@@ -6,7 +6,6 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 var JS = SpawnJSRuntime.Instance;
-JS.Marshallers.Add(new SpawnJSObjectMarshaller<SpawnJSObject>());
 JS.Verbose = true;
 
 var typeInfo = JS.TypeInfo();

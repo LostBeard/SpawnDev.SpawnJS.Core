@@ -1,7 +1,9 @@
-using System.Diagnostics.CodeAnalysis;
+using SpawnDev.SpawnJS.JSObjects;
 using SpawnDev.SpawnJS.Marshaller;
 using SpawnDev.SpawnJS.Marshallers;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices.JavaScript;
+using System.Security.Cryptography;
 
 namespace SpawnDev.SpawnJS
 {
@@ -11,17 +13,99 @@ namespace SpawnDev.SpawnJS
     /// Design rule that defines this library: <see cref="JSObject"/> (Microsoft's WASM interop handle) is
     /// NOT used anywhere. Its disposal quirk was the multi-year blocker for the previous interop attempts,
     /// and it leaked into Gemineachy. The ONLY place a <see cref="JSObject"/> is permitted is the single
-    /// <see cref="_registerInstance(JSObject)"/> call that hands this app's DotnetInstance to the JS side -
+    /// _registerInstance call that hands this app's DotnetInstance to the JS side -
     /// and never again. Everything else references JS values by a numeric id (see
     /// <see cref="SpawnJSObjectReference"/>), so nothing crosses the boundary that needs disposing on the
     /// Microsoft interop table.<br/>
     /// <br/>
-    /// The runtime itself is a <see cref="SpawnJSObjectReference"/> whose id is <see cref="GlobalThis"/>,
+    /// The runtime itself is a <see cref="SpawnJSObjectReference"/> whose id is GlobalThisId,
     /// so calling <c>JS.PropertyGet*/PropertySet</c> operates directly on the JS <c>globalThis</c>.
     /// </summary>
-    public partial class SpawnJSRuntime : SpawnJSObjectReference
+    public partial class SpawnJSRuntime : SpawnJSObjectReference, IGlobalScopeSource
     {
+        /// <summary>
+        /// True when running on the browser-wasm runtime. It asks the .Net runtime rather than Javascript,
+        /// so it is valid before any interop has happened.<br/>
+        /// ⚠️ This does NOT mean "running in a browser". A WebAssembly console app on Node also reports
+        /// true, because it targets the same runtime - measured: the console host reports IsBrowser=True
+        /// with a global scope of "Object". To ask whether there is a page, use <see cref="IsWindow"/>.
+        /// SpawnDev.BlazorJS has the same semantics.
+        /// </summary>
+        public bool IsBrowser => OperatingSystem.IsBrowser();
         internal SpawnJSObjectReference SpawnJSInterop { get; } = new SpawnJSObjectReference(SpawnJSInteropId);
+        /// <summary>
+        /// The constructor name of globalThis, which is what identifies the scope: "Window",
+        /// "DedicatedWorkerGlobalScope", "SharedWorkerGlobalScope", "ServiceWorkerGlobalScope" - or on a
+        /// non browser host, something else entirely.
+        /// </summary>
+        public string GlobalScopeName => _globalScopeName ??= ConstructorName() ?? "";
+        string? _globalScopeName;
+
+        /// <inheritdoc/>
+        Task<GlobalScope> IGlobalScopeSource.GetGlobalScope() => Task.FromResult(GlobalScope);
+        /// <summary>
+        /// GlobalScope enum
+        /// </summary>
+        public GlobalScope GlobalScope { get; private set; }
+        /// <summary>
+        /// GlobalThis
+        /// </summary>
+        public SpawnJSObject GlobalThis { get; private set; }
+        /// <summary>
+        /// If the globalThis is a Window, WindowThis will refer to globalThis, otherwise null.
+        /// </summary>
+        public Window? WindowThis { get; private set; }
+        /// <summary>
+        /// If the globalThis is a DedicatedWorkerGlobalScope, DedicateWorkerThis will refer to globalThis, otherwise null.
+        /// </summary>
+        public DedicatedWorkerGlobalScope? DedicateWorkerThis { get; private set; }
+        /// <summary>
+        /// If the globalThis is a SharedWorkerGlobalScope, SharedWorkerThis will refer to globalThis, otherwise null.
+        /// </summary>
+        public SharedWorkerGlobalScope? SharedWorkerThis { get; private set; }
+        /// <summary>
+        /// If the globalThis is a ServiceWorkerGlobalScope, ServiceWorkerThis will refer to globalThis, otherwise null.
+        /// </summary>
+        public ServiceWorkerGlobalScope? ServiceWorkerThis { get; private set; }
+        /// <summary>
+        /// This app instance's id
+        /// </summary>
+        public string InstanceId { get; }
+        /// <summary>
+        /// The URL this app was LOADED from - the origin of its own <c>main.*</c> / <c>_framework</c>, with
+        /// a trailing slash. Unlike the host page's <c>document.baseURI</c>, this stays correct when the app
+        /// is served from a CDN at a different path than the host page, which is what worker entry scripts
+        /// (main.classic.js / main.module.js / _framework/*) must resolve against.<br/>
+        /// Determined per-runtime from THIS app's own dotnet runtime, so two SpawnJS apps loaded from
+        /// different origins on one page each report their own base.<br/>
+        /// Empty string when it could not be determined (e.g. a non-browser host).
+        /// </summary>
+        public string AppBaseUri { get; private set; } = "";
+
+        /// <summary>
+        /// True when running in a page rather than a worker
+        /// </summary>
+        public bool IsWindow => GlobalScopeName == "Window";
+
+        /// <summary>
+        /// True in a dedicated worker
+        /// </summary>
+        public bool IsDedicatedWorkerGlobalScope => GlobalScopeName == "DedicatedWorkerGlobalScope";
+
+        /// <summary>
+        /// True in a shared worker
+        /// </summary>
+        public bool IsSharedWorkerGlobalScope => GlobalScopeName == "SharedWorkerGlobalScope";
+
+        /// <summary>
+        /// True in a service worker
+        /// </summary>
+        public bool IsServiceWorkerGlobalScope => GlobalScopeName == "ServiceWorkerGlobalScope";
+
+        /// <summary>
+        /// True in any kind of worker
+        /// </summary>
+        public bool IsWorker => IsDedicatedWorkerGlobalScope || IsSharedWorkerGlobalScope || IsServiceWorkerGlobalScope;
         /// <summary>
         /// The process-wide singleton. Created on first access if it does not already exist.
         /// </summary>
@@ -58,12 +142,15 @@ namespace SpawnDev.SpawnJS
         bool _verbose = false;
         internal string[] InteropMethods;
         /// <summary>
-        /// Creates the runtime. The base id is <see cref="GlobalThis"/> so the instance addresses JS
+        /// Creates the runtime. The base id is GlobalThisId so the instance addresses JS
         /// <c>globalThis</c> directly. Registers the built-in marshallers in priority order (last wins).
         /// </summary>
         private SpawnJSRuntime() : base(GlobalThisId)
         {
             _instance = this;
+            var id = Convert.ToHexString(RandomNumberGenerator.GetBytes(8));
+            var chunkSize = 4;
+            InstanceId = string.Join("-", Enumerable.Range(0, id.Length / chunkSize).Select(i => id.Substring(i * chunkSize, chunkSize)));
             //AppJsonContext.Init();
             // Registration order matters: GetMarshaller scans this list in REVERSE, so a marshaller added
             // later takes precedence when more than one reports it can marshal a type. The more specific /
@@ -115,6 +202,8 @@ namespace SpawnDev.SpawnJS
             Marshallers.Add(new DelegateMarshallerFactory());
             // .Net: BingInteger? <-> JS: BigInt?
             Marshallers.Add(new BigIntegerNullableMarshaller());
+            // .Net: SpawnJSObject <-> JS: Any
+            Marshallers.Add(new SpawnJSObjectMarshaller<SpawnJSObject>());
             // The one and only permitted JSObject use: hand this app's DotnetInstance to the JS side and
             // immediately reduce it to a numeric SpawnJSObjectReference id. Never touched as a JSObject again.
             DotnetInstance = new SpawnJSObjectReference(
@@ -133,7 +222,48 @@ namespace SpawnDev.SpawnJS
             // load method names to enable indexed based interop calling (vs string)
             InteropMethods = _refreshMethodMap();
             HeapSize = GetHeapSize();
+
+            if (IsBrowser)
+            {
+                switch (GlobalScopeName)
+                {
+                    case nameof(Window):
+                        // in firefox browser extension running in content mode, a window and globalThis are not the same so they are loaded separately here to normalize usage
+                        WindowThis = Get<Window>("window");
+                        GlobalThis = Get<Window>("globalThis");
+                        GlobalScope = GlobalScope.Window;
+                        break;
+                    case nameof(DedicatedWorkerGlobalScope):
+                        DedicateWorkerThis = Get<DedicatedWorkerGlobalScope>("globalThis");
+                        GlobalThis = DedicateWorkerThis;
+                        GlobalScope = GlobalScope.DedicatedWorker;
+                        break;
+                    case nameof(SharedWorkerGlobalScope):
+                        SharedWorkerThis = Get<SharedWorkerGlobalScope>("globalThis");
+                        GlobalThis = SharedWorkerThis;
+                        GlobalScope = GlobalScope.SharedWorker;
+                        break;
+                    case nameof(ServiceWorkerGlobalScope):
+                        ServiceWorkerThis = Get<ServiceWorkerGlobalScope>("globalThis");
+                        GlobalThis = ServiceWorkerThis;
+                        GlobalScope = GlobalScope.ServiceWorker;
+                        break;
+                    default:
+                        GlobalThis = Get<SpawnJSObject>("globalThis");
+                        GlobalScope = GlobalScope.BrowserOther;
+                        break;
+                }
+            }
+            else
+            {
+                GlobalScope = GlobalScope.NonBrowser;
+            }
+            AppBaseUri = SpawnJSInterop.Call<SpawnJSObjectReference, string>("appBaseUri", DotnetInstance) ?? "";
+            Console.WriteLine($"SpawnJSRuntime: {GlobalScopeName} {AppBaseUri}");
         }
+        /// <summary>
+        /// The last reported size of the .Net heap
+        /// </summary>
         public long HeapSize { get; private set; } = 0;
         void OnDetachedHeap(long oldSize, long newSize)
         {
@@ -141,6 +271,9 @@ namespace SpawnDev.SpawnJS
             Console.WriteLine($"OnDetachedHeap: {oldSize} > {HeapSize}");
             OnHeapGrow?.Invoke(oldSize, newSize);
         }
+        /// <summary>
+        /// Fired on a heap detach event
+        /// </summary>
         public event Action<long, long>? OnHeapGrow;
         /// <summary>
         /// Get the current heap size
@@ -180,8 +313,15 @@ namespace SpawnDev.SpawnJS
         /// Returns value as type T
         /// </summary>
         /// <typeparam name="T">The type to return value as</typeparam>
+        /// <typeparam name="T1">The value</typeparam>
         /// <returns>value as type T</returns>
         public T As<T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(T1 value) => InteropCall<T1, T>("returnMe", value);
+        /// <summary>
+        /// Returns value as type
+        /// </summary>
+        /// <param name="type">The type to return value as</param>
+        /// <param name="value">The value</param>
+        /// <returns>value as type T</returns>
         public object? As(Type type, object? value) => ((Delegate)As<object, object>).InvokeGeneric([value?.GetType() ?? typeof(object), type], value);
         /// <summary>
         /// Compares two values using Javascript equality.<br/>

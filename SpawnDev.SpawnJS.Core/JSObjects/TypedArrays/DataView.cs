@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.JSInterop;
 using System.Numerics;
 
 namespace SpawnDev.SpawnJS.JSObjects
